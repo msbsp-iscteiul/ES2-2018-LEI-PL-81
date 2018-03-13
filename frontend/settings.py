@@ -121,4 +121,17 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
  ]
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/public')
+FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.TemporaryFileUploadHandler"]
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+#Settings do mailtrp.io
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '378d365bfcf1e8'
+EMAIL_HOST_PASSWORD = '411205a635b0cb'
+EMAIL_PORT = '2525'
+

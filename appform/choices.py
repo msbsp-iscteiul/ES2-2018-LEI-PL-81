@@ -1,5 +1,5 @@
 type_choices=(
-    ('Integer', 'Int'),
-    ('Double', 'Doub'),
-    ('Boolean', 'Bl')
+    ('Int', 'Int'),
+    ('Db', 'Doub'),
+    ('Bl', 'Bl')
 )
