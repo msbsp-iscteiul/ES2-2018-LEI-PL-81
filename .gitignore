@@ -1,0 +1,20 @@
+# Jetbrains #
+.idea
+
+# Logs and databases #
+######################
+*.sqlite
+*.sqlite3
+
+# OS generated files #
+######################
+.DS_Store
+
+# Thumbnails
+._*
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
