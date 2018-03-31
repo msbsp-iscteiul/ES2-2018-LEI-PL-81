@@ -7,7 +7,8 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = DoubleSolution.class)
+// TODO
+//@BuilderTypes(solutionType = DoubleSolution.class)
 public class DifferentialEvolutionFactory implements AlgorithmBuilder<DifferentialEvolution> {
 	private final DoubleProblem problem;
 

@@ -6,6 +6,7 @@ import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
+import org.uma.jmetal.util.archive.impl.CrowdingDistanceArchive;
 import org.uma.jmetal.util.archive.impl.HypervolumeArchive;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
@@ -19,9 +20,9 @@ public class ABYSSFactory implements AlgorithmBuilder<ABYSS> {
 
 	@Override
 	public ABYSS build() {
-		return new ABYSSBuilder(problem, new HypervolumeArchive<>(
-			problem.getNumberOfVariables(),
-			new PISAHypervolume<>()
-		)).build();
+                return new ABYSSBuilder(
+                        problem,
+                        new CrowdingDistanceArchive<>(problem.getNumberOfVariables())
+                ).build();
 	}
 }

@@ -12,6 +12,8 @@
     <modules>
         <module>algorithm-finder</module>
         <module>backend</module>
+        <module>optimizationjobrunner</module>
+        <module>clientjarloader</module>
     </modules>
 
     <properties>

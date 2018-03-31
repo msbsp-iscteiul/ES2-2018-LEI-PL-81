@@ -10,7 +10,8 @@ import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 /**
  * @see <a href="http://clerc.maurice.free.fr/pso/SPSO_descriptions.pdf">http://clerc.maurice.free.fr/pso/SPSO_descriptions.pdf</a>
  */
-@BuilderTypes(solutionType = DoubleSolution.class)
+//@BuilderTypes(solutionType = DoubleSolution.class)
+// TODO
 public class StandardPSO2011Factory implements AlgorithmBuilder<StandardPSO2011> {
 	private final DoubleProblem problem;
 
