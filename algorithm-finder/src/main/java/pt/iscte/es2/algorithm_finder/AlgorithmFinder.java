@@ -24,13 +24,13 @@ public class AlgorithmFinder {
 		this.problem = problem;
 	}
 
-        public List<Constructor<?>> execute() {
+	public List<Constructor<?>> execute() {
 		Class<?> problemSolutionType = getSolutionTypeForProblem();
 		if (problemSolutionType == null) {
 			return Collections.emptyList();
 		}
 
-                List<Constructor<?>> constructors = new ArrayList<>();
+		List<Constructor<?>> constructors = new ArrayList<>();
 		Reflections reflections = buildReflector();
 
 		for (Class<?> aClass : reflections.getTypesAnnotatedWith(BuilderTypes.class)) {
@@ -47,12 +47,12 @@ public class AlgorithmFinder {
 			for (Constructor<?> constructor : aClass.getConstructors()) {
 				final Class<?> constructorType = constructor.getParameterTypes()[0];
 				if (constructorType.isAssignableFrom(problem.getClass())) {
-                                        constructors.add(constructor);
+					constructors.add(constructor);
 					break;
 				}
 			}
 		}
-                return constructors;
+		return constructors;
 	}
 
 	private Class<?> getSolutionTypeForProblem() {

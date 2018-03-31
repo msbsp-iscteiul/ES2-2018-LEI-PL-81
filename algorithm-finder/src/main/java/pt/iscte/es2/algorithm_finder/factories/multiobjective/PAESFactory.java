@@ -21,7 +21,7 @@ public class PAESFactory<S extends Solution<?>> implements AlgorithmBuilder<PAES
 
 	@Override
 	public PAES<S> build() {
-                return new PAESBuilder<>(problem)
-                        .build();
+		return new PAESBuilder<>(problem)
+			.build();
 	}
 }

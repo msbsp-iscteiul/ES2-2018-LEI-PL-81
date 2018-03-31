@@ -20,9 +20,9 @@ public class ABYSSFactory implements AlgorithmBuilder<ABYSS> {
 
 	@Override
 	public ABYSS build() {
-                return new ABYSSBuilder(
-                        problem,
-                        new CrowdingDistanceArchive<>(problem.getNumberOfVariables())
-                ).build();
+		return new ABYSSBuilder(
+			problem,
+			new CrowdingDistanceArchive<>(problem.getNumberOfVariables())
+		).build();
 	}
 }
