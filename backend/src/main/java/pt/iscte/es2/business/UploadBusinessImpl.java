@@ -36,7 +36,6 @@ public class UploadBusinessImpl implements UploadBusiness {
 			if (!Files.exists(path)) {
 				new File(ApplicationConstants.JARS_PATH).mkdirs();
 			}
-			// Get the file and save it somewhere
 			byte[] bytes = file.getBytes();
 			filePath = ApplicationConstants.JARS_PATH + file.getOriginalFilename();
 			path = Paths.get(filePath);
@@ -45,6 +44,6 @@ public class UploadBusinessImpl implements UploadBusiness {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new UploadResult(3,4,5);
+		return new UploadResult(3,4);
 	}
 }

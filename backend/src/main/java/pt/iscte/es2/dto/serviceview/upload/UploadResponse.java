@@ -6,9 +6,7 @@ package pt.iscte.es2.dto.serviceview.upload;
 public class UploadResponse {
 
 	private String sessionId;
-	private Integer variables;
-	private Integer objectives;
-	private Integer constraints;
+	private UploadResult result;
 
 	public UploadResponse() {
 
@@ -26,27 +24,11 @@ public class UploadResponse {
 		this.sessionId = sessionId;
 	}
 
-	public Integer getVariables() {
-		return variables;
+	public UploadResult getResult() {
+		return result;
 	}
 
-	public void setVariables(Integer variables) {
-		this.variables = variables;
-	}
-
-	public Integer getObjectives() {
-		return objectives;
-	}
-
-	public void setObjectives(Integer objectives) {
-		this.objectives = objectives;
-	}
-
-	public Integer getConstraints() {
-		return constraints;
-	}
-
-	public void setConstraints(Integer constraints) {
-		this.constraints = constraints;
+	public void setResult(UploadResult result) {
+		this.result = result;
 	}
 }

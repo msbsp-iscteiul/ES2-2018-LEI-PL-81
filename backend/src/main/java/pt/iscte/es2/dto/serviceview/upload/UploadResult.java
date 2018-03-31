@@ -7,16 +7,14 @@ public class UploadResult {
 
 	private int variables;
 	private int objectives;
-	private int constraints;
 
 	public UploadResult() {
 
 	}
 
-	public UploadResult(int variables, int objectives, int constraints) {
+	public UploadResult(int variables, int objectives) {
 		this.variables = variables;
 		this.objectives = objectives;
-		this.constraints = constraints;
 	}
 
 	public int getVariables() {
@@ -35,11 +33,4 @@ public class UploadResult {
 		this.objectives = objectives;
 	}
 
-	public int getConstraints() {
-		return constraints;
-	}
-
-	public void setConstraints(int constraints) {
-		this.constraints = constraints;
-	}
 }
