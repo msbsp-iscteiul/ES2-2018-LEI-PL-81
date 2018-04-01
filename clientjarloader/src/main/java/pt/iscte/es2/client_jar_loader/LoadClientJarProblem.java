@@ -10,7 +10,7 @@ import java.net.URL;
 public class LoadClientJarProblem {
 	public Problem<Solution<?>> loadProblemFromJar(String jarFilePath)
 		throws MalformedURLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-		final File jar = new File(getClass().getClassLoader().getResource(jarFilePath).getFile());
+		final File jar = new File(jarFilePath);
 		final String file = "file://" + jar.getAbsolutePath();
 		final ClassLoader clientClassLoader = new SecureClientClassLoader(new URL(file));
 		final Class<? extends Problem<Solution<?>>> pluginClass =

@@ -103,12 +103,10 @@ public class AlgorithmFinder {
 			constructors = Collections.emptyList();
 		}
 
-		public Map<String, String> getAlgorithms() {
+		public List<String> getAlgorithms() {
 			return algorithmFactories.stream()
-				.collect(Collectors.toMap(
-					factory -> factory.getAnnotation(BuilderTypes.class).algorithm().getName(),
-					Class::getCanonicalName
-				));
+				.map(factory -> factory.getAnnotation(BuilderTypes.class).algorithm().getName())
+				.collect(Collectors.toList());
 		}
 
 		public List<Constructor<?>> getConstructors() {
@@ -116,7 +114,11 @@ public class AlgorithmFinder {
 		}
 
 		public List<Constructor<?>> getConstructorsForAlgorithms(List<String> selectedAlgorithms) {
-			final Map<String, String> algorithms = getAlgorithms();
+			final Map<String, String> algorithms = algorithmFactories.stream()
+				.collect(Collectors.toMap(
+					factory -> factory.getAnnotation(BuilderTypes.class).algorithm().getName(),
+					Class::getName
+				));
 			return constructors.stream()
 				.filter(constructor -> {
 					for (String selectedAlgorithm : selectedAlgorithms) {

@@ -27,7 +27,7 @@ public class JMetalConfiguration {
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
 //		setSecurityContext();
 		Problem<Solution<?>> clientOptimizationProblem = new LoadClientJarProblem()
-			.loadProblemFromJar("data/containee-1.0-SNAPSHOT.jar");
+			.loadProblemFromJar("optimizationjobrunner/target/data/containee-1.0-SNAPSHOT.jar");
 		AlgorithmFinder.AlgorithmFinderResult finderResult =
 			new AlgorithmFinder(clientOptimizationProblem).execute();
 		ExperimentProblem<Solution<?>> experimentProblem = new ExperimentProblem<>(clientOptimizationProblem);
@@ -35,9 +35,9 @@ public class JMetalConfiguration {
 			experimentProblem,
 			finderResult.getConstructors()
 		);
-		finderResult.getAlgorithms().forEach((k, v) -> {
-			System.out.println("Algorithm: " + k + ", Builder: " + v);
-		});
+//		finderResult.getAlgorithms().forEach(algorithm -> {
+//			System.out.println(algorithm);
+//		});
 //		System.out.println("---");
 //		final List<Constructor<?>> constructorsForAlgorithms = finderResult.getConstructorsForAlgorithms(Collections.singletonList("org.uma.jmetal.algorithm.multiobjective.ibea.IBEA"));
 //		System.out.println(((AlgorithmBuilder) constructorsForAlgorithms.get(0).newInstance(experimentProblem.getProblem())).build());
