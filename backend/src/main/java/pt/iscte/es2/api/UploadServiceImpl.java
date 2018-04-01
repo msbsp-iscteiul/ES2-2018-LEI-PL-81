@@ -17,10 +17,14 @@ public class UploadServiceImpl implements UploadService {
 	@Autowired
 	private UploadBusiness uploadBusiness;
 
+	/**
+	 * @see UploadService#uploadFile(UploadRequest)
+	 */
 	@PostMapping(value = "/")
 	public UploadResponse uploadFile(UploadRequest request) {
 		UploadResponse response = new UploadResponse();
-		uploadBusiness.uploadFile(request.getSessionId(), request.getFile());
+		response.setSessionId(request.getSessionId());
+		response.setResult(uploadBusiness.uploadFile(request.getSessionId(), request.getFile()));
 		return response;
 	}
 }

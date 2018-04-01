@@ -30,7 +30,7 @@ import java.util.List;
 public class JMetalConfiguration {
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
 //		setSecurityContext();
-		Problem<Solution<?>> clientOptimizationProblem = getClientOptimizationProblem();
+		Problem<Solution<?>> clientOptimizationProblem = getClientOptimizationProblem("data/containee-1.0-SNAPSHOT.jar");
 		List<Constructor<?>> algorithmFactoryConstructors =
 			new AlgorithmFinder(clientOptimizationProblem).execute();
 		ExperimentProblem<Solution<?>> problem = new ExperimentProblem<>(clientOptimizationProblem);
@@ -74,9 +74,10 @@ public class JMetalConfiguration {
 		return algorithms;
 	}
 
-	private static Problem<Solution<?>> getClientOptimizationProblem()
+	public static Problem<Solution<?>> getClientOptimizationProblem(String filePath)
 		throws MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		File jar = new File(SecureClientClassLoader.class.getClassLoader().getResource("data/containee-1.0-SNAPSHOT.jar").getFile());
+		File jar = new File(filePath);
+		// File jar = new File(SecureClientClassLoader.class.getClassLoader().getResource(filePath).getFile());
 		String file = "file://" + jar.getAbsolutePath();
 		ClassLoader clientClassLoader = new SecureClientClassLoader(new URL(file));
 		Class<?> pluginClass = clientClassLoader.loadClass("Plugin");
