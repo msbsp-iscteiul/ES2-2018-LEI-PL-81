@@ -2,10 +2,16 @@ package pt.iscte.es2.algorithm_finder.factories.multiobjective;
 
 import org.uma.jmetal.algorithm.multiobjective.omopso.OMOPSO;
 import org.uma.jmetal.algorithm.multiobjective.omopso.OMOPSOBuilder;
+import org.uma.jmetal.operator.impl.mutation.NonUniformMutation;
+import org.uma.jmetal.operator.impl.mutation.UniformMutation;
 import org.uma.jmetal.problem.DoubleProblem;
+import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator;
+import org.uma.jmetal.util.pseudorandom.RandomGenerator;
+import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
+@BuilderTypes(solutionType = DoubleSolution.class)
 public class OMOPSOFactory implements AlgorithmBuilder<OMOPSO> {
 	private final DoubleProblem problem;
 
@@ -21,6 +27,9 @@ public class OMOPSOFactory implements AlgorithmBuilder<OMOPSO> {
 				Runtime.getRuntime().availableProcessors(),
 				problem
 			)
-		).build();
+		)
+			.setNonUniformMutation(new NonUniformMutation(.5, .5, 10))
+			.setUniformMutation(new UniformMutation(.5, .5, Math::random))
+			.build();
 	}
 }
