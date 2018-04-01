@@ -1,5 +1,8 @@
 package pt.iscte.es2.dto.serviceview.upload;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DTO Upload Result
  */
@@ -8,6 +11,7 @@ public class UploadResult {
 	private int id;
 	private int variables;
 	private int objectives;
+	private List<String> algorithms;
 
 	public UploadResult() {
 
@@ -17,6 +21,17 @@ public class UploadResult {
 		this.id = id;
 		this.variables = variables;
 		this.objectives = objectives;
+	}
+
+	public List<String> getAlgorithms() {
+		if (algorithms == null) {
+			algorithms = new ArrayList<>();
+		}
+		return algorithms;
+	}
+
+	public void setAlgorithms(List<String> algorithms) {
+		this.algorithms = algorithms;
 	}
 
 	public int getId() {

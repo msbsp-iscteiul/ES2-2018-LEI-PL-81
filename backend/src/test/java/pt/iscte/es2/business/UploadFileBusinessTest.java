@@ -32,7 +32,7 @@ public class UploadFileBusinessTest {
 	// TODO
 	@Test
 	public void uploadFileWithEmptyFile() {
-		MultipartFile file = getMultipartFile();
+		// MultipartFile file = getMultipartFile();
 	}
 
 	// TODO
@@ -41,8 +41,8 @@ public class UploadFileBusinessTest {
 		UploadResult result = new UploadResult(1,2,2);
 	}
 
-	private MultipartFile getMultipartFile() {
-		MultipartFile file = (MultipartFile) new File("src/test/resources/data/containee-1.0-SNAPSHOT.jar");
-		return file;
-	}
+//	private MultipartFile getMultipartFile() {
+//		MultipartFile file = (MultipartFile) new File("src/test/resources/data/containee-1.0-SNAPSHOT.jar");
+//		return file;
+//	}
 }
