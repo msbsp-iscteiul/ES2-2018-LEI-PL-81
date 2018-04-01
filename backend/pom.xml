@@ -108,12 +108,12 @@
         </dependency>
         <dependency>
             <groupId>pt.iscte</groupId>
-            <artifactId>client-jar-loader</artifactId>
+            <artifactId>clientjarloader</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>pt.iscte</groupId>
-            <artifactId>optimization-job-runner</artifactId>
+            <artifactId>optimizationjobrunner</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

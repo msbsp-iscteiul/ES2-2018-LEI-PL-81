@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>client-jar-loader</artifactId>
+    <artifactId>clientjarloader</artifactId>
 
     <dependencies>
         <dependency>
