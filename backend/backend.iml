@@ -129,6 +129,7 @@
     <orderEntry type="library" name="Maven: net.minidev:json-smart:2.3" level="project" />
     <orderEntry type="library" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Maven: org.assertj:assertj-core:3.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.mockito:mockito-core:2.15.0" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.7.9" level="project" />
@@ -165,8 +166,6 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.4" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.9-rc" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:2.0.2-beta" level="project" />
     <orderEntry type="module" module-name="algorithm-finder" />
     <orderEntry type="library" name="Maven: org.uma.jmetal:jmetal-algorithm:5.5" level="project" />
     <orderEntry type="library" name="Maven: org.uma.jmetal:jmetal-core:5.5" level="project" />
@@ -180,5 +179,10 @@
     <orderEntry type="library" name="Maven: org.uma.jmetal:jmetal-problem:5.5" level="project" />
     <orderEntry type="library" name="Maven: org.reflections:reflections:0.9.11" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:20.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:2.0.2-beta" level="project" />
   </component>
 </module>

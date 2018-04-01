@@ -28,7 +28,7 @@ public class UploadFileBusinessTest {
 
 	@Test
 	public void uploadFileWithSuccess() {
-		UploadResult result = new UploadResult(2,2,2);
+		UploadResult result = new UploadResult(2,2);
 	}
 
 }
