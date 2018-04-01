@@ -1,11 +1,11 @@
 from django import forms
-from appform import choices
 
 
 class ProblemInputUser(forms.Form):
     name = forms.CharField(
         max_length=30,
-        label='Name')
+        label='Problem name',
+        help_text='Write the problem name using Java Class Name Convention')
     description = forms.CharField(
         label='Description',
         max_length=500,
@@ -30,23 +30,36 @@ class ProblemInputUser(forms.Form):
 
 
 class ProblemInputVariable(forms.Form):
-    num_var = forms.IntegerField(
-        label='Variables',
-        help_text='Number of variables to analyze')
-    num_obj = forms.IntegerField(
-        label='Objectives',
-        help_text='')
-    varName = forms.CharField(
-        max_length=30,
-        label='Variable name')
-    varType = forms.ChoiceField(
-        choices=choices.type_choices,
-        required=True)
-    var_min = forms.Field(label='Variable minimum limit')
-    var_max = forms.Field(label='Variable maximum limit')
-    var_inv = forms.Field(label='Variable invalid value')
-    objName = forms.CharField(max_length=30,
-                              label='Objective name')
+
+    def __init__(self, *args, **kwargs):
+        data = kwargs.pop('data')
+        print('data __init__ form')
+        print(data)
+        number_variables = data.get('number_variables')
+        super(ProblemInputVariable, self).__init__(data, *args, **kwargs)
+        count = 0
+        while count < number_variables:
+            self.fields['custom_%s' % count] = forms.Field(label='Variable Name %s' % count)
+            count = count + 1
+
+    num_obj = forms.IntegerField(label='Objectives')
+    number_variables = forms.IntegerField(label='Number of variables')
+    varType = forms.Field(required=True)
+    var_min = forms.IntegerField(label='Variable minimum limit')
+    var_max = forms.IntegerField(label='Variable maximum limit')
+    var_inv = forms.IntegerField(label='Variable invalid value')
+    objName = forms.CharField(max_length=30, label='Objective name')
+
+    def clean(self):
+        cleaned_data = super(ProblemInputVariable, self).clean()
+        num_obj = cleaned_data.get('num_obj')
+        number_variables = cleaned_data.get('number_variables')
+        varType = cleaned_data.get('varType')
+        var_min = cleaned_data.get('var_min')
+        var_max = cleaned_data.get('var_max')
+        objName = cleaned_data.get('objName')
+        if not (num_obj or number_variables or varType or var_min or var_max or objName):
+            raise forms.ValidationError('You have to fill out the form!')
 
 
 class SendEmail(forms.Form):

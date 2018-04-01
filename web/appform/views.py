@@ -1,8 +1,8 @@
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
 from appform.forms import ProblemInputUser, ProblemInputVariable, SendEmail
-import requests
 from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+import requests
 
 
 def welcome(request):
@@ -12,40 +12,50 @@ def welcome(request):
 def init_form(request):
     if request.method == 'POST':
         form = ProblemInputUser(request.POST, request.FILES)
-        url = 'https://requestb.in/u5b837u5'
-
+    #    url_upload = 'http://172.17.12.70:8080/api/upload/'
         if form.is_valid():
             upload = request.FILES['input_jar']
             request.session['form'] = {k: v for k, v in form.cleaned_data.items() if k != 'input_jar'}
-            request.session['file'] = upload.name
-            print(request.session.session_key)
 
+            request.session['file'] = upload.name
+            # print(request.session.session_key)
             files = {
                 'file': (upload.name,
                          open(upload.file.name, 'rb'))}
-            r = requests.post(url, files=files)
-            s = request.session._session_key
-            print(r.text)
-
-            return HttpResponseRedirect('/form2')
+            data = {'sessionId': request.session.session_key}
+    #       p = requests.post(url_upload, data=data, files=files)
+    #        print(p.text)
+            # key = request.session._session_key
+            exp = {
+                'number_variables': 3,
+                'varType': 'DoubleSolution'
+            }
+            request.session['data'] = exp
+            return redirect('/form2')
     else:
         form = ProblemInputUser()
     return render(request, 'form.html', {'form': form})
 
 
 def form_page2(request):
-    print(request.session.session_key)
-    print(request.session['form'])
-    print(request.session['file'])
-    if request.method == 'POST':
-        form = ProblemInputVariable(request.POST)
-        if form.is_valid():
-            return redirect(form_page2)
-        pass  # does nothing, just trigger the validation
 
+    if request.method == 'POST':
+        post = request.POST.dict()
+        form = ProblemInputVariable(data=post)
+
+        if form.is_valid():
+            request.session['form2'] = {k: v for k, v in form.cleaned_data.items()}
+            d = request.session.get('form2')
+            print(d)
+            return redirect('processing/')
     else:
-        form = ProblemInputVariable()
+        data_session = request.session.get('data')
+        form = ProblemInputVariable(data=data_session)
     return render(request, 'form.html', {'form': form})
+
+
+def submit_problem(request):
+    return 'We are preocessing you problem! Thank you!'
 
 
 def saved_conf(request):
