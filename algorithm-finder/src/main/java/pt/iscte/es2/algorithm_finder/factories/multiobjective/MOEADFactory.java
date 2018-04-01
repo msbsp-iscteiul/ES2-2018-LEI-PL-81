@@ -7,7 +7,10 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = DoubleSolution.class)
+@BuilderTypes(
+	algorithm = AbstractMOEAD.class,
+	solutionType = DoubleSolution.class
+)
 public class MOEADFactory implements AlgorithmBuilder<AbstractMOEAD<DoubleSolution>> {
 	private final Problem<DoubleSolution> problem;
 

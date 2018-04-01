@@ -7,15 +7,14 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.Problem;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AlgorithmFinder {
 	private final Problem problem;
@@ -24,13 +23,14 @@ public class AlgorithmFinder {
 		this.problem = problem;
 	}
 
-	public List<Constructor<?>> execute() {
+	public AlgorithmFinderResult execute() {
 		Class<?> problemSolutionType = getSolutionTypeForProblem();
 		if (problemSolutionType == null) {
-			return Collections.emptyList();
+			return new AlgorithmFinderResult();
 		}
 
-		List<Constructor<?>> constructors = new ArrayList<>();
+		final List<Class<?>> factories = new ArrayList<>();
+		final List<Constructor<?>> constructors = new ArrayList<>();
 		Reflections reflections = buildReflector();
 
 		for (Class<?> aClass : reflections.getTypesAnnotatedWith(BuilderTypes.class)) {
@@ -41,18 +41,21 @@ public class AlgorithmFinder {
 			if (!annotatedSolutionType.isAssignableFrom(problemSolutionType)) {
 				continue;
 			}
+			factories.add(aClass);
 
 			// Ensures the constructor is compatible with the problem
 			// May be easier with method in an interface
 			for (Constructor<?> constructor : aClass.getConstructors()) {
+				// get first constructor
 				final Class<?> constructorType = constructor.getParameterTypes()[0];
+				// check compatibility and break if found
 				if (constructorType.isAssignableFrom(problem.getClass())) {
 					constructors.add(constructor);
 					break;
 				}
 			}
 		}
-		return constructors;
+		return new AlgorithmFinderResult(factories, constructors);
 	}
 
 	private Class<?> getSolutionTypeForProblem() {
@@ -81,5 +84,48 @@ public class AlgorithmFinder {
 				new FilterBuilder()
 					.include(FilterBuilder.prefix("pt.iscte.es2.algorithm_finder.factories"))
 			));
+	}
+
+	public class AlgorithmFinderResult {
+		final List<Class<?>> algorithmFactories;
+		final List<Constructor<?>> constructors;
+
+		private AlgorithmFinderResult(
+			List<Class<?>> algorithmFactories,
+			List<Constructor<?>> constructors
+		) {
+			this.algorithmFactories = algorithmFactories;
+			this.constructors = constructors;
+		}
+
+		private AlgorithmFinderResult() {
+			algorithmFactories = Collections.emptyList();
+			constructors = Collections.emptyList();
+		}
+
+		public Map<String, String> getAlgorithms() {
+			return algorithmFactories.stream()
+				.collect(Collectors.toMap(
+					factory -> factory.getAnnotation(BuilderTypes.class).algorithm().getName(),
+					Class::getCanonicalName
+				));
+		}
+
+		public List<Constructor<?>> getConstructors() {
+			return constructors;
+		}
+
+		public List<Constructor<?>> getConstructorsForAlgorithms(List<String> selectedAlgorithms) {
+			final Map<String, String> algorithms = getAlgorithms();
+			return constructors.stream()
+				.filter(constructor -> {
+					for (String selectedAlgorithm : selectedAlgorithms) {
+						if (constructor.getName().equals(algorithms.get(selectedAlgorithm))) {
+							return true;
+						}
+					}
+					return false;
+				}).collect(Collectors.toList());
+		}
 	}
 }

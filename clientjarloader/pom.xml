@@ -16,7 +16,6 @@
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-algorithm</artifactId>
             <version>5.5</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

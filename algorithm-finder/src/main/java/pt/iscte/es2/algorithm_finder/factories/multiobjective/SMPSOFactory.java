@@ -9,7 +9,10 @@ import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.archive.impl.HypervolumeArchive;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = DoubleSolution.class)
+@BuilderTypes(
+	algorithm = SMPSO.class,
+	solutionType = DoubleSolution.class
+)
 public class SMPSOFactory implements AlgorithmBuilder<SMPSO> {
 	private final DoubleProblem problem;
 

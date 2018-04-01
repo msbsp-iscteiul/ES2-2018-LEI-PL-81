@@ -3,7 +3,6 @@ package pt.iscte.es2.optimization_job_runner.stub;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
-import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.experiment.Experiment;
@@ -12,15 +11,12 @@ import org.uma.jmetal.util.experiment.component.*;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 import pt.iscte.es2.algorithm_finder.AlgorithmFinder;
-import pt.iscte.es2.client_jar_loader.SecureClientClassLoader;
+import pt.iscte.es2.client_jar_loader.LoadClientJarProblem;
 import pt.iscte.es2.client_jar_loader.SecurityPolicy;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.Policy;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,18 +26,26 @@ import java.util.List;
 public class JMetalConfiguration {
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
 //		setSecurityContext();
-		Problem<Solution<?>> clientOptimizationProblem = getClientOptimizationProblem("data/containee-1.0-SNAPSHOT.jar");
-		List<Constructor<?>> algorithmFactoryConstructors =
+		Problem<Solution<?>> clientOptimizationProblem = new LoadClientJarProblem()
+			.loadProblemFromJar("data/containee-1.0-SNAPSHOT.jar");
+		AlgorithmFinder.AlgorithmFinderResult finderResult =
 			new AlgorithmFinder(clientOptimizationProblem).execute();
-		ExperimentProblem<Solution<?>> problem = new ExperimentProblem<>(clientOptimizationProblem);
+		ExperimentProblem<Solution<?>> experimentProblem = new ExperimentProblem<>(clientOptimizationProblem);
 		List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms = getExperimentAlgorithms(
-			problem,
-			algorithmFactoryConstructors
+			experimentProblem,
+			finderResult.getConstructors()
 		);
+		finderResult.getAlgorithms().forEach((k, v) -> {
+			System.out.println("Algorithm: " + k + ", Builder: " + v);
+		});
+//		System.out.println("---");
+//		final List<Constructor<?>> constructorsForAlgorithms = finderResult.getConstructorsForAlgorithms(Collections.singletonList("org.uma.jmetal.algorithm.multiobjective.ibea.IBEA"));
+//		System.out.println(((AlgorithmBuilder) constructorsForAlgorithms.get(0).newInstance(experimentProblem.getProblem())).build());
+//		System.out.println(constructorsForAlgorithms);
 
 		Experiment<Solution<?>, List<Solution<?>>> experiment =
 			new ExperimentBuilder("Experiment")
-				.setProblemList(Collections.singletonList(problem))
+				.setProblemList(Collections.singletonList(experimentProblem))
 				.setAlgorithmList(algorithms)
 				.setNumberOfCores(Math.max(Runtime.getRuntime().availableProcessors() / 2, 1))
 				.setExperimentBaseDirectory("experimentBaseDirectory")
@@ -61,6 +65,7 @@ public class JMetalConfiguration {
 		ExperimentProblem<Solution<?>> experimentProblem,
 		List<Constructor<?>> algorithmFactoryConstructors
 	) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+
 		List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms = new ArrayList<>(
 			algorithmFactoryConstructors.size());
 		for (Constructor<?> constructor : algorithmFactoryConstructors) {
@@ -72,17 +77,6 @@ public class JMetalConfiguration {
 			);
 		}
 		return algorithms;
-	}
-
-	public static Problem<Solution<?>> getClientOptimizationProblem(String filePath)
-		throws MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		File jar = new File(filePath);
-		// File jar = new File(SecureClientClassLoader.class.getClassLoader().getResource(filePath).getFile());
-		String file = "file://" + jar.getAbsolutePath();
-		ClassLoader clientClassLoader = new SecureClientClassLoader(new URL(file));
-		Class<?> pluginClass = clientClassLoader.loadClass("Plugin");
-		Problem plugin = (Problem) pluginClass.newInstance();
-		return plugin;
 	}
 
 	private static void setSecurityContext() {

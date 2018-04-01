@@ -10,7 +10,10 @@ import org.uma.jmetal.util.archive.impl.CrowdingDistanceArchive;
 import org.uma.jmetal.util.archive.impl.HypervolumeArchive;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = DoubleSolution.class)
+@BuilderTypes(
+	algorithm = ABYSS.class,
+	solutionType = DoubleSolution.class
+)
 public class ABYSSFactory implements AlgorithmBuilder<ABYSS> {
 	private final DoubleProblem problem;
 

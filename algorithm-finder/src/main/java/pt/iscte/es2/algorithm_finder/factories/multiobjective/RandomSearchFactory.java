@@ -7,7 +7,10 @@ import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = Solution.class)
+@BuilderTypes(
+	algorithm = RandomSearch.class,
+	solutionType = Solution.class
+)
 public class RandomSearchFactory<S extends Solution<?>> implements AlgorithmBuilder<RandomSearch<S>> {
 	private final Problem<S> problem;
 

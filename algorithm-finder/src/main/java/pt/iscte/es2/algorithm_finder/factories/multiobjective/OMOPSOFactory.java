@@ -11,7 +11,10 @@ import org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator;
 import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = DoubleSolution.class)
+@BuilderTypes(
+	algorithm = OMOPSO.class,
+	solutionType = DoubleSolution.class
+)
 public class OMOPSOFactory implements AlgorithmBuilder<OMOPSO> {
 	private final DoubleProblem problem;
 

@@ -7,7 +7,10 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = DoubleSolution.class)
+@BuilderTypes(
+	algorithm = DMOPSO.class,
+	solutionType = DoubleSolution.class
+)
 public class DMOPSOFactory implements AlgorithmBuilder<DMOPSO> {
 	private final DoubleProblem problem;
 

@@ -7,7 +7,10 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
-@BuilderTypes(solutionType = DoubleSolution.class)
+@BuilderTypes(
+	algorithm = IBEA.class,
+	solutionType = DoubleSolution.class
+)
 public class IBEAFactory implements AlgorithmBuilder<IBEA<DoubleSolution>> {
 	private final DoubleProblem problem;
 

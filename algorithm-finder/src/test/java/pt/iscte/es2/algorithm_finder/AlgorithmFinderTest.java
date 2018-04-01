@@ -16,7 +16,8 @@ class AlgorithmFinderTest {
 	@Test
 	void findsAlgorithmsCompatibleWithProblemTypeAndSolution() {
 		final SomeBinaryProblem problem = new SomeBinaryProblem();
-                final List<Constructor<?>> algorithmBuilderConstructors = new AlgorithmFinder(problem).execute();
+                final List<Constructor<?>> algorithmBuilderConstructors =
+					new AlgorithmFinder(problem).execute().getConstructors();
                 algorithmBuilderConstructors.forEach(constructor -> {
 			try {
 				assertNotNull(constructor.newInstance(problem));
