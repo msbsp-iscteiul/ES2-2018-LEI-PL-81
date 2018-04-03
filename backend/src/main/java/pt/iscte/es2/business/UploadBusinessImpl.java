@@ -50,6 +50,7 @@ public class UploadBusinessImpl implements UploadBusiness {
 			if (uploadFile != null && uploadFile.getId() > 0) {
 				try {
 					Problem<Solution<?>> problem = new LoadClientJarProblem().loadProblemFromJar(filePath);
+					result.setId(uploadFile.getId());
 					result.setVariables(problem.getNumberOfVariables());
 					result.setObjectives(problem.getNumberOfObjectives());
 					result.setAlgorithms(new AlgorithmFinder(problem).execute().getAlgorithms());
