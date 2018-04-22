@@ -1,0 +1,12 @@
+version: "3.5"
+services:
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $PASSWORD
+    volumes:
+      - $DATABASE_PATH:/var/lib/mysql
+    ports:
+      - $DATABASE_PORT:3306
