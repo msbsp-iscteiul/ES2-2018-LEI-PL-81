@@ -22,3 +22,6 @@ Desktop.ini
 # Project generated files #
 experimentBaseDirectory
 target
+
+# .env
+.env
