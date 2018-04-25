@@ -55,7 +55,7 @@ public class AlgorithmFinder {
 				}
 			}
 		}
-		return new AlgorithmFinderResult(factories, constructors);
+		return new AlgorithmFinderResult(factories, constructors, problemSolutionType.getName());
 	}
 
 	private Class<?> getSolutionTypeForProblem() {
@@ -87,20 +87,24 @@ public class AlgorithmFinder {
 	}
 
 	public class AlgorithmFinderResult {
-		final List<Class<?>> algorithmFactories;
-		final List<Constructor<?>> constructors;
+		private final List<Class<?>> algorithmFactories;
+		private final List<Constructor<?>> constructors;
+		private final String solutionTypeName;
 
 		private AlgorithmFinderResult(
 			List<Class<?>> algorithmFactories,
-			List<Constructor<?>> constructors
+			List<Constructor<?>> constructors,
+			String solutionTypeName
 		) {
 			this.algorithmFactories = algorithmFactories;
 			this.constructors = constructors;
+			this.solutionTypeName = solutionTypeName;
 		}
 
 		private AlgorithmFinderResult() {
 			algorithmFactories = Collections.emptyList();
 			constructors = Collections.emptyList();
+			solutionTypeName = null;
 		}
 
 		public List<String> getAlgorithms() {
@@ -128,6 +132,10 @@ public class AlgorithmFinder {
 					}
 					return false;
 				}).collect(Collectors.toList());
+		}
+
+		public String getSolutionTypeName() {
+			return solutionTypeName;
 		}
 	}
 }
