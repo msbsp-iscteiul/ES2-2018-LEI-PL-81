@@ -1,0 +1,2 @@
+
+-- Comparar o numero de colunas com o numero que está configurado no JAR

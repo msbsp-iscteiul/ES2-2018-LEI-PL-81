@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -50,10 +51,11 @@ public class UploadBusinessImpl implements UploadBusiness {
 			if (uploadFile != null && uploadFile.getId() > 0) {
 				try {
 					Problem<Solution<?>> problem = new LoadClientJarProblem().loadProblemFromJar(filePath);
-					result.setId(uploadFile.getId());
 					result.setVariables(problem.getNumberOfVariables());
 					result.setObjectives(problem.getNumberOfObjectives());
 					result.setAlgorithms(new AlgorithmFinder(problem).execute().getAlgorithms());
+					// TODO
+					result.setVariable_type("Python POWA");
 				} catch (InstantiationException|IllegalAccessException|ClassNotFoundException e) {
 					e.printStackTrace();
 				}

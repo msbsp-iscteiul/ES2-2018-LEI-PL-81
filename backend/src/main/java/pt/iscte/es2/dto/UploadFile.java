@@ -1,7 +1,8 @@
 package pt.iscte.es2.dto;
 
-public class UploadFile {
+import java.io.Serializable;
 
+public class UploadFile implements Serializable {
 	private int id;
 	private String sessionId;
 	private String filePath;
