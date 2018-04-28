@@ -2,6 +2,33 @@
 
 {% load bootstrap4 %}
 
+{% block body_scripts %}
+    <script>
+    var $choices = $('[name=choices]');
+    $('#id_algorithm_choice_method').change(function () {
+        var method = $(this).val();
+        if (method === 'Manual') {
+            $choices.prop('disabled', false);
+        } else if (method === 'Automatic') {
+            randomizeChoices();
+            $choices.prop('disabled', true);
+        } else if (method === 'Mixed') {
+            randomizeChoices();
+            $choices.prop('disabled', false);
+        }
+    });
+    function randomizeChoices() {
+        do {
+            $choices.each(function () {
+                $(this).prop('checked', Math.random() > .5);
+            });
+        } while ($choices.filter(function () {
+            return $(this).prop('checked');
+        }).length === 0)
+    }
+    </script>
+{% endblock %}
+
 {% block content_app %}
 
     <div class="container">

@@ -26,12 +26,6 @@ class ProblemInputUser(forms.Form):
     waiting_time = forms.IntegerField(
         help_text='Write the maximum time you are willing to wait for optimization of the problem')
     input_jar = forms.FileField(label='Select a file')
-    algor_selection = forms.ChoiceField(choices=(
-        (0, 'Manual'), (1, 'Automatic'), (2, 'Mixed')),
-        label='Select how you want to choose the algorithms that aply to your problem',
-        help_text='Automatic: Let us choose the best for your problem! '
-                  'Manual: You choose which to use! '
-                  'Mixed: Choose two and we choose the third!')
 
     def clean(self):
         cleaned_data = super(ProblemInputUser, self).clean()
@@ -39,15 +33,14 @@ class ProblemInputUser(forms.Form):
         description = cleaned_data.get('description')
         waiting_time = cleaned_data.get('max')
         input_jar = cleaned_data.get('input_jar')
-        algor_selection = cleaned_data.get('algor_selection')
-        if not (name or description or waiting_time or input_jar or algor_selection):
+        if not (name or description or waiting_time or input_jar):
             raise forms.ValidationError('You have to fill out the form!')
 
 
 class ProblemInputVariable(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        algor_selection = kwargs.pop('algor_selection')
+        # algor_selection = kwargs.pop('algor_selection')
         algorithms = kwargs.pop('algorithms')
         variables = kwargs.pop('variables')
         objectives = kwargs.pop('objectives')
@@ -70,21 +63,20 @@ class ProblemInputVariable(forms.Form):
         self.fields['variable_type'].initial = variable_type
         self.fields['objectives'].initial = objectives
         self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have')
-        choices = ()
-        for i in range(len(algorithms)):
-            str = algorithms[i].split('.')
-            int = len(str)
-            aux = (i, str[int - 1])
-            choices = choices + (aux,)
-        if algor_selection == 0:
-            self.fields['algorithms'] = forms.MultipleChoiceField(choices=choices,
-                                                                  widget=forms.CheckboxSelectMultiple())
-        elif algor_selection == 1:
-            # preciso do html para mostrar a lista dos algoritmos escolhidos!
-            self.fields['algorithms'] = forms.Field(widget=forms.CheckboxSelectMultiple(attrs={'readonly': True}))
-        else:
-            self.fields['algorithms'] = forms.MultipleChoiceField(choices=choices,
-                                                                  widget=forms.CheckboxSelectMultiple())
+        self.fields['algorithm_choice_method'] = forms.ChoiceField(
+            label='Select the algorithm choice method',
+            choices=(
+                ('Manual', 'Manual'),
+                ('Automatic', 'Automatic'),
+                ('Mixed', 'Mixed')
+            )
+        )
+        self.fields['choices'] = forms.MultipleChoiceField(
+            label='Select the algorithms to run the problem with',
+            choices=zip(algorithms, [algorithm.split('.')[-1] for algorithm in algorithms]),
+            widget=forms.CheckboxSelectMultiple,
+            required=True
+        )
 
         def clean(self):
             cleaned_data = super(ProblemInputVariable, self).clean()

@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from appform.decorators import enter_email
 
-url_upload = 'http://172.17.8.26:8080/api/upload/'
+url_upload = 'http://172.17.9.217:8080/api/optimization/fileupload/'
 
 
 @enter_email
@@ -37,13 +37,14 @@ def init_form(request):
             data = {'sessionId': request.session.session_key, 'data': data_form}
 
             # Confirmar como vem a resposta! se preciso de uma get ou "p = " basta
-            # p = requests.post(url_upload, data=data, files=files)
-            # info = p.json()
-            info = {'result': {'objectives': 2, 'variables': 10, 'variable_type': 'Double',
-                               'algorithms': ['a', 'b', 'c', 'd']},
-                    'SessionID': 1203883}
-            info['result']['algor_selection'] = data_form.get('algor_selection')
+            p = requests.post(url_upload, data=data, files=files)
+            info = p.json()
+            # info = {'result': {'objectives': 2, 'variables': 10, 'variable_type': 'Double',
+            #                    'algorithms': ['a', 'b', 'c', 'd']},
+            #         'SessionID': 1203883}
+            # info['result']['algor_selection'] = data_form.get('algor_selection')
             request.session['data'] = info['result']
+            request.session['data'].update(data_form)
             return redirect('/form2')
     else:
         form = ProblemInputUser()
@@ -52,8 +53,8 @@ def init_form(request):
 
 @enter_email
 def form_page2(request):
-    extra_questions = request.session.get('data')
-    form = ProblemInputVariable(request.POST or None, request.FILES or None, **extra_questions)
+    extra_data = request.session.get('data')
+    form = ProblemInputVariable(request.POST or None, request.FILES or None, **extra_data)
 
     if form.is_valid():
         upload = request.FILES['input_csv']
@@ -67,9 +68,10 @@ def form_page2(request):
 
         return redirect('/processing')
 
-    return render(request, 'form2.html', {'form': form, 'variables': extra_questions['variables'],
-                                          'objectives': extra_questions['objectives'],
-                                          })
+    return render(request, 'form2.html', {
+        'form': form, 'variables': extra_data['variables'],
+        'objectives': extra_data['objectives'],
+    })
 
 
 def submit_problem(request):
