@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from appform.decorators import enter_email
 
 url_upload = 'http://172.17.9.217:8080/api/optimization/fileupload/'
+url_upload2 = 'http://172.17.9.217:8080/api/optimization/save/'
 
 
 @enter_email
@@ -26,23 +27,19 @@ def request_email(request):
 def init_form(request):
     if request.method == 'POST':
         form = ProblemInputUser(request.POST, request.FILES)
-        #    url_upload = 'http://172.17.12.70:8080/api/upload/'
         if form.is_valid():
             upload = request.FILES['input_jar']
-            # print(request.session.session_key)
             files = {
                 'file': (upload.name,
                          open(upload.file.name, 'rb'))}
             data_form = {k: v for k, v in form.cleaned_data.items() if k != 'input_jar'}
             data = {'sessionId': request.session.session_key, 'data': data_form}
 
-            # Confirmar como vem a resposta! se preciso de uma get ou "p = " basta
             p = requests.post(url_upload, data=data, files=files)
             info = p.json()
             # info = {'result': {'objectives': 2, 'variables': 10, 'variable_type': 'Double',
-            #                    'algorithms': ['a', 'b', 'c', 'd']},
-            #         'SessionID': 1203883}
-            # info['result']['algor_selection'] = data_form.get('algor_selection')
+            #                   'algorithms': ['a', 'b', 'c', 'd']},
+            #        'SessionID': 1203883}
             request.session['data'] = info['result']
             request.session['data'].update(data_form)
             return redirect('/form2')
@@ -56,18 +53,28 @@ def form_page2(request):
     extra_data = {k: v for k, v in request.session.get('data').items()
                   if k in ['algorithms', 'variables', 'objectives', 'variable_type']}
     form = ProblemInputVariable(request.POST or None, request.FILES or None, **extra_data)
-
+    info = request.session.get('data')
     if form.is_valid():
         upload = request.FILES['input_csv']
+        variablesList = []
+        objectivesList = []
+        for i in range(info.get('variables')):
+            variablesList.append(form.cleaned_data.get('variable_name_%s' % i))
+        for i in range(info.get('objectives')):
+            objectivesList.append(form.cleaned_data.get('objectives_name_%s' % i))
         files = {
-            'csv_file': (upload.name,
+            'file': (upload.name,
                          open(upload.file.name, 'rb'))}
-
         data_form = {k: v for k, v in form.cleaned_data.items() if k != 'input_csv'}
-        data = {'sessionId': request.session.session_key, 'data': data_form}
-        # requests.post(url_upload, data=data, files=files)
-
-        return redirect('/processing')
+        data = {'sessionId': request.session.session_key, 'problemName': info.get('name'),
+                'email': request.session.get('email'),
+                'executionMaxWaitTime': info.get('waiting_time'),
+                'algorithmChoiceMethod': data_form.get('algorithm_choice_method'),
+                'variables': variablesList, 'objectives': objectivesList, 'algorithms': data_form.get('choices')
+                }
+        p = requests.post(url_upload2, data=data, files=files)
+        #if p is not None:
+        #    return redirect('/processing')
 
     return render(request, 'form2.html', {
         'form': form, 'variables': extra_data['variables'],

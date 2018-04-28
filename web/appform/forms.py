@@ -79,23 +79,23 @@ class ProblemInputVariable(forms.Form):
             required=True
         )
 
-        def clean(self):
-            cleaned_data = super(ProblemInputVariable, self).clean()
-            variables = cleaned_data.get('variables')
-            variable_type = cleaned_data.get('variable_type')
-            objectives = cleaned_data.get('objectives')
-            input_csv = cleaned_data.get('input_csv')
-            algorithms = cleaned_data.get('algorithms') or []
-            if len(algorithms) > 3 or len(algorithms) == 0:
-                raise forms.ValidationError("You have to select between 0 and 3 items.")
-            for i in range(variables):
-                if cleaned_data['variable_name_%s' % i] == '':
-                    self.cleaned_data['variable_name_%s' % i] = 'var%s' % (i + 1)
-            for i in range(objectives):
-                if cleaned_data['objectives_name_%s' % i] == '':
-                    self.cleaned_data['objectives_name_%s' % i] = 'obj%s' % (i + 1)
-            if not (objectives or variables or variable_type or input_csv or algorithms):
-                raise forms.ValidationError('You have to fill out the form!')
+    def clean(self):
+        cleaned_data = super(ProblemInputVariable, self).clean()
+        variables = cleaned_data.get('variables')
+        variable_type = cleaned_data.get('variable_type')
+        objectives = cleaned_data.get('objectives')
+        input_csv = cleaned_data.get('input_csv')
+        choices = cleaned_data.get('choices') or []
+        if len(choices) > 3 or len(choices) == 0:
+            raise forms.ValidationError("You have to select between 0 and 3 items.")
+        for i in range(variables):
+            if cleaned_data['variable_name_%s' % i] == '':
+                self.cleaned_data['variable_name_%s' % i] = 'var%s' % (i + 1)
+        for i in range(objectives):
+            if cleaned_data['objectives_name_%s' % i] == '':
+                self.cleaned_data['objectives_name_%s' % i] = 'obj%s' % (i + 1)
+        if not (objectives or variables or variable_type or input_csv or choices):
+            raise forms.ValidationError('You have to fill out the form!')
 
 
 class SendEmail(forms.Form):
