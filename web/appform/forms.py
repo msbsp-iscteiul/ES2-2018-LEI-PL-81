@@ -21,7 +21,9 @@ class ProblemInputUser(forms.Form):
     description = forms.CharField(
         label='Description',
         max_length=500,
-        widget=forms.Textarea(),
+        widget=forms.Textarea(attrs={
+            'rows': 3
+        }),
         help_text='Write the description of the problem to solve')
     waiting_time = forms.IntegerField(
         help_text='Write the maximum time you are willing to wait for optimization of the problem')
