@@ -40,7 +40,6 @@ class ProblemInputUser(forms.Form):
 class ProblemInputVariable(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        # algor_selection = kwargs.pop('algor_selection')
         algorithms = kwargs.pop('algorithms')
         variables = kwargs.pop('variables')
         objectives = kwargs.pop('objectives')

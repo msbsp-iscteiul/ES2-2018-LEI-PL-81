@@ -53,7 +53,8 @@ def init_form(request):
 
 @enter_email
 def form_page2(request):
-    extra_data = request.session.get('data')
+    extra_data = {k: v for k, v in request.session.get('data').items()
+                  if k in ['algorithms', 'variables', 'objectives', 'variable_type']}
     form = ProblemInputVariable(request.POST or None, request.FILES or None, **extra_data)
 
     if form.is_valid():
