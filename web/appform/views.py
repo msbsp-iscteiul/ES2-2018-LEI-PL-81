@@ -25,26 +25,24 @@ def request_email(request):
 
 @enter_email
 def init_form(request):
-    if request.method == 'POST':
-        form = ProblemInputUser(request.POST, request.FILES)
-        if form.is_valid():
-            upload = request.FILES['input_jar']
-            files = {
-                'file': (upload.name,
-                         open(upload.file.name, 'rb'))}
-            data_form = {k: v for k, v in form.cleaned_data.items() if k != 'input_jar'}
-            data = {'sessionId': request.session.session_key, 'data': data_form}
+    form = ProblemInputUser(request.POST or None, request.FILES or None)
 
-            p = requests.post(url_upload, data=data, files=files)
-            info = p.json()
-            # info = {'result': {'objectives': 2, 'variables': 10, 'variable_type': 'Double',
-            #                   'algorithms': ['a', 'b', 'c', 'd']},
-            #        'SessionID': 1203883}
-            request.session['data'] = info['result']
-            request.session['data'].update(data_form)
-            return redirect('/form2')
-    else:
-        form = ProblemInputUser()
+    if form.is_valid():
+        upload = request.FILES['input_jar']
+        files = {
+            'file': (upload.name,
+                     open(upload.file.name, 'rb'))}
+        data_form = {k: v for k, v in form.cleaned_data.items() if k != 'input_jar'}
+        data = {'sessionId': request.session.session_key, 'data': data_form}
+
+        p = requests.post(url_upload, data=data, files=files)
+        info = p.json()
+        # info = {'result': {'objectives': 2, 'variables': 10, 'variable_type': 'Double',
+        #                    'algorithms': ['a', 'b', 'c', 'd']},
+        #         'SessionID': 1203883}
+        request.session['data'] = info['result']
+        request.session['data'].update(data_form)
+        return redirect('/form2')
     return render(request, 'form.html', {'form': form})
 
 
