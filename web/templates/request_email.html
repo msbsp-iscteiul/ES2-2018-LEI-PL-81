@@ -3,18 +3,11 @@
 {% load bootstrap4 %}
 
 {% block content_app %}
-
     <div class="container">
-
-        <form action="" method="post" enctype="multipart/form-data">
-
+        <form method="post">
             {% csrf_token %}
-            
             {% bootstrap_form form %}
-
-            <button type="submit" class="btn btn-primary">Next</button>
-
+            <button type="submit">Enter your email to continue</button>
         </form>
     </div>
-
 {% endblock %}

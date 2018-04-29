@@ -1,5 +1,5 @@
-type_choices=(
-    ('Int', 'Int'),
-    ('Db', 'Doub'),
-    ('Bl', 'Bl')
+type_choices = (
+    (0, 'Manual'),
+    (1, 'Automatic'),
+    (2, 'Mixed')
 )
