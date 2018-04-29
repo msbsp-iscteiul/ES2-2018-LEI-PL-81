@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
@@ -16,15 +17,22 @@ class AlgorithmFinderTest {
 	@Test
 	void findsAlgorithmsCompatibleWithProblemTypeAndSolution() {
 		final SomeBinaryProblem problem = new SomeBinaryProblem();
-                final List<Constructor<?>> algorithmBuilderConstructors =
-					new AlgorithmFinder(problem).execute().getConstructors();
-                algorithmBuilderConstructors.forEach(constructor -> {
+		final List<Constructor<?>> algorithmBuilderConstructors =
+			new AlgorithmFinder(problem).execute().getConstructors();
+		algorithmBuilderConstructors.forEach(constructor -> {
 			try {
 				assertNotNull(constructor.newInstance(problem));
 			} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		});
+	}
+
+	@Test
+	void findsSolutionTypeName() {
+		final SomeBinaryProblem problem = new SomeBinaryProblem();
+		final String solutionTypeName = new AlgorithmFinder(problem).execute().getSolutionTypeName();
+		assertEquals("org.uma.jmetal.solution.BinarySolution", solutionTypeName);
 	}
 
 	private class SomeBinaryProblem extends AbstractBinaryProblem {

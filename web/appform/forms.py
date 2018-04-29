@@ -1,6 +1,18 @@
 from django import forms
 
 
+# Formulário que trata o pedido de email, caso não exista em sessão
+class RequestEmailForm(forms.Form):
+    email = forms.EmailField(label='Email',
+                             help_text='Please, enter your email -- Acrescentar algo')
+
+    def clean(self):
+        cleaned_data = super(RequestEmailForm, self).clean()
+        email = cleaned_data.get('email')
+        if not email:
+            self.add_error('email', 'Please, enter your email')
+
+
 class ProblemInputUser(forms.Form):
     name = forms.CharField(
         max_length=30,
@@ -9,12 +21,11 @@ class ProblemInputUser(forms.Form):
     description = forms.CharField(
         label='Description',
         max_length=500,
-        widget=forms.Textarea(),
+        widget=forms.Textarea(attrs={
+            'rows': 3
+        }),
         help_text='Write the description of the problem to solve')
-    email = forms.EmailField(
-        max_length=254,
-        label='Email')
-    max_time = forms.IntegerField(
+    waiting_time = forms.IntegerField(
         help_text='Write the maximum time you are willing to wait for optimization of the problem')
     input_jar = forms.FileField(label='Select a file')
 
@@ -22,50 +33,72 @@ class ProblemInputUser(forms.Form):
         cleaned_data = super(ProblemInputUser, self).clean()
         name = cleaned_data.get('name')
         description = cleaned_data.get('description')
-        email = cleaned_data.get('email')
-        max_time = cleaned_data.get('max')
+        waiting_time = cleaned_data.get('max')
         input_jar = cleaned_data.get('input_jar')
-        if not (name or description or email or max_time or input_jar):
+        if not (name or description or waiting_time or input_jar):
             raise forms.ValidationError('You have to fill out the form!')
 
 
 class ProblemInputVariable(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        data = kwargs.pop('data')
-        print('data __init__ form')
-        print(data)
-        number_variables = data.get('number_variables')
-        super(ProblemInputVariable, self).__init__(data, *args, **kwargs)
-        count = 0
-        while count < number_variables:
-            self.fields['custom_%s' % count] = forms.Field(label='Variable Name %s' % count)
-            count = count + 1
-
-    num_obj = forms.IntegerField(label='Objectives')
-    number_variables = forms.IntegerField(label='Number of variables')
-    varType = forms.Field(required=True)
-    var_min = forms.IntegerField(label='Variable minimum limit')
-    var_max = forms.IntegerField(label='Variable maximum limit')
-    var_inv = forms.IntegerField(label='Variable invalid value')
-    objName = forms.CharField(max_length=30, label='Objective name')
+        algorithms = kwargs.pop('algorithms')
+        variables = kwargs.pop('variables')
+        objectives = kwargs.pop('objectives')
+        variable_type = kwargs.pop('variable_type')
+        super(ProblemInputVariable, self).__init__(*args, **kwargs)
+        self.fields['variables'] = forms.IntegerField(
+            label='Number of variables',
+            widget=forms.TextInput(attrs={'readonly': True}))
+        self.fields['variable_type'] = forms.Field(
+            label='Solution type',
+            widget=forms.TextInput(attrs={'readonly': True}))
+        for i in range(variables):
+            self.fields['variable_name_%s' % i] = forms.Field(label='Variable Name %s' % (i + 1), required=False)
+        self.fields['objectives'] = forms.IntegerField(
+            label='Number of objectives',
+            widget=forms.TextInput(attrs={'readonly': True}))
+        for i in range(objectives):
+            self.fields['objectives_name_%s' % i] = forms.Field(label='Objectives Name %s' % (i + 1), required=False)
+        self.fields['variables'].initial = variables
+        self.fields['variable_type'].initial = variable_type
+        self.fields['objectives'].initial = objectives
+        self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have')
+        self.fields['algorithm_choice_method'] = forms.ChoiceField(
+            label='Select the algorithm choice method',
+            choices=(
+                ('Manual', 'Manual'),
+                ('Automatic', 'Automatic'),
+                ('Mixed', 'Mixed')
+            )
+        )
+        self.fields['choices'] = forms.MultipleChoiceField(
+            label='Select the algorithms to run the problem with',
+            choices=zip(algorithms, [algorithm.split('.')[-1] for algorithm in algorithms]),
+            widget=forms.CheckboxSelectMultiple,
+            required=True
+        )
 
     def clean(self):
         cleaned_data = super(ProblemInputVariable, self).clean()
-        num_obj = cleaned_data.get('num_obj')
-        number_variables = cleaned_data.get('number_variables')
-        varType = cleaned_data.get('varType')
-        var_min = cleaned_data.get('var_min')
-        var_max = cleaned_data.get('var_max')
-        objName = cleaned_data.get('objName')
-        if not (num_obj or number_variables or varType or var_min or var_max or objName):
+        variables = cleaned_data.get('variables')
+        variable_type = cleaned_data.get('variable_type')
+        objectives = cleaned_data.get('objectives')
+        input_csv = cleaned_data.get('input_csv')
+        choices = cleaned_data.get('choices') or []
+        if len(choices) > 3 or len(choices) == 0:
+            raise forms.ValidationError("You have to select between 0 and 3 items.")
+        for i in range(variables):
+            if cleaned_data['variable_name_%s' % i] == '':
+                self.cleaned_data['variable_name_%s' % i] = 'var%s' % (i + 1)
+        for i in range(objectives):
+            if cleaned_data['objectives_name_%s' % i] == '':
+                self.cleaned_data['objectives_name_%s' % i] = 'obj%s' % (i + 1)
+        if not (objectives or variables or variable_type or input_csv or choices):
             raise forms.ValidationError('You have to fill out the form!')
 
 
 class SendEmail(forms.Form):
-    email_client = forms.EmailField(
-        max_length=254,
-        label='Email')
     subject = forms.CharField(
         max_length=30,
         label='Subject')
