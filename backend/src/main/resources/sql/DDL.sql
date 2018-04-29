@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS file_upload;
-DROP TABLE IF EXISTS optimization_configuration;
+DROP TABLE IF EXISTS optimization_job_solutions;
 DROP TABLE IF EXISTS optimization_job_executions;
 DROP TABLE IF EXISTS optimization_configuration_variables;
 DROP TABLE IF EXISTS optimization_configuration_objectives;
 DROP TABLE IF EXISTS optimization_configuration_restrictions;
 DROP TABLE IF EXISTS optimization_configuration_algorithms;
 DROP TABLE IF EXISTS optimization_configuration_user_solutions;
-
+DROP TABLE IF EXISTS optimization_configuration;
 
 -- File Upload Table
 CREATE TABLE file_upload (
@@ -18,6 +18,7 @@ CREATE TABLE file_upload (
   -- CONSTRAINT UNIQUE (session_id)
 );
 
+-- Optimization Configuration Table
 CREATE TABLE optimization_configuration (
   id INT NOT NULL AUTO_INCREMENT,
   problem_name VARCHAR(100) NOT NULL,
@@ -25,19 +26,21 @@ CREATE TABLE optimization_configuration (
   file_path VARCHAR(100) NOT NULL,
   variables_quantity INT NOT NULL,
   objectives_quantity INT NOT NULL,
-  restrictions_quantity INT NOT NULL,
+  restrictions_quantity INT NULL,
   algorithms_quantity INT NOT NULL,
   execution_max_wait_time INT NOT NULL,
+  algorithm_choice_method ENUM('Mixed', 'Automatic', 'Manual') NOT NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id)
 );
 
+-- Optimization Job Executions Table
 CREATE TABLE optimization_job_executions (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_configuration INT NOT NULL,
   start_date DATETIME NOT NULL,
   end_date DATETIME NULL,
-  state enum('Ready', 'Running', 'Finished') null,
+  state ENUM('Ready', 'Running', 'Finished') NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_job_executions(id_optimization_configuration)
@@ -46,12 +49,13 @@ CREATE TABLE optimization_job_executions (
     ON DELETE CASCADE
 );
 
+-- Optimization Job Solutions Table
 CREATE TABLE optimization_job_solutions (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_job_executions INT NOT NULL,
-  algorithm_name varchar(255) not null,
-  solution text not null,
-  solution_quality text not null,
+  algorithm_name VARCHAR(255) NOT NULL,
+  solution_name VARCHAR(100) NOT NULL,
+  solution_quality TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_job_solutions(id_optimization_job_executions)
@@ -64,53 +68,57 @@ CREATE INDEX idx_fk_optimization_job_solutions ON optimization_job_solutions (id
 
 CREATE INDEX idx_fk_optimization_job_executions ON optimization_job_executions (id_optimization_configuration);
 
--- Variables Table
+-- Optimization Configuration Variables Table
 CREATE TABLE optimization_configuration_variables (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_configuration INT NOT NULL,
-  `index` int not null,
+  -- index_optimization_configuration INT NOT NULL,
   name VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_configuration_variables(id_optimization_configuration)
   REFERENCES optimization_configuration(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT idx_optimization_configuration_variables_order UNIQUE (id_optimization_configuration, `index`)
+    ON DELETE CASCADE
+  -- CONSTRAINT idx_optimization_configuration_variables_order UNIQUE (id_optimization_configuration, index_optimization_configuration)
 );
 
--- Objectives Table
+-- Optimization Configuration Objectives Table
 CREATE TABLE optimization_configuration_objectives (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_configuration INT NOT NULL,
-  `index` int not null,
+  -- index_optimization_configuration INT NOT NULL,
   name VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_configuration_objectives(id_optimization_configuration)
   REFERENCES optimization_configuration(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT idx_optimization_configuration_objectives_order UNIQUE (id_optimization_configuration, `index`)
+    ON DELETE CASCADE
+  -- CONSTRAINT idx_optimization_configuration_objectives_order UNIQUE (id_optimization_configuration, index_optimization_configuration)
 );
 
--- Restrictions Table
+-- Optimization Configuration Restrictions Table
 CREATE TABLE optimization_configuration_restrictions (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_configuration INT NOT NULL,
-  `index` int not null,
+  -- index_optimization_configuration INT NOT NULL,
   name VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_configuration_restrictions(id_optimization_configuration)
   REFERENCES optimization_configuration(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT idx_optimization_configuration_objectives_order UNIQUE (id_optimization_configuration, `index`)
+    ON DELETE CASCADE
+  -- CONSTRAINT idx_optimization_configuration_objectives_order UNIQUE (id_optimization_configuration, index_optimization_configuration)
 );
 
--- Algorithms Table
+-- Optimization Configuration Algorithms Table
 CREATE TABLE optimization_configuration_algorithms (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_configuration INT NOT NULL,
   name VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_configuration_algorithms(id_optimization_configuration)
   REFERENCES optimization_configuration(id)
@@ -120,12 +128,12 @@ CREATE TABLE optimization_configuration_algorithms (
 
 CREATE INDEX idx_optimization_configuration_algorithms ON optimization_configuration_algorithms (id);
 
--- User Solutions Table
+-- Optimization Configuration User Solutions Table
 CREATE TABLE optimization_configuration_user_solutions (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_configuration INT NOT NULL,
-  objectives_quality VARCHAR(100) NOT NULL,
-  solution_quality text not null,
+  solution_quality TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_configuration_user_solutions(id_optimization_configuration)
   REFERENCES optimization_configuration(id)
