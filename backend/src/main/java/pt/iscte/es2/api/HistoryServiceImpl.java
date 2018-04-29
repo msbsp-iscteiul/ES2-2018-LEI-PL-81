@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pt.iscte.es2.ApplicationConstants;
 import pt.iscte.es2.business.HistoryBusiness;
-import pt.iscte.es2.business.UploadBusiness;
-import pt.iscte.es2.dto.serviceview.history.HistoryRequest;
-import pt.iscte.es2.dto.serviceview.history.HistoryResponse;
-import pt.iscte.es2.dto.serviceview.upload.UploadRequest;
-import pt.iscte.es2.dto.serviceview.upload.UploadResponse;
+import pt.iscte.es2.dto.service.history.HistoryRequest;
+import pt.iscte.es2.dto.service.history.HistoryResponse;
 
 @RestController
 @RequestMapping(value = ApplicationConstants.HISTORY_PATH)

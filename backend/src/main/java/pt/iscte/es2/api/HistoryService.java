@@ -1,7 +1,7 @@
 package pt.iscte.es2.api;
 
-import pt.iscte.es2.dto.serviceview.history.HistoryRequest;
-import pt.iscte.es2.dto.serviceview.history.HistoryResponse;
+import pt.iscte.es2.dto.service.history.HistoryRequest;
+import pt.iscte.es2.dto.service.history.HistoryResponse;
 
 public interface HistoryService {
 
