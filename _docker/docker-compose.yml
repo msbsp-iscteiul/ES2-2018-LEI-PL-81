@@ -9,3 +9,9 @@ services:
       - $DATABASE_PATH:/var/lib/mysql
     ports:
       - $DATABASE_PORT:3306
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - $RBMQ_PORT:5672
+      - $RBMQ_MANAGEMENT_PORT:15672
