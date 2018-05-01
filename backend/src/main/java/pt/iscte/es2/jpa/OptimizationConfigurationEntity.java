@@ -46,6 +46,9 @@ public class OptimizationConfigurationEntity {
 	@NotNull
 	private String algorithmChoiceMethod;
 
+	@NotNull
+	private String description;
+
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -144,6 +147,14 @@ public class OptimizationConfigurationEntity {
 
 	public void setAlgorithmChoiceMethod(String algorithmChoiceMethod) {
 		this.algorithmChoiceMethod = algorithmChoiceMethod;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public List<OptimizationConfigurationVariablesEntity> getOptimizationConfigurationVariables() {

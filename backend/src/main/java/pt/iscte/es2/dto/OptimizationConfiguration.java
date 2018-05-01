@@ -17,6 +17,7 @@ public class OptimizationConfiguration {
 	private Integer restrictionsQuantity;
 	private Integer algorithmsQuantity;
 	private Integer executionMaxWaitTime;
+	private String description;
 	private AlgorithmChoiceMethod algorithmChoiceMethod;
 	private List<OptimizationConfigurationVariables> variables;
 	private List<OptimizationConfigurationObjectives> objectives;
@@ -99,6 +100,14 @@ public class OptimizationConfiguration {
 
 	public AlgorithmChoiceMethod getAlgorithmChoiceMethod() {
 		return algorithmChoiceMethod;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public void setAlgorithmChoiceMethod(AlgorithmChoiceMethod algorithmChoiceMethod) {
