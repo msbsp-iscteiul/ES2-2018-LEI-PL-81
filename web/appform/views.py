@@ -86,19 +86,20 @@ def submit_problem(request):
 
 @enter_email
 def saved_conf(request):
-    return render(request, 'save_conf.html')
+    email_conf = request.session.get('email')
+    return render(request, 'save_conf.html', {'user_email': email_conf})
 
 
 def faq_page(request):
     return render(request, 'faq.html')
 
-
+@enter_email
 def history(request):
     email_conf = request.session.get('email')
     return render(request, 'history.html', {'user_email': email_conf})
 
-
-def details(request):
+@enter_email
+def details(request, num)
     return render(request, 'details.html')
 
 
