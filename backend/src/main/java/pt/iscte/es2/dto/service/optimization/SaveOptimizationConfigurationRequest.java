@@ -9,9 +9,10 @@ import java.util.List;
 /**
  * DTO Optimization Request
  */
-public class OptimizationRequest {
+public class SaveOptimizationConfigurationRequest {
 
 	private String problemName;
+	private String description;
 	private String email;
 	private String sessionId;
 	private List<OptimizationConfigurationVariables> variables;
@@ -28,6 +29,14 @@ public class OptimizationRequest {
 
 	public void setProblemName(String problemName) {
 		this.problemName = problemName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getEmail() {

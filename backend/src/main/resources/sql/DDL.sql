@@ -30,7 +30,7 @@ CREATE TABLE optimization_configuration (
   algorithms_quantity INT NOT NULL,
   execution_max_wait_time INT NOT NULL,
   algorithm_choice_method ENUM('Mixed', 'Automatic', 'Manual') NOT NULL,
-  descriptio VARCHAR(500) NOT NULL,
+  description VARCHAR(500) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id)
 );

@@ -60,14 +60,12 @@ public class SaveOptimizationConfigurationBusinessTest {
 	private OptimizationConfigurationVariables getOptimizationConfigurationVariables() {
 		OptimizationConfigurationVariables optimizationConfigurationVariables = new OptimizationConfigurationVariables();
 		optimizationConfigurationVariables.setName("Variable 1");
-		optimizationConfigurationVariables.setOptimizationConfiguration(getOptimizationConfiguration());
 		return optimizationConfigurationVariables;
 	}
 
 	private OptimizationConfigurationObjectives getOptimizationConfigurationObjectives() {
 		OptimizationConfigurationObjectives optimizationConfigurationObjectives = new OptimizationConfigurationObjectives();
 		optimizationConfigurationObjectives.setName("Objective 1");
-		optimizationConfigurationObjectives.setOptimizationConfiguration(getOptimizationConfiguration());
 		return optimizationConfigurationObjectives;
 	}
 }

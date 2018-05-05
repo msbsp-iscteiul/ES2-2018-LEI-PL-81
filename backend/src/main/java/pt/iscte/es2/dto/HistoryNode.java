@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class HistoryNode implements Serializable {
 
+	private Integer id;
 	private String problemName;
 	private Date startDate;
 	private Date endDate;
@@ -17,6 +18,14 @@ public class HistoryNode implements Serializable {
 		this.problemName = problemName;
 		this.startDate = startDate;
 		this.endDate = endDate;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getProblemName() {
