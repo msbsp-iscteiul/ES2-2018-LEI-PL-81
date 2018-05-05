@@ -1,0 +1,44 @@
+{% extends   "base.html" %}
+
+{% load bootstrap4 %}
+
+{% block body_scripts %}
+    {% load static %}
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="{% static "JS/RadarChart.js" %}"></script>
+    <script src="{% static "JS/script.js" %}"></script>
+{% endblock %}
+
+{% block content_app %}
+
+
+
+    <!------ Include the above in your HEAD tag ---------->
+
+    <div class="container" style="width:100%;">
+
+        <div class="main">
+            <div class="RequestDetails">
+                <h1>Request Detail</h1>
+            </div>
+
+             <div class="row">
+                <div class="col-sm">
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti et illo laudantium libero officiis, pariatur perferendis provident quaerat quas! Alias autem beatae, eaque earum error illo non repellat repudiandae voluptate.
+                </div>
+                <div class="col-md">
+                  <div id="chart" class="Graph"></div>
+                </div>
+              </div>
+
+            <div id="chart" class="Graph">
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+

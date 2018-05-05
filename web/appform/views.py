@@ -95,8 +95,11 @@ def faq_page(request):
 
 def history(request):
     email_conf = request.session.get('email')
-    conf = requests.get(url_upload, email_conf)
-    return render(request, 'history.html', {'conf': conf})
+    return render(request, 'history.html', {'user_email': email_conf})
+
+
+def details(request):
+    return render(request, 'details.html')
 
 
 def send_email(request):
