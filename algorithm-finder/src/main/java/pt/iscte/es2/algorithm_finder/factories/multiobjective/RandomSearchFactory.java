@@ -5,6 +5,7 @@ import org.uma.jmetal.algorithm.multiobjective.randomsearch.RandomSearchBuilder;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmBuilder;
+import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
 @BuilderTypes(
@@ -20,6 +21,8 @@ public class RandomSearchFactory<S extends Solution<?>> implements AlgorithmBuil
 
 	@Override
 	public RandomSearch<S> build() {
-		return new RandomSearchBuilder<>(problem).build();
+		return new RandomSearchBuilder<>(problem)
+			.setMaxEvaluations(AlgorithmConstants.MAX_EVALUTIONS)
+			.build();
 	}
 }

@@ -5,6 +5,7 @@ import org.uma.jmetal.algorithm.multiobjective.moead.MOEADBuilder;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
+import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
 @BuilderTypes(
@@ -20,6 +21,8 @@ public class MOEADFactory implements AlgorithmBuilder<AbstractMOEAD<DoubleSoluti
 
 	@Override
 	public AbstractMOEAD<DoubleSolution> build() {
-		return new MOEADBuilder(problem, MOEADBuilder.Variant.MOEAD).build();
+		return new MOEADBuilder(problem, MOEADBuilder.Variant.MOEAD)
+			.setMaxEvaluations(AlgorithmConstants.MAX_EVALUTIONS)
+			.build();
 	}
 }

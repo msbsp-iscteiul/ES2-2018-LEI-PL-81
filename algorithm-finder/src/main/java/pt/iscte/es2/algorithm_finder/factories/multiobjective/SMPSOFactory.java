@@ -7,6 +7,7 @@ import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.archive.impl.HypervolumeArchive;
+import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
 @BuilderTypes(
@@ -28,6 +29,8 @@ public class SMPSOFactory implements AlgorithmBuilder<SMPSO> {
 				problem.getNumberOfVariables(),
 				new PISAHypervolume<>()
 			)
-		).build();
+		)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.build();
 	}
 }
