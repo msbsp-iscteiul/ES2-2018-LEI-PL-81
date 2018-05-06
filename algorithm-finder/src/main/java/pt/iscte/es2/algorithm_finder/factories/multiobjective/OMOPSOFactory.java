@@ -9,6 +9,7 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator;
 import org.uma.jmetal.util.pseudorandom.RandomGenerator;
+import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
 @BuilderTypes(
@@ -31,6 +32,7 @@ public class OMOPSOFactory implements AlgorithmBuilder<OMOPSO> {
 				problem
 			)
 		)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
 			.setNonUniformMutation(new NonUniformMutation(.5, .5, 10))
 			.setUniformMutation(new UniformMutation(.5, .5, Math::random))
 			.build();
