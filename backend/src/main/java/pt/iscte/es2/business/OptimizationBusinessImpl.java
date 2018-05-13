@@ -50,31 +50,36 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		@RequestParam("executionMaxWaitTime") Integer executionMaxWaitTime,
 		@RequestParam("file") MultipartFile file) {
 
-		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-		if (!file.isEmpty() && extension != null && !extension.equals("csv")) {
-			return new SaveOptimizationConfigurationResult("File Extension is incorrect.");
-		}
-
 		StringBuilder stringBuilder = new StringBuilder();
-
-		if (!file.isEmpty()) {
-			createAndWriteFileToDirectory(ApplicationConstants.CSV_PATH, file);
-			File fileToDelete = new File(ApplicationConstants.CSV_PATH + file.getOriginalFilename());
-			String line = "";
-			try (BufferedReader bufferedReader = new BufferedReader(new FileReader(ApplicationConstants.CSV_PATH + file.getOriginalFilename()))) {
-				while ((line = bufferedReader.readLine()) != null) {
-					if (line.split("\\s+").length == objectives.size()) {
-						stringBuilder.append(line + "\n");
-					} else {
-						return new SaveOptimizationConfigurationResult("Solution Quality doesn't match. Please review the CSV file.");
-					}
-				}
-			} catch (IOException e) {
-				fileToDelete.delete();
-				e.printStackTrace();
+		if (file != null) {
+			if (file.isEmpty()) {
+				return new SaveOptimizationConfigurationResult("File Is Empty");
 			}
-			// Delete the current CSV file after processing
-			fileToDelete.delete();
+
+			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+			if (extension != null && !extension.equals("csv")) {
+				return new SaveOptimizationConfigurationResult("File Extension is incorrect.");
+			}
+
+			if (!file.isEmpty()) {
+				createAndWriteFileToDirectory(ApplicationConstants.CSV_PATH, file);
+				File fileToDelete = new File(ApplicationConstants.CSV_PATH + file.getOriginalFilename());
+				String line = "";
+				try (BufferedReader bufferedReader = new BufferedReader(new FileReader(ApplicationConstants.CSV_PATH + file.getOriginalFilename()))) {
+					while ((line = bufferedReader.readLine()) != null) {
+						if (line.split("\\s+").length == objectives.size()) {
+							stringBuilder.append(line + "\n");
+						} else {
+							return new SaveOptimizationConfigurationResult("Solution Quality doesn't match. Please review the CSV file.");
+						}
+					}
+				} catch (IOException e) {
+					fileToDelete.delete();
+					e.printStackTrace();
+				}
+				// Delete the current CSV file after processing
+				fileToDelete.delete();
+			}
 		}
 
 		String filePath = optimizationDataManager.searchFilePathBySessionId(sessionId);
