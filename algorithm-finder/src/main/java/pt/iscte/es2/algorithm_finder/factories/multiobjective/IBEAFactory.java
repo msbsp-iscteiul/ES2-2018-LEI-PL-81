@@ -5,6 +5,7 @@ import org.uma.jmetal.algorithm.multiobjective.ibea.IBEABuilder;
 import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
+import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
 @BuilderTypes(
@@ -20,6 +21,8 @@ public class IBEAFactory implements AlgorithmBuilder<IBEA<DoubleSolution>> {
 
 	@Override
 	public IBEA<DoubleSolution> build() {
-		return new IBEABuilder(problem).build();
+		return new IBEABuilder(problem)
+			.setMaxEvaluations(AlgorithmConstants.MAX_EVALUTIONS)
+			.build();
 	}
 }

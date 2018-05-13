@@ -2,8 +2,7 @@ package pt.iscte.es2.business;
 
 import org.springframework.web.multipart.MultipartFile;
 import pt.iscte.es2.dto.*;
-import pt.iscte.es2.dto.service.optimization.FileUploadResult;
-import pt.iscte.es2.dto.service.optimization.OptimizationResult;
+import pt.iscte.es2.dto.service.optimization.*;
 
 import java.util.List;
 
@@ -15,6 +14,8 @@ public interface OptimizationBusiness {
 	 * AlgorithmChoiceMethod and CSV File
 	 *
 	 * @param problemName
+	 * 			String
+	 * @param description
 	 * 			String
 	 * @param email
 	 * 			String
@@ -35,10 +36,11 @@ public interface OptimizationBusiness {
 	 * @param file
 	 * 			MultipartFile
 	 *
-	 * 	@return OptimizationResult
+	 * 	@return SaveOptimizationConfigurationResult
 	 */
-	public OptimizationResult saveOptimization(
+	public SaveOptimizationConfigurationResult saveOptimization(
 		String problemName,
+		String description,
 		String email,
 		String sessionId,
 		List<OptimizationConfigurationVariables> variables,
@@ -69,4 +71,39 @@ public interface OptimizationBusiness {
 	 * @return {@link FileUploadResult}
 	 */
 	public FileUploadResult fileUpload(String sessionId, MultipartFile file);
+
+
+	/**
+	 * Searchs for an OptimizationConfiguration by an existing Id and Email
+	 *
+	 * @param id
+	 * 			Integer
+	 * @param email
+	 * 			String
+	 *
+	 * @return OptimizationConfigurationResult
+	 */
+	public OptimizationConfigurationResult searchOptimizationConfigurationByIdAndEmail(Integer id, String email);
+
+	/**
+	 * Searchs for a SummaryOptimizationConfigurationResult by Email
+	 *
+	 * @param email
+	 * 			String
+	 *
+	 * @return SummaryOptimizationConfigurationResult
+	 */
+	public SummaryOptimizationConfigurationResult searchOptimizationConfigurationByEmail(String email);
+
+	/**
+	 * Executes an OptimizationConfiguration By ID and the User Email
+	 *
+	 * @param id
+	 * 			Integer
+	 * @param email
+	 * 			String
+	 *
+	 * @return ExecuteOptimizationConfigurationResult
+	 */
+	public ExecuteOptimizationConfigurationResult executeOptimizationConfiguration(Integer id, String email);
 }

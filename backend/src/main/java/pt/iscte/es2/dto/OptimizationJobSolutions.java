@@ -5,17 +5,12 @@ package pt.iscte.es2.dto;
  */
 public class OptimizationJobSolutions {
 
-	private OptimizationJobExecutions optimizationJobExecution;
 	private String algorithmName;
 	private String solutionName;
 	private String solutionQuality;
 
-	public OptimizationJobExecutions getOptimizationJobExecution() {
-		return optimizationJobExecution;
-	}
+	public OptimizationJobSolutions() {
 
-	public void setOptimizationJobExecution(OptimizationJobExecutions optimizationJobExecution) {
-		this.optimizationJobExecution = optimizationJobExecution;
 	}
 
 	public String getAlgorithmName() {

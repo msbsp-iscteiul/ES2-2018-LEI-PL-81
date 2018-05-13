@@ -1,15 +1,10 @@
 package pt.iscte.es2.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pt.iscte.es2.ApplicationConstants;
 import pt.iscte.es2.business.OptimizationBusiness;
-import pt.iscte.es2.dto.service.optimization.FileUploadRequest;
-import pt.iscte.es2.dto.service.optimization.FileUploadResponse;
-import pt.iscte.es2.dto.service.optimization.OptimizationRequest;
-import pt.iscte.es2.dto.service.optimization.OptimizationResponse;
+import pt.iscte.es2.dto.service.optimization.*;
 
 @RestController
 @RequestMapping(value = ApplicationConstants.OPTIMIZATION_PATH)
@@ -19,12 +14,13 @@ public class OptimizationServiceImpl implements OptimizationService {
 	private OptimizationBusiness optimizationBusiness;
 
 	/**
-	 * @see OptimizationService#saveOptimization(OptimizationRequest)
+	 * @see OptimizationService#saveOptimization(SaveOptimizationConfigurationRequest)
 	 */
 	@PostMapping(value = "/save")
-	public OptimizationResponse saveOptimization(OptimizationRequest request) {
-		return new OptimizationResponse(optimizationBusiness.saveOptimization(
+	public SaveOptimizationConfigurationResponse saveOptimization(SaveOptimizationConfigurationRequest request) {
+		return new SaveOptimizationConfigurationResponse(optimizationBusiness.saveOptimization(
 			request.getProblemName(),
+			request.getDescription(),
 			request.getEmail(), request.getSessionId(), request.getVariables(),
 			request.getObjectives(), request.getAlgorithms(), request.getRestrictions(),
 			request.getAlgorithmChoiceMethod(), request.getExecutionMaxWaitTime(), request.getFile()));
@@ -45,4 +41,34 @@ public class OptimizationServiceImpl implements OptimizationService {
 		return response;
 	}
 
+	/**
+	 * @see OptimizationService#searchOptimizationConfigurationByIdAndEmail(SearchOptimizationConfigurationByIdAndEmailRequest)
+	 */
+	@PostMapping(value = "/searchoptimizationconfigurationbyidandemail")
+	public SearchOptimizationConfigurationByIdAndEmailResponse searchOptimizationConfigurationByIdAndEmail(
+		SearchOptimizationConfigurationByIdAndEmailRequest request) {
+		return new SearchOptimizationConfigurationByIdAndEmailResponse(
+			optimizationBusiness.searchOptimizationConfigurationByIdAndEmail(request.getId(), request.getEmail()));
+	}
+
+	/**
+	 * @see OptimizationService#searchOptimizationConfigurationByEmail(SearchOptimizationConfigurationByEmailRequest)
+	 */
+	@CrossOrigin
+	@GetMapping(value = "/searchoptimizationconfigurationbyemail")
+	public SearchOptimizationConfigurationByEmailResponse searchOptimizationConfigurationByEmail(
+		SearchOptimizationConfigurationByEmailRequest request) {
+		return new SearchOptimizationConfigurationByEmailResponse(
+			optimizationBusiness.searchOptimizationConfigurationByEmail(request.getEmail()));
+	}
+
+	/**
+	 * @see OptimizationService#executeOptimizationConfiguration(ExecuteOptimizationConfigurationRequest)
+	 */
+	@PostMapping(value = "/executeoptimizationconfiguration")
+	public ExecuteOptimizationConfigurationResponse executeOptimizationConfiguration(
+		ExecuteOptimizationConfigurationRequest request) {
+		return new ExecuteOptimizationConfigurationResponse(
+			optimizationBusiness.executeOptimizationConfiguration(request.getId(), request.getEmail()));
+	}
 }

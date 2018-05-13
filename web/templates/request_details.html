@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+
+{% block content_app %}
+
+    <div class="container">
+        <h1>Configuration details. Please, confirm your configuration before submit.</h1>
+        <dl>
+            <dt>Problem name</dt>
+            <dd class="ml-4"> {{ details.problemName }}</dd>
+
+            <dt>Problem description</dt>
+            <dd class="ml-4">{{ details.description }}</dd>
+
+            <dt>Waiting time</dt>
+            <dd class="ml-4">{{ details.executionMaxWaitTime }}</dd>
+
+            <dt>Jar name</dt>
+            <dd class="ml-4">{{ details.filePath }}</dd>
+
+            <dt>Best solution</dt>
+            {% if details.userSolutions|length > 0 %}
+                <dd class="ml-4">Submitted</dd>
+            {% else %}
+                <dd class="ml-4">Not submitted</dd>
+            {% endif %}
+
+            <dt>Variables quantity</dt>
+            <dd class="ml-4"> {{ details.variablesQuantity }}</dd>
+
+            <dt>Variables name</dt>
+            {% for var in details.variables %}
+                <dd class="ml-4"> {{ var.name }}</dd>
+            {% endfor %}
+
+            <dt>Objectives quantity</dt>
+            <dd class="ml-4">{{ details.objectivesQuantity }}</dd>
+
+            <dt>Objectives name</dt>
+            {% for obj in details.objectives %}
+                <dd class="ml-4"> {{ obj.name }}</dd>
+            {% endfor %}
+
+            <dt>Algorithm choice method</dt>
+            <dd class="ml-4"> {{ details.algorithmChoiceMethod }}</dd>
+
+            <dt>Selected algorithms</dt>
+            {% for alg in details.algorithms %}
+                <dd class="ml-4"> {{ alg }}</dd>
+            {% endfor %}
+
+        </dl>
+        <a class="btn btn-primary" href="{% url 'init_form' %}">Cancel</a>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+
+
+{% endblock %}
+

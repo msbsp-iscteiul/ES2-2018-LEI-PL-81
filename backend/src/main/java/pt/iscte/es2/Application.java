@@ -1,6 +1,14 @@
 package pt.iscte.es2;
 
 import org.dozer.spring.DozerBeanMapperFactoryBean;
+
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +24,45 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaAuditing
 public class Application {
 
+	static final String topicExchangeName = "optimization-job-executions-exchange";
+
+	static final String queueName = "optimization-job-executions";
+
+	@Bean
+	public Queue queue() {
+		return new Queue(queueName, false);
+	}
+
+	@Bean
+	public TopicExchange exchange() {
+		return new TopicExchange(topicExchangeName);
+	}
+
+	@Bean
+	public Binding binding(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("pt.iscte.#");
+	}
+
+	@Bean
+	public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+		container.setConnectionFactory(connectionFactory);
+		container.setQueueNames(queueName);
+		container.setMessageListener(listenerAdapter);
+		return container;
+	}
+
+	@Bean
+	public MessageListenerAdapter listenerAdapter(Receiver receiver) {
+		return new MessageListenerAdapter(receiver, "receiveMessage");
+	}
+
+	@Bean
+	public DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean() {
+		return new DozerBeanMapperFactoryBean();
+	}
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
-    @Bean
-	public DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean() {
-    	return new DozerBeanMapperFactoryBean();
-	}
 }

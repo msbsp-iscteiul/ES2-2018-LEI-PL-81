@@ -3,15 +3,16 @@ package pt.iscte.es2.dto.service.optimization;
 /**
  * DTO OptimizationConfiguration Result
  */
-public class OptimizationResult {
+public class SaveOptimizationConfigurationResult {
 
+	private Integer id;
 	private String message;
 
-	public OptimizationResult() {
+	public SaveOptimizationConfigurationResult() {
 
 	}
 
-	public OptimizationResult(String message) {
+	public SaveOptimizationConfigurationResult(String message) {
 		this.message = message;
 	}
 
@@ -21,5 +22,13 @@ public class OptimizationResult {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

@@ -8,6 +8,8 @@ import pt.iscte.es2.dto.*;
 import pt.iscte.es2.jpa.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -34,6 +36,9 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 
 	@Autowired
 	private OptimizationConfigurationUserSolutionsDao optimizationConfigurationUserSolutionsDao;
+
+	@Autowired
+	private OptimizationJobExecutionsDao optimizationJobExecutionsDao;
 
 	@Autowired
 	private Mapper mapper;
@@ -115,6 +120,47 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 		entity.setFilePath(filePath);
 		FileUploadEntity savedFileUploadEntity = fileUploadDao.saveAndFlush(entity);
 		return new FileUpload(savedFileUploadEntity.getId().intValue(), entity.getSessionId(), entity.getFilePath());
+	}
+
+	/**
+	 * @see OptimizationDataManager#searchOptimizationConfigurationByIdAndEmail(Integer, String)
+	 */
+	public OptimizationConfiguration searchOptimizationConfigurationByIdAndEmail(Integer id, String email) {
+		OptimizationConfiguration result = mapper.map(optimizationConfigurationDao
+			.findByIdAndEmail(id.longValue(), email), OptimizationConfiguration.class);
+		optimizationConfigurationVariablesDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getVariables().add(mapper.map(entity, OptimizationConfigurationVariables.class)));
+		optimizationConfigurationAlgorithmsDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getAlgorithms().add(mapper.map(entity, OptimizationConfigurationAlgorithms.class)));
+		optimizationConfigurationRestrictionsDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getRestrictions().add(mapper.map(entity, OptimizationConfigurationRestrictions.class)));
+		optimizationConfigurationObjectivesDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getObjectives().add(mapper.map(entity, OptimizationConfigurationObjectives.class)));
+		optimizationConfigurationUserSolutionsDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getUserSolutions().add(mapper.map(entity, OptimizationConfigurationUserSolutions.class)));
+		return result;
+	}
+
+	/**
+	 * @see OptimizationDataManager#searchOptimizationConfigurationByEmail(String)
+	 */
+	public List<SummaryOptimizationConfiguration> searchOptimizationConfigurationByEmail(String email) {
+		List<SummaryOptimizationConfiguration> list = new ArrayList<>();
+		optimizationConfigurationDao.findByEmail(email)
+			.forEach(entity -> list.add(new SummaryOptimizationConfiguration(
+					entity.getId().intValue(), entity.getProblemName(), entity.getDescription(), entity.getCreatedAt())));
+		return list;
+	}
+
+	/**
+	 * @see OptimizationDataManager#saveExecutionOptimizationConfiguration(OptimizationConfiguration)
+	 */
+	public OptimizationJobExecutions saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
+		return mapper.map(
+			optimizationJobExecutionsDao.saveAndFlush(
+				new OptimizationJobExecutionsEntity(
+					mapper.map(optimizationConfiguration, OptimizationConfigurationEntity.class), new Date(), State.Ready)),
+			OptimizationJobExecutions.class);
 	}
 
 }

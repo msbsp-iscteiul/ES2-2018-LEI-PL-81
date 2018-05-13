@@ -5,6 +5,7 @@ import org.uma.jmetal.algorithm.multiobjective.dmopso.DMOPSOBuilder;
 import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.AlgorithmBuilder;
+import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
 import pt.iscte.es2.algorithm_finder.annotations.BuilderTypes;
 
 @BuilderTypes(
@@ -20,6 +21,9 @@ public class DMOPSOFactory implements AlgorithmBuilder<DMOPSO> {
 
 	@Override
 	public DMOPSO build() {
-		return new DMOPSOBuilder(problem).build();
+		return new DMOPSOBuilder(problem)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 100)
+//			.setSwarmSize(AlgorithmConstants.MAX_EVALUTIONS)
+			.build();
 	}
 }

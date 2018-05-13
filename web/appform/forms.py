@@ -63,7 +63,7 @@ class ProblemInputVariable(forms.Form):
         self.fields['variables'].initial = variables
         self.fields['variable_type'].initial = variable_type
         self.fields['objectives'].initial = objectives
-        self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have')
+        self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have', required=False)
         self.fields['algorithm_choice_method'] = forms.ChoiceField(
             label='Select the algorithm choice method',
             choices=(
@@ -86,8 +86,8 @@ class ProblemInputVariable(forms.Form):
         objectives = cleaned_data.get('objectives')
         input_csv = cleaned_data.get('input_csv')
         choices = cleaned_data.get('choices') or []
-        if len(choices) > 3 or len(choices) == 0:
-            raise forms.ValidationError("You have to select between 0 and 3 items.")
+        if len(choices) < 0:
+            raise forms.ValidationError("You have to select .")
         for i in range(variables):
             if cleaned_data['variable_name_%s' % i] == '':
                 self.cleaned_data['variable_name_%s' % i] = 'var%s' % (i + 1)
@@ -107,3 +107,4 @@ class SendEmail(forms.Form):
         max_length=500,
         widget=forms.Textarea(),
         help_text='Tell us about your questions')
+

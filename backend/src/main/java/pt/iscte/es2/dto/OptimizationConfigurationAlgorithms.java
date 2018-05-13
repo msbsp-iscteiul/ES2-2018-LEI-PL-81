@@ -6,7 +6,6 @@ package pt.iscte.es2.dto;
 public class OptimizationConfigurationAlgorithms {
 
 	private Integer id;
-	private OptimizationConfiguration optimizationConfiguration;
 	private String name;
 
 	public OptimizationConfigurationAlgorithms() {
@@ -23,14 +22,6 @@ public class OptimizationConfigurationAlgorithms {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public OptimizationConfiguration getOptimizationConfiguration() {
-		return optimizationConfiguration;
-	}
-
-	public void setOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
-		this.optimizationConfiguration = optimizationConfiguration;
 	}
 
 	public String getName() {
