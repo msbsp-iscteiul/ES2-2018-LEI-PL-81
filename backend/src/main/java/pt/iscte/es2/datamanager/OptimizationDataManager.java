@@ -2,6 +2,7 @@ package pt.iscte.es2.datamanager;
 
 import pt.iscte.es2.dto.OptimizationConfiguration;
 import pt.iscte.es2.dto.FileUpload;
+import pt.iscte.es2.dto.OptimizationJobExecutions;
 import pt.iscte.es2.dto.SummaryOptimizationConfiguration;
 
 import java.util.List;
@@ -61,4 +62,13 @@ public interface OptimizationDataManager {
 	 */
 	public List<SummaryOptimizationConfiguration> searchOptimizationConfigurationByEmail(String email);
 
+	/**
+	 * Persists an OptimizationConfiguration By ID
+	 *
+	 * @param optimizationConfiguration
+	 * 			OptimizationConfiguration
+	 *
+	 * @return OptimizationJobExecutions
+	 */
+	public OptimizationJobExecutions saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration);
 }

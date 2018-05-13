@@ -61,4 +61,14 @@ public class OptimizationServiceImpl implements OptimizationService {
 		return new SearchOptimizationConfigurationByEmailResponse(
 			optimizationBusiness.searchOptimizationConfigurationByEmail(request.getEmail()));
 	}
+
+	/**
+	 * @see OptimizationService#executeOptimizationConfiguration(ExecuteOptimizationConfigurationRequest)
+	 */
+	@PostMapping(value = "/executeoptimizationconfiguration")
+	public ExecuteOptimizationConfigurationResponse executeOptimizationConfiguration(
+		ExecuteOptimizationConfigurationRequest request) {
+		return new ExecuteOptimizationConfigurationResponse(
+			optimizationBusiness.executeOptimizationConfiguration(request.getId(), request.getEmail()));
+	}
 }

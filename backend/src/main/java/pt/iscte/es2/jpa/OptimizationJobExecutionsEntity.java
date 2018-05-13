@@ -34,12 +34,24 @@ public class OptimizationJobExecutionsEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 
-	private Enum<State> state;
+	@Enumerated(EnumType.STRING)
+	private State state;
 
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private Date createdAt;
+
+	public OptimizationJobExecutionsEntity() {
+
+	}
+
+	public OptimizationJobExecutionsEntity(
+		OptimizationConfigurationEntity optimizationConfiguration, Date startDate, State state) {
+		this.optimizationConfiguration = optimizationConfiguration;
+		this.startDate = startDate;
+		this.state = state;
+	}
 
 	public Long getId() {
 		return id;
@@ -81,11 +93,11 @@ public class OptimizationJobExecutionsEntity {
 		this.endDate = endDate;
 	}
 
-	public Enum<State> getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(Enum<State> state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 }

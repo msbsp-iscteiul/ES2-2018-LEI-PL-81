@@ -8,14 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import pt.iscte.es2.ApplicationConstants;
+import pt.iscte.es2.Sender;
 import pt.iscte.es2.algorithm_finder.AlgorithmFinder;
 import pt.iscte.es2.client_jar_loader.LoadClientJarProblem;
 import pt.iscte.es2.datamanager.OptimizationDataManager;
 import pt.iscte.es2.dto.*;
-import pt.iscte.es2.dto.service.optimization.FileUploadResult;
-import pt.iscte.es2.dto.service.optimization.OptimizationConfigurationResult;
-import pt.iscte.es2.dto.service.optimization.SaveOptimizationConfigurationResult;
-import pt.iscte.es2.dto.service.optimization.SummaryOptimizationConfigurationResult;
+import pt.iscte.es2.dto.service.optimization.*;
 
 import javax.transaction.Transactional;
 import java.io.BufferedReader;
@@ -35,6 +33,9 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 
 	@Autowired
 	private OptimizationDataManager optimizationDataManager;
+
+	@Autowired
+	private Sender sender;
 
 	@Override
 	public SaveOptimizationConfigurationResult saveOptimization(
@@ -186,6 +187,25 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		return new SummaryOptimizationConfigurationResult(
 			optimizationDataManager.searchOptimizationConfigurationByEmail(email));
 	}
+
+	/**
+	 * @see OptimizationBusiness#executeOptimizationConfiguration(Integer, String)
+	 */
+	public ExecuteOptimizationConfigurationResult executeOptimizationConfiguration(
+		@RequestParam("id") Integer id, @RequestParam("email") String email) {
+		ExecuteOptimizationConfigurationResult result;
+		OptimizationConfiguration optimizationConfiguration = optimizationDataManager
+			.searchOptimizationConfigurationByIdAndEmail(id, email);
+		if (optimizationConfiguration != null) {
+			result = new ExecuteOptimizationConfigurationResult(optimizationDataManager
+				.saveExecutionOptimizationConfiguration(optimizationConfiguration), "Success");
+			sender.sendMessage(result.getOptimizationJobExecution().getId());
+		} else {
+			result = new ExecuteOptimizationConfigurationResult(null, "Fail");
+		}
+		return result;
+	}
+
 
 
 }

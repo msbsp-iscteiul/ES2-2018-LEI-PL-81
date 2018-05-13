@@ -2,10 +2,7 @@ package pt.iscte.es2.business;
 
 import org.springframework.web.multipart.MultipartFile;
 import pt.iscte.es2.dto.*;
-import pt.iscte.es2.dto.service.optimization.FileUploadResult;
-import pt.iscte.es2.dto.service.optimization.OptimizationConfigurationResult;
-import pt.iscte.es2.dto.service.optimization.SaveOptimizationConfigurationResult;
-import pt.iscte.es2.dto.service.optimization.SummaryOptimizationConfigurationResult;
+import pt.iscte.es2.dto.service.optimization.*;
 
 import java.util.List;
 
@@ -97,4 +94,16 @@ public interface OptimizationBusiness {
 	 * @return SummaryOptimizationConfigurationResult
 	 */
 	public SummaryOptimizationConfigurationResult searchOptimizationConfigurationByEmail(String email);
+
+	/**
+	 * Executes an OptimizationConfiguration By ID and the User Email
+	 *
+	 * @param id
+	 * 			Integer
+	 * @param email
+	 * 			String
+	 *
+	 * @return ExecuteOptimizationConfigurationResult
+	 */
+	public ExecuteOptimizationConfigurationResult executeOptimizationConfiguration(Integer id, String email);
 }

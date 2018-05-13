@@ -9,6 +9,7 @@ import pt.iscte.es2.jpa.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -35,6 +36,9 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 
 	@Autowired
 	private OptimizationConfigurationUserSolutionsDao optimizationConfigurationUserSolutionsDao;
+
+	@Autowired
+	private OptimizationJobExecutionsDao optimizationJobExecutionsDao;
 
 	@Autowired
 	private Mapper mapper;
@@ -146,6 +150,17 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 			.forEach(entity -> list.add(new SummaryOptimizationConfiguration(
 					entity.getId().intValue(), entity.getProblemName(), entity.getDescription(), entity.getCreatedAt())));
 		return list;
+	}
+
+	/**
+	 * @see OptimizationDataManager#saveExecutionOptimizationConfiguration(OptimizationConfiguration)
+	 */
+	public OptimizationJobExecutions saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
+		return mapper.map(
+			optimizationJobExecutionsDao.saveAndFlush(
+				new OptimizationJobExecutionsEntity(
+					mapper.map(optimizationConfiguration, OptimizationConfigurationEntity.class), new Date(), State.Ready)),
+			OptimizationJobExecutions.class);
 	}
 
 }
