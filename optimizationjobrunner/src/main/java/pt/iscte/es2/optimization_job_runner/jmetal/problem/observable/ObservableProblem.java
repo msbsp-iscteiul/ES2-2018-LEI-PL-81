@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObservableProblem<S extends Solution<?>> implements Problem<S> {
-	private final Problem<S> innerProblem;
-	private final List<SolutionEvaluationListener<S>> evaluationListeners = new ArrayList<>();
+	final Problem<S> innerProblem;
+	final List<SolutionEvaluationListener<S>> evaluationListeners = new ArrayList<>();
 
 	public ObservableProblem(Problem<S> innerProblem) {
 		this.innerProblem = innerProblem;

@@ -29,7 +29,7 @@ public class NSGA3DoubleSolutionFactory implements AlgorithmBuilder<NSGAIII<Doub
 			.setCrossoverOperator(new SBXCrossover(.5, 5))
 			.setMutationOperator(new PolynomialMutation(1.0 / problem.getNumberOfVariables(), 10.0))
 			.setSelectionOperator(new RandomSelection<>())
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 10)
 			.build();
 	}
 }

@@ -28,7 +28,7 @@ public class SPEA2IntegerSolutionFactory implements AlgorithmBuilder<SPEA2<Integ
 			new IntegerSBXCrossover(0.9, 20),
 			new IntegerPolynomialMutation(1 / problem.getNumberOfVariables(), 20)
 		)
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 100)
 			.build();
 	}
 }

@@ -30,7 +30,7 @@ public class NSGA3IntegerSolutionFactory implements AlgorithmBuilder<NSGAIII<Int
 			.setCrossoverOperator(new IntegerSBXCrossover(0.9, 20.0))
 			.setMutationOperator(new IntegerPolynomialMutation(1 / problem.getNumberOfVariables(), 20.0))
 			.setSelectionOperator(new RandomSelection<>())
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 10)
 			.build();
 	}
 }

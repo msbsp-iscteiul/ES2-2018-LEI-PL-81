@@ -30,7 +30,7 @@ public class SMPSOFactory implements AlgorithmBuilder<SMPSO> {
 				new PISAHypervolume<>()
 			)
 		)
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 100)
 			.build();
 	}
 }

@@ -29,7 +29,7 @@ public class SPEA2BinarySolutionFactory implements AlgorithmBuilder<SPEA2<Binary
 			new SinglePointCrossover(1.0),
 			new BitFlipMutation(1.0 / problem.getNumberOfVariables())
 		)
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 100)
 			.build();
 	}
 }

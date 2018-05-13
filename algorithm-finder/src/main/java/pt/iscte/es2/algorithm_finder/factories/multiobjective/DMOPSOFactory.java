@@ -22,7 +22,8 @@ public class DMOPSOFactory implements AlgorithmBuilder<DMOPSO> {
 	@Override
 	public DMOPSO build() {
 		return new DMOPSOBuilder(problem)
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 100)
+//			.setSwarmSize(AlgorithmConstants.MAX_EVALUTIONS)
 			.build();
 	}
 }

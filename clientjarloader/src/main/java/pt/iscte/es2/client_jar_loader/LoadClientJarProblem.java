@@ -14,7 +14,7 @@ public class LoadClientJarProblem {
 		final String file = "file://" + jar.getAbsolutePath();
 		final ClassLoader clientClassLoader = new SecureClientClassLoader(new URL(file));
 		final Class<? extends Problem<Solution<?>>> pluginClass =
-			(Class<? extends Problem<Solution<?>>>) clientClassLoader.loadClass("Plugin");
+			(Class<? extends Problem<Solution<?>>>) clientClassLoader.loadClass("pt.iscte.es2.Plugin");
 		return pluginClass.newInstance();
 	}
 }
