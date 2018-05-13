@@ -5,8 +5,12 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from appform.decorators import enter_email
 
-url_upload = 'http://172.17.9.217:8080/api/optimization/fileupload/'
-url_upload2 = 'http://172.17.9.217:8080/api/optimization/save/'
+url_upload = 'http://127.0.0.1:8080/api/optimization/fileupload/'
+url_upload2 = 'http://127.0.0.1:8080/api/optimization/save/'
+url_upload3 = 'http://127.0.0.1:8080/api/optimization/searchoptimizationconfigurationbyidandemail'
+# url_upload = 'http://172.17.5.62:8080/api/optimization/fileupload/'
+# url_upload2 = 'http://172.17.5.62:8080/api/optimization/save/'
+# url_upload3 = 'http://172.17.5.62:8080/api/optimization/searchoptimizationconfigurationbyidandemail'
 
 
 @enter_email
@@ -62,17 +66,18 @@ def form_page2(request):
             objectivesList.append(form.cleaned_data.get('objectives_name_%s' % i))
         files = {
             'file': (upload.name,
-                         open(upload.file.name, 'rb'))}
+                     open(upload.file.name, 'rb'))}
         data_form = {k: v for k, v in form.cleaned_data.items() if k != 'input_csv'}
         data = {'sessionId': request.session.session_key, 'problemName': info.get('name'),
-                'email': request.session.get('email'),
+                'email': request.session.get('email'), 'description': info.get('description'),
                 'executionMaxWaitTime': info.get('waiting_time'),
                 'algorithmChoiceMethod': data_form.get('algorithm_choice_method'),
                 'variables': variablesList, 'objectives': objectivesList, 'algorithms': data_form.get('choices')
                 }
         p = requests.post(url_upload2, data=data, files=files)
-        #if p is not None:
-        #    return redirect('/processing')
+        info = p.json()
+        print(info)
+        return redirect('/requestdetails/' + str(info['result']['id']))
 
     return render(request, 'form2.html', {
         'form': form, 'variables': extra_data['variables'],
@@ -86,19 +91,67 @@ def submit_problem(request):
 
 @enter_email
 def saved_conf(request):
-    return render(request, 'save_conf.html')
+    email_conf = request.session.get('email')
+    return render(request, 'save_conf.html', {'user_email': email_conf})
 
 
 def faq_page(request):
     return render(request, 'faq.html')
 
 
+@enter_email
 def history(request):
     email_conf = request.session.get('email')
-    conf = requests.get(url_upload, email_conf)
-    return render(request, 'history.html', {'conf': conf})
+    return render(request, 'history.html', {'user_email': email_conf})
 
 
+@enter_email
+def details(request, num):
+    return render(request, 'details.html')
+
+
+@enter_email
+def request_details(request, num):
+    if request.POST:
+        # info = {
+        #     "result": {
+        #         "optimizationConfiguration": {
+        #             "id": 2,
+        #             "problemName": "This is another Problemmmm",
+        #             "email": "email@email.com",
+        #             "filePath": "backend/target/jars/containee-1.0-SNAPSHOT.jar",
+        #             "variablesQuantity": 2,
+        #             "objectivesQuantity": 2,
+        #             "restrictionsQuantity": 0,
+        #             "algorithmsQuantity": 2,
+        #             "executionMaxWaitTime": 30,
+        #             "description": "This is some Real Description!!!! This is really working has intentionedjhbcjhsbdv,
+        # jbfv,jbsdkjvbs ffhasdklhlksdblisdhflwbf dskfbsdkjlhfjsdbfsd sdkfjhsdfhjsdbhf sfbsdliuhflsdhfsd difhsdjhvgjhsdf
+        # fjhweiuwyriewhsd c kfhsdkjvsdjbv !!!!!",
+        #             "algorithmChoiceMethod": "Mixed",
+        #             "variables": [{'name': 'var1'}, {'name': 'var2'}, {'name': 'var3'}],
+        #             "objectives": [{'name': 'obj1'}, {'name': 'obj2'}, {'name': 'obj3'}],
+        #             "algorithms": [{'name': 'alg1'}, {'name': 'alg2'}, {'name': 'alg3'}],
+        #             "userSolutions": [],
+        #         }
+        #     }
+        # }
+
+        data = {'id': num, 'email': request.session.get('email')}
+        p = requests.post(url_upload3, data=data)
+        info = p.json()
+        jar = info['result']['optimizationConfiguration']['filePath'].split('/')[-1]
+        info['result']['optimizationConfiguration']['filePath'] = jar
+        listAlgo = []
+        for var in info['result']['optimizationConfiguration']['algorithms']:
+            listAlgo.append(var['name'].split('.')[-1])
+        # data = info['result']['optimizationConfiguration']
+        info['result']['optimizationConfiguration']['algorithms'] = listAlgo
+    else:
+        return render(request, 'request_details.html')
+
+
+@enter_email
 def send_email(request):
     if request.method == 'POST':
         email_request = SendEmail(request.POST)
