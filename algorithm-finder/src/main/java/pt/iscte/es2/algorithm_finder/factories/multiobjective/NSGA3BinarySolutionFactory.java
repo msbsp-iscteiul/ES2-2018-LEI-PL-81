@@ -29,7 +29,7 @@ public class NSGA3BinarySolutionFactory implements AlgorithmBuilder<NSGAIII<Bina
 			.setCrossoverOperator(new HUXCrossover(1.0))
 			.setMutationOperator(new BitFlipMutation(1.0 / problem.getNumberOfVariables()))
 			.setSelectionOperator(new RandomSelection<>())
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 10)
 			.build();
 	}
 }

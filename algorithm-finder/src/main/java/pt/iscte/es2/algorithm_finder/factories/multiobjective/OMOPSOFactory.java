@@ -32,7 +32,7 @@ public class OMOPSOFactory implements AlgorithmBuilder<OMOPSO> {
 				problem
 			)
 		)
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 100)
 			.setNonUniformMutation(new NonUniformMutation(.5, .5, 10))
 			.setUniformMutation(new UniformMutation(.5, .5, Math::random))
 			.build();

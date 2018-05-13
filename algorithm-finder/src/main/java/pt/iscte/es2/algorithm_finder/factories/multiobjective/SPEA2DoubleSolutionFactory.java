@@ -28,7 +28,7 @@ public class SPEA2DoubleSolutionFactory implements AlgorithmBuilder<SPEA2<Double
 			new SBXCrossover(.5, 5),
 			new PolynomialMutation(1.0 / problem.getNumberOfVariables(), 10.0)
 		)
-			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS)
+			.setMaxIterations(AlgorithmConstants.MAX_EVALUTIONS / 100)
 			.build();
 	}
 }
