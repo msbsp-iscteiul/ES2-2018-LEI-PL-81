@@ -13,7 +13,9 @@ import pt.iscte.es2.client_jar_loader.LoadClientJarProblem;
 import pt.iscte.es2.datamanager.OptimizationDataManager;
 import pt.iscte.es2.dto.*;
 import pt.iscte.es2.dto.service.optimization.FileUploadResult;
-import pt.iscte.es2.dto.service.optimization.OptimizationResult;
+import pt.iscte.es2.dto.service.optimization.OptimizationConfigurationResult;
+import pt.iscte.es2.dto.service.optimization.SaveOptimizationConfigurationResult;
+import pt.iscte.es2.dto.service.optimization.SummaryOptimizationConfigurationResult;
 
 import javax.transaction.Transactional;
 import java.io.BufferedReader;
@@ -24,8 +26,6 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,8 +37,9 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 	private OptimizationDataManager optimizationDataManager;
 
 	@Override
-	public OptimizationResult saveOptimization(
+	public SaveOptimizationConfigurationResult saveOptimization(
 		@RequestParam("problemName") String problemName,
+		@RequestParam("description") String description,
 		@RequestParam("email") String email,
 		@RequestParam("sessionId") String sessionId,
 		@RequestParam("variables") List<OptimizationConfigurationVariables> variables,
@@ -49,37 +50,38 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		@RequestParam("executionMaxWaitTime") Integer executionMaxWaitTime,
 		@RequestParam("file") MultipartFile file) {
 
-		if (file.isEmpty()) {
-			return new OptimizationResult("File is Empty.");
-		}
-
-		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-		if (extension != null && !extension.equals("csv")) {
-			return new OptimizationResult("File Extension is incorrect.");
-		}
-
-		createAndWriteFileToDirectory(ApplicationConstants.CSV_PATH, file);
-
-		File fileToDelete = new File(ApplicationConstants.CSV_PATH + file.getOriginalFilename());
-
 		StringBuilder stringBuilder = new StringBuilder();
-		String line = "";
-
-		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(ApplicationConstants.CSV_PATH + file.getOriginalFilename()))) {
-			while ((line = bufferedReader.readLine()) != null) {
-				if (line.split("\\s+").length == objectives.size()) {
-					stringBuilder.append(line + "\n");
-				} else {
-					return new OptimizationResult("Solution Quality doesn't match. Please review the CSV file.");
-				}
+		if (file != null) {
+			if (file.isEmpty()) {
+				return new SaveOptimizationConfigurationResult("File Is Empty");
 			}
-		} catch (IOException e) {
-			fileToDelete.delete();
-			e.printStackTrace();
+
+			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+			if (extension != null && !extension.equals("csv")) {
+				return new SaveOptimizationConfigurationResult("File Extension is incorrect.");
+			}
+
+			if (!file.isEmpty()) {
+				createAndWriteFileToDirectory(ApplicationConstants.CSV_PATH, file);
+				File fileToDelete = new File(ApplicationConstants.CSV_PATH + file.getOriginalFilename());
+				String line = "";
+				try (BufferedReader bufferedReader = new BufferedReader(new FileReader(ApplicationConstants.CSV_PATH + file.getOriginalFilename()))) {
+					while ((line = bufferedReader.readLine()) != null) {
+						if (line.split("\\s+").length == objectives.size()) {
+							stringBuilder.append(line + "\n");
+						} else {
+							return new SaveOptimizationConfigurationResult("Solution Quality doesn't match. Please review the CSV file.");
+						}
+					}
+				} catch (IOException e) {
+					fileToDelete.delete();
+					e.printStackTrace();
+				}
+				// Delete the current CSV file after processing
+				fileToDelete.delete();
+			}
 		}
 
-		// Delete the current CSV file after processing
-		fileToDelete.delete();
 		String filePath = optimizationDataManager.searchFilePathBySessionId(sessionId);
 
 		OptimizationConfiguration optimizationConfiguration = new OptimizationConfiguration();
@@ -96,14 +98,18 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		optimizationConfiguration.setRestrictions(restrictions);
 		optimizationConfiguration.setExecutionMaxWaitTime(executionMaxWaitTime);
 		optimizationConfiguration.setProblemName(problemName);
-		optimizationConfiguration.setUserSolutions(
-			Collections.singletonList(new OptimizationConfigurationUserSolutions(stringBuilder.toString())));
+		optimizationConfiguration.setDescription(description);
+		if (stringBuilder.length() != 0) {
+			optimizationConfiguration.setUserSolutions(
+				Collections.singletonList(new OptimizationConfigurationUserSolutions(stringBuilder.toString())));
+		}
 		OptimizationConfiguration savedOptimizationConfiguration = optimizationDataManager.saveOptimization(optimizationConfiguration);
-		OptimizationResult result = new OptimizationResult();
+		SaveOptimizationConfigurationResult result = new SaveOptimizationConfigurationResult();
 		if (savedOptimizationConfiguration.getId() != null) {
-			result.setMessage("SUCCESS");
+			result.setId(savedOptimizationConfiguration.getId());
+			result.setMessage("Success");
 		} else {
-			result.setMessage("ERROR");
+			result.setMessage("Error");
 		}
 		return result;
 	}
@@ -161,5 +167,25 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * @see OptimizationBusiness#searchOptimizationConfigurationByIdAndEmail(Integer, String)
+	 */
+	public OptimizationConfigurationResult searchOptimizationConfigurationByIdAndEmail(
+		@RequestParam("id") Integer id,
+		@RequestParam("email") String email) {
+		return new OptimizationConfigurationResult(
+			optimizationDataManager.searchOptimizationConfigurationByIdAndEmail(id, email));
+	}
+
+	/**
+	 * @see OptimizationBusiness#searchOptimizationConfigurationByEmail(String)
+	 */
+	public SummaryOptimizationConfigurationResult searchOptimizationConfigurationByEmail(
+		@RequestParam("email") String email) {
+		return new SummaryOptimizationConfigurationResult(
+			optimizationDataManager.searchOptimizationConfigurationByEmail(email));
+	}
+
 
 }

@@ -1,9 +1,6 @@
 package pt.iscte.es2.api;
 
-import pt.iscte.es2.dto.service.optimization.FileUploadRequest;
-import pt.iscte.es2.dto.service.optimization.FileUploadResponse;
-import pt.iscte.es2.dto.service.optimization.OptimizationRequest;
-import pt.iscte.es2.dto.service.optimization.OptimizationResponse;
+import pt.iscte.es2.dto.service.optimization.*;
 
 /**
  * OptimizationConfiguration Service API
@@ -15,13 +12,18 @@ public interface OptimizationService {
 	 * AlgorithmChoiceMethod and CSV File
 	 *
 	 * @param request
-	 * 			OptimizationRequest
+	 * 			SaveOptimizationConfigurationRequest
 	 *
-	 * @return OptimizationResponse
+	 * @return SaveOptimizationConfigurationResponse
 	 */
-	public OptimizationResponse saveOptimization(OptimizationRequest request);
+	public SaveOptimizationConfigurationResponse saveOptimization(SaveOptimizationConfigurationRequest request);
 
-
+	/**
+	 * Returns the filePath of the JAR file of the current SessionId.
+	 *
+	 * @param sessionId
+	 * 			String
+	 */
 	public void searchFilePathBySessionId(String sessionId);
 
 	/**
@@ -33,4 +35,27 @@ public interface OptimizationService {
 	 * @return {@link FileUploadResponse}
 	 */
 	public FileUploadResponse fileUpload(FileUploadRequest request);
+
+	/**
+	 * Searchs for an OptimizationConfiguration by an existing Id and Email
+	 *
+	 * @param request
+	 * 			SearchOptimizationConfigurationByIdAndEmailRequest
+	 *
+	 * @return SearchOptimizationConfigurationByIdAndEmailResponse
+	 */
+	public SearchOptimizationConfigurationByIdAndEmailResponse searchOptimizationConfigurationByIdAndEmail(
+		SearchOptimizationConfigurationByIdAndEmailRequest request);
+
+	/**
+	 * Searchs for all SummaryOptimizationConfiguration by Email
+	 *
+	 * @param request
+	 * 			SearchOptimizationConfigurationByEmailRequest
+	 *
+	 * @return SearchOptimizationConfigurationByEmailResponse
+	 */
+	public SearchOptimizationConfigurationByEmailResponse searchOptimizationConfigurationByEmail(
+		SearchOptimizationConfigurationByEmailRequest request);
+
 }

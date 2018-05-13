@@ -9,18 +9,13 @@ import java.util.List;
  */
 public class OptimizationJobExecutions {
 
-	private OptimizationConfiguration optimizationConfiguration;
 	private Date startDate;
 	private Date endDate;
 	private Enum<State> state;
 	private List<OptimizationJobSolutions> optimizationJobSolutions;
 
-	public OptimizationConfiguration getOptimizationConfiguration() {
-		return optimizationConfiguration;
-	}
+	public OptimizationJobExecutions() {
 
-	public void setOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
-		this.optimizationConfiguration = optimizationConfiguration;
 	}
 
 	public Date getStartDate() {

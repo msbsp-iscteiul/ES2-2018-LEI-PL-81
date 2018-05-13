@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,9 @@ public class OptimizationConfigurationEntity {
 	@NotNull
 	private String algorithmChoiceMethod;
 
+	@NotNull
+	private String description;
+
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -62,6 +66,9 @@ public class OptimizationConfigurationEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
 	private List<OptimizationConfigurationAlgorithmsEntity> optimizationConfigurationAlgorithms;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
+	private List<OptimizationConfigurationUserSolutionsEntity> optimizationConfigurationUserSolutions;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
 	private List<OptimizationJobExecutionsEntity> optimizationJobExecutions;
@@ -146,7 +153,18 @@ public class OptimizationConfigurationEntity {
 		this.algorithmChoiceMethod = algorithmChoiceMethod;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public List<OptimizationConfigurationVariablesEntity> getOptimizationConfigurationVariables() {
+		if (optimizationConfigurationVariables == null) {
+			optimizationConfigurationVariables = new ArrayList<>();
+		}
 		return optimizationConfigurationVariables;
 	}
 
@@ -155,6 +173,9 @@ public class OptimizationConfigurationEntity {
 	}
 
 	public List<OptimizationConfigurationObjectivesEntity> getOptimizationConfigurationObjectives() {
+		if (optimizationConfigurationObjectives == null) {
+			optimizationConfigurationObjectives = new ArrayList<>();
+		}
 		return optimizationConfigurationObjectives;
 	}
 
@@ -163,6 +184,9 @@ public class OptimizationConfigurationEntity {
 	}
 
 	public List<OptimizationConfigurationRestrictionsEntity> getOptimizationConfigurationRestrictions() {
+		if (optimizationConfigurationRestrictions == null) {
+			optimizationConfigurationRestrictions = new ArrayList<>();
+		}
 		return optimizationConfigurationRestrictions;
 	}
 
@@ -171,6 +195,9 @@ public class OptimizationConfigurationEntity {
 	}
 
 	public List<OptimizationConfigurationAlgorithmsEntity> getOptimizationConfigurationAlgorithms() {
+		if (optimizationConfigurationAlgorithms == null) {
+			optimizationConfigurationAlgorithms = new ArrayList<>();
+		}
 		return optimizationConfigurationAlgorithms;
 	}
 
@@ -179,10 +206,32 @@ public class OptimizationConfigurationEntity {
 	}
 
 	public List<OptimizationJobExecutionsEntity> getOptimizationJobExecutions() {
+		if (optimizationJobExecutions == null) {
+			optimizationJobExecutions = new ArrayList<>();
+		}
 		return optimizationJobExecutions;
 	}
 
 	public void setOptimizationJobExecutions(List<OptimizationJobExecutionsEntity> optimizationJobExecutions) {
 		this.optimizationJobExecutions = optimizationJobExecutions;
+	}
+
+	public List<OptimizationConfigurationUserSolutionsEntity> getOptimizationConfigurationUserSolutions() {
+		if (optimizationConfigurationUserSolutions == null) {
+			optimizationConfigurationUserSolutions = new ArrayList<>();
+		}
+		return optimizationConfigurationUserSolutions;
+	}
+
+	public void setOptimizationConfigurationUserSolutions(List<OptimizationConfigurationUserSolutionsEntity> optimizationConfigurationUserSolutions) {
+		this.optimizationConfigurationUserSolutions = optimizationConfigurationUserSolutions;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 }
