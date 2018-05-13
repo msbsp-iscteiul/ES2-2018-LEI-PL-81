@@ -58,4 +58,15 @@ public interface OptimizationService {
 	public SearchOptimizationConfigurationByEmailResponse searchOptimizationConfigurationByEmail(
 		SearchOptimizationConfigurationByEmailRequest request);
 
+	/**
+	 * Executes an OptimizationConfiguration By ID and the User Email
+	 *
+	 * @param request
+	 * 			ExecuteOptimizationConfigurationRequest
+	 *
+	 * @return ExecuteOptimizationConfigurationResponse
+	 */
+	public ExecuteOptimizationConfigurationResponse executeOptimizationConfiguration(
+		ExecuteOptimizationConfigurationRequest request);
+
 }

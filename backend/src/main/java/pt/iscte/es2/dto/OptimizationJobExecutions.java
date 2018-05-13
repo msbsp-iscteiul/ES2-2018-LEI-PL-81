@@ -9,13 +9,22 @@ import java.util.List;
  */
 public class OptimizationJobExecutions {
 
+	private Integer id;
 	private Date startDate;
 	private Date endDate;
-	private Enum<State> state;
+	private State state;
 	private List<OptimizationJobSolutions> optimizationJobSolutions;
 
 	public OptimizationJobExecutions() {
 
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Date getStartDate() {
@@ -34,11 +43,11 @@ public class OptimizationJobExecutions {
 		this.endDate = endDate;
 	}
 
-	public Enum<State> getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(Enum<State> state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 
