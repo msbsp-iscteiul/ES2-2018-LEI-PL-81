@@ -1,9 +1,11 @@
 package pt.iscte.es2.optimization_job_runner.jmetal.problem.observable;
 
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.uma.jmetal.solution.Solution;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +32,10 @@ public class EvaluationsCounter implements SolutionEvaluationListener {
 			simpleMailMessage.setTo("msbsp@iscte-iul.pt");
 			simpleMailMessage.setFrom("robot@es2.com");
 			simpleMailMessage.setText("Currently at " + counter + " iterations.");
-			mailSender.send(simpleMailMessage);
+			try {
+				mailSender.send(simpleMailMessage);
+			} catch (MailException ignore) {
+			}
 			LOGGER.log(Level.INFO, String.valueOf(counter));
 		}
 	}

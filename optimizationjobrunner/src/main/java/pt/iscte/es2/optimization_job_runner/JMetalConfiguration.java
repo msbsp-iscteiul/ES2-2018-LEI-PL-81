@@ -19,7 +19,7 @@ import pt.iscte.es2.client_jar_loader.SecurityPolicy;
 import pt.iscte.es2.optimization_job_runner.jmetal.problem.observable.EvaluationsCounter;
 import pt.iscte.es2.optimization_job_runner.jmetal.problem.observable.ObservableProblem;
 import pt.iscte.es2.optimization_job_runner.jmetal.problem.observable.ObservableProblemFactory;
-import pt.iscte.es2.optimization_job_runner.mail.MailSenderProvider;
+import pt.iscte.es2.optimization_job_runner.post_processing.PostProblemProcessor;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -38,9 +38,14 @@ public class JMetalConfiguration {
 
 	private static final Logger LOGGER = Logger.getLogger(JMetalConfiguration.class.getName());
 	private static final int INDEPENDENT_RUNS = 1;
+	private final JavaMailSender mailSender;
+
+	public JMetalConfiguration(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
 
 	// @PostConstruct
-	public void run(JavaMailSender mailSender) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
+	public void run() throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
 //		setSecurityContext();
 		Problem<Solution<?>> clientOptimizationProblem = new LoadClientJarProblem()
 			.loadProblemFromJar("optimizationjobrunner/target/data/containee-1.0-SNAPSHOT-integer.jar");
@@ -81,6 +86,13 @@ public class JMetalConfiguration {
 		new GenerateLatexTablesWithStatistics(experiment).run();
 		new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run();
 		LOGGER.log(Level.INFO, String.valueOf(evaluationsCounter.getCount()));
+		new PostProblemProcessor(
+			"Experiment",
+			clientOptimizationProblem.getName(),
+			"experimentBaseDirectory/referenceFronts",
+			"experimentBaseDirectory/Experiment",
+			algorithms
+		).execute();
 	}
 
 	private static List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> getExperimentAlgorithms(
