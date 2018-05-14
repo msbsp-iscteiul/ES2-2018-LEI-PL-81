@@ -57,6 +57,7 @@ CREATE TABLE optimization_job_solutions (
   algorithm_name VARCHAR(255) NOT NULL,
   solution_name VARCHAR(100) NOT NULL,
   solution_quality TEXT NOT NULL,
+  quality VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_job_solutions(id_optimization_job_executions)

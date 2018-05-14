@@ -106,4 +106,17 @@ public interface OptimizationBusiness {
 	 * @return ExecuteOptimizationConfigurationResult
 	 */
 	public ExecuteOptimizationConfigurationResult executeOptimizationConfiguration(Integer id, String email);
+
+	/**
+	 * Saves a list of OptimizationJobSolution By OptimizationJobExecution ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @param solutions
+	 * 			List<Solution>
+	 *
+	 * @return SaveOptimizationJobSolutionResult
+	 */
+	public SaveOptimizationJobSolutionResult saveOptimizationJobSolution(Integer id, List<OptimizationJobSolutions> solutions);
 }

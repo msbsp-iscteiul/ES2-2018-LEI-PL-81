@@ -5,12 +5,31 @@ package pt.iscte.es2.dto;
  */
 public class OptimizationJobSolutions {
 
+	private Integer id;
+	private OptimizationJobExecutions optimizationJobExecutions;
 	private String algorithmName;
 	private String solutionName;
 	private String solutionQuality;
+	private String quality;
 
 	public OptimizationJobSolutions() {
 
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public OptimizationJobExecutions getOptimizationJobExecutions() {
+		return optimizationJobExecutions;
+	}
+
+	public void setOptimizationJobExecutions(OptimizationJobExecutions optimizationJobExecutions) {
+		this.optimizationJobExecutions = optimizationJobExecutions;
 	}
 
 	public String getAlgorithmName() {
@@ -35,5 +54,13 @@ public class OptimizationJobSolutions {
 
 	public void setSolutionQuality(String solutionQuality) {
 		this.solutionQuality = solutionQuality;
+	}
+
+	public String getQuality() {
+		return quality;
+	}
+
+	public void setQuality(String quality) {
+		this.quality = quality;
 	}
 }

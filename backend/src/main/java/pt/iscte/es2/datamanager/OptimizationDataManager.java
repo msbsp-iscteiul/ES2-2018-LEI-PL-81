@@ -1,9 +1,6 @@
 package pt.iscte.es2.datamanager;
 
-import pt.iscte.es2.dto.OptimizationConfiguration;
-import pt.iscte.es2.dto.FileUpload;
-import pt.iscte.es2.dto.OptimizationJobExecutions;
-import pt.iscte.es2.dto.SummaryOptimizationConfiguration;
+import pt.iscte.es2.dto.*;
 
 import java.util.List;
 
@@ -71,4 +68,24 @@ public interface OptimizationDataManager {
 	 * @return OptimizationJobExecutions
 	 */
 	public OptimizationJobExecutions saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration);
+
+	/**
+	 * Searchs for an OptimizationJobExecutions By its ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @return OptimizationJobExecutions
+	 */
+	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id);
+
+	/**
+	 * Persists a list of OptimizationJobSolutions
+	 *
+	 * @param optimizationJobSolutions
+	 * 			List<OptimizationJobSolutions>
+	 *
+	 * @return OptimizationJobExecutions
+	 */
+	public List<OptimizationJobSolutions> saveOptimizationJobSolution(List<OptimizationJobSolutions> optimizationJobSolutions);
 }

@@ -71,4 +71,16 @@ public class OptimizationServiceImpl implements OptimizationService {
 		return new ExecuteOptimizationConfigurationResponse(
 			optimizationBusiness.executeOptimizationConfiguration(request.getId(), request.getEmail()));
 	}
+
+	/**
+	 * @see OptimizationService#saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest)
+	 */
+	@PostMapping(value = "/saveoptimizationjobsolution")
+	public SaveOptimizationJobSolutionResponse saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest request) {
+		return new SaveOptimizationJobSolutionResponse(
+			optimizationBusiness.saveOptimizationJobSolution(request.getId(), request.getSolutions()));
+	}
+
+
+
 }

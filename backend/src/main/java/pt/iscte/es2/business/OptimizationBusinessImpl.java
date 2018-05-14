@@ -3,6 +3,7 @@ package pt.iscte.es2.business;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.uma.jmetal.problem.Problem;
@@ -206,6 +207,16 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		return result;
 	}
 
-
+	/**
+	 * @see OptimizationBusiness#saveOptimizationJobSolution(Integer, List<OptimizationJobSolutions>)
+	 */
+	public SaveOptimizationJobSolutionResult saveOptimizationJobSolution(
+		@RequestParam("id") Integer id, @RequestParam("solutions") List<OptimizationJobSolutions> solutions) {
+		OptimizationJobExecutions optimizationJobExecutions = optimizationDataManager.searchOptimizationJobExecutionsById(id);
+		// TODO - Add @RequestParam("latex") and @RequestParam("r") and save the files on disk
+		solutions.forEach(solution -> solution.setOptimizationJobExecutions(optimizationJobExecutions));
+		return new SaveOptimizationJobSolutionResult("SUCCESS", optimizationDataManager
+			.saveOptimizationJobSolution(solutions));
+	}
 
 }

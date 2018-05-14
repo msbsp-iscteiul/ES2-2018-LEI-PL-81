@@ -39,7 +39,7 @@ public class JMetalConfiguration {
 	private static final Logger LOGGER = Logger.getLogger(JMetalConfiguration.class.getName());
 	private static final int INDEPENDENT_RUNS = 1;
 
-	@PostConstruct
+	// @PostConstruct
 	public void run(JavaMailSender mailSender) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
 //		setSecurityContext();
 		Problem<Solution<?>> clientOptimizationProblem = new LoadClientJarProblem()

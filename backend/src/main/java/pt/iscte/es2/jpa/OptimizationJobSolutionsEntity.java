@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -30,6 +31,9 @@ public class OptimizationJobSolutionsEntity {
 
 	@NotBlank
 	private String solutionQuality;
+
+	@NotBlank
+	private String quality;
 
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -74,5 +78,13 @@ public class OptimizationJobSolutionsEntity {
 
 	public void setSolutionQuality(String solutionQuality) {
 		this.solutionQuality = solutionQuality;
+	}
+
+	public String getQuality() {
+		return quality;
+	}
+
+	public void setQuality(String quality) {
+		this.quality = quality;
 	}
 }

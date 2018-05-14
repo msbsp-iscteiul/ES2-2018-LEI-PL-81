@@ -69,4 +69,14 @@ public interface OptimizationService {
 	public ExecuteOptimizationConfigurationResponse executeOptimizationConfiguration(
 		ExecuteOptimizationConfigurationRequest request);
 
+	/**
+	 * Persists a list of OptimizationJobSolution given an OptimizationJobExecution ID
+	 *
+	 * @param request
+	 * 			ExecuteOptimizationConfigurationRequest
+	 *
+	 * @return ExecuteOptimizationConfigurationResponse
+	 */
+	public SaveOptimizationJobSolutionResponse saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest request);
+
 }
