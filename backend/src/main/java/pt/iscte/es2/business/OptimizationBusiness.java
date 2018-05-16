@@ -116,7 +116,14 @@ public interface OptimizationBusiness {
 	 * @param solutions
 	 * 			List<Solution>
 	 *
+	 * @param latex
+	 * 			MultipartFile
+	 *
+	 * @param r
+	 * 			MultipartFile
+	 *
 	 * @return SaveOptimizationJobSolutionResult
 	 */
-	public SaveOptimizationJobSolutionResult saveOptimizationJobSolution(Integer id, List<OptimizationJobSolutions> solutions);
+	public SaveOptimizationJobSolutionResult saveOptimizationJobSolution(
+		Integer id, List<OptimizationJobSolutions> solutions, MultipartFile latex, MultipartFile r);
 }

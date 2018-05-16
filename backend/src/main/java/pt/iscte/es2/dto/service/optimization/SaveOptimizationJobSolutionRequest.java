@@ -1,14 +1,20 @@
 package pt.iscte.es2.dto.service.optimization;
 
+import org.springframework.web.multipart.MultipartFile;
 import pt.iscte.es2.dto.OptimizationJobSolutions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Save OptimizationJobSolution Request DTO
+ */
 public class SaveOptimizationJobSolutionRequest {
 
 	private Integer id;
 	private List<OptimizationJobSolutions> solutions;
+	private MultipartFile latex;
+	private MultipartFile r;
 
 	public Integer getId() {
 		return id;
@@ -27,5 +33,21 @@ public class SaveOptimizationJobSolutionRequest {
 
 	public void setSolutions(List<OptimizationJobSolutions> solutions) {
 		this.solutions = solutions;
+	}
+
+	public MultipartFile getLatex() {
+		return latex;
+	}
+
+	public void setLatex(MultipartFile latex) {
+		this.latex = latex;
+	}
+
+	public MultipartFile getR() {
+		return r;
+	}
+
+	public void setR(MultipartFile r) {
+		this.r = r;
 	}
 }

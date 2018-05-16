@@ -208,12 +208,41 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 	}
 
 	/**
-	 * @see OptimizationBusiness#saveOptimizationJobSolution(Integer, List<OptimizationJobSolutions>)
+	 * @see OptimizationBusiness#saveOptimizationJobSolution(Integer, List, MultipartFile, MultipartFile)
 	 */
 	public SaveOptimizationJobSolutionResult saveOptimizationJobSolution(
-		@RequestParam("id") Integer id, @RequestParam("solutions") List<OptimizationJobSolutions> solutions) {
+		@RequestParam("id") Integer id, @RequestParam("solutions") List<OptimizationJobSolutions> solutions,
+		@RequestParam("latex") MultipartFile latex, @RequestParam("r") MultipartFile r) {
+
+		// Validate Latex File
+		if (latex == null) {
+			return new SaveOptimizationJobSolutionResult("Latex File Missing!");
+		} else {
+			if (latex.isEmpty()) {
+				return new SaveOptimizationJobSolutionResult("Latex File is Empty!");
+			}
+			String extension = FilenameUtils.getExtension(latex.getOriginalFilename());
+			if (extension != null && !extension.equals("pdf")) {
+				return new SaveOptimizationJobSolutionResult("Wrong Format of LATEX File!");
+			}
+			createAndWriteFileToDirectory(ApplicationConstants.LATEX_PATH, latex);
+		}
+
+		// Validate R File
+		if (r == null) {
+			return new SaveOptimizationJobSolutionResult("R File Missing!");
+		} else {
+			if (r.isEmpty()) {
+				return new SaveOptimizationJobSolutionResult("R File is Empty!");
+			}
+			String extension = FilenameUtils.getExtension(r.getOriginalFilename());
+			if (extension != null && !extension.equals("eps")) {
+				return new SaveOptimizationJobSolutionResult("Wrong Format of R File!");
+			}
+			createAndWriteFileToDirectory(ApplicationConstants.R_PATH, r);
+		}
+
 		OptimizationJobExecutions optimizationJobExecutions = optimizationDataManager.searchOptimizationJobExecutionsById(id);
-		// TODO - Add @RequestParam("latex") and @RequestParam("r") and save the files on disk
 		solutions.forEach(solution -> solution.setOptimizationJobExecutions(optimizationJobExecutions));
 		return new SaveOptimizationJobSolutionResult("SUCCESS", optimizationDataManager
 			.saveOptimizationJobSolution(solutions));

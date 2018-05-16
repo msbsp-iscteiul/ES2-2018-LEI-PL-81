@@ -78,7 +78,8 @@ public class OptimizationServiceImpl implements OptimizationService {
 	@PostMapping(value = "/saveoptimizationjobsolution")
 	public SaveOptimizationJobSolutionResponse saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest request) {
 		return new SaveOptimizationJobSolutionResponse(
-			optimizationBusiness.saveOptimizationJobSolution(request.getId(), request.getSolutions()));
+			optimizationBusiness.saveOptimizationJobSolution(
+				request.getId(), request.getSolutions(), request.getLatex(), request.getR()));
 	}
 
 
