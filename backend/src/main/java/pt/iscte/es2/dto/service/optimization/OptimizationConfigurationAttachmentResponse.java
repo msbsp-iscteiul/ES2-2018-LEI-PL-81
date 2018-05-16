@@ -1,29 +1,24 @@
 package pt.iscte.es2.dto.service.optimization;
 
-import pt.iscte.es2.dto.OptimizationConfiguration;
+import org.springframework.web.multipart.MultipartFile;
 
-/**
- * DTO OptimizationConfiguration Attachment Response
- *
- * Response that contains an {@link OptimizationConfigurationAttachmentResult}
- */
 public class OptimizationConfigurationAttachmentResponse {
 
-	private OptimizationConfigurationAttachmentResult result;
+	private MultipartFile file;
 
 	public OptimizationConfigurationAttachmentResponse() {
 
 	}
 
-	public OptimizationConfigurationAttachmentResponse(OptimizationConfigurationAttachmentResult result) {
-		this.result = result;
+	public OptimizationConfigurationAttachmentResponse(MultipartFile file) {
+		this.file = file;
 	}
 
-	public OptimizationConfigurationAttachmentResult getResult() {
-		return result;
+	public MultipartFile getFile() {
+		return file;
 	}
 
-	public void setResult(OptimizationConfigurationAttachmentResult result) {
-		this.result = result;
+	public void setFile(MultipartFile file) {
+		this.file = file;
 	}
 }

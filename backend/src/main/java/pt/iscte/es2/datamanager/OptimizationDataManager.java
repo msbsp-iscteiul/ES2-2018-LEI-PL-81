@@ -67,7 +67,7 @@ public interface OptimizationDataManager {
 	 *
 	 * @return OptimizationJobExecutions
 	 */
-	public Integer saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration);
+	public OptimizationJobExecutions saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration);
 
 	/**
 	 * Searchs for an OptimizationJobExecutions By its ID
@@ -82,25 +82,12 @@ public interface OptimizationDataManager {
 	/**
 	 * Persists a list of OptimizationJobSolutions
 	 *
-	 * @param id
-	 * 			Integer
-	 *
 	 * @param optimizationJobSolutions
 	 * 			List
 	 *
-	 * @param state
-	 * 			State
-	 *
-	 * @param latexPath
-	 * 			Sring
-	 *
-	 * @param rPath
-	 * 			String
-	 *
-	 * @return List<OptimizationJobSolutions>
+	 * @return OptimizationJobExecutions
 	 */
-	public List<OptimizationJobSolutions> saveOptimizationJobSolution(
-		Integer id, List<OptimizationJobSolutions> optimizationJobSolutions, State state, String latexPath, String rPath);
+	public List<OptimizationJobSolutions> saveOptimizationJobSolution(List<OptimizationJobSolutions> optimizationJobSolutions);
 
 	/**
 	 * Updates the state of an Execution By ID
@@ -116,43 +103,12 @@ public interface OptimizationDataManager {
 	public OptimizationJobExecutions updateState(Integer id, State state);
 
 	/**
-	 * Searchs for all OptimizationJobExecutions available given an OptimizationConfigurationId
-	 *
-	 * @param id
-	 * 			Integer
-	 *
-	 * @return List<OptimizationJobExecutions>
-	 */
-	public List<OptimizationJobExecutions> searchOptimizationJobExecutionsByOptimizationConfigurationId(Integer id);
-
-	/**
 	 * Searchs for an OptimizationJobExecutions By ID
 	 *
-	 * @param optimizationJobExecutions
-	 * 			OptimizationJobExecutions
-	 *
-	 * @return OptimizationConfiguration
-	 */
-	public OptimizationConfiguration searchOptimizationConfigurationByOptimizationJobExecution(
-		OptimizationJobExecutions optimizationJobExecutions);
-
-	/**
-	 * Searchs a Latex Path given an Execution ID
-	 *
 	 * @param id
 	 * 			Integer
 	 *
-	 * @return String
+	 * @return OptimizationJobExecutions
 	 */
-	public String searchLatexPathByExecutionId(Integer id);
-
-	/**
-	 * Searchs a R Path given an Execution ID
-	 *
-	 * @param id
-	 * 			Integer
-	 *
-	 * @return String
-	 */
-	public String searchRPathByExecutionId(Integer id);
+	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id);
 }

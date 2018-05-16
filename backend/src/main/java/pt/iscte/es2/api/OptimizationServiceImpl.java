@@ -1,8 +1,6 @@
 package pt.iscte.es2.api;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.*;
 import pt.iscte.es2.ApplicationConstants;
 import pt.iscte.es2.business.OptimizationBusiness;
@@ -27,6 +25,11 @@ public class OptimizationServiceImpl implements OptimizationService {
 			request.getEmail(), request.getSessionId(), request.getVariables(),
 			request.getObjectives(), request.getAlgorithms(), request.getRestrictions(),
 			request.getAlgorithmChoiceMethod(), request.getExecutionMaxWaitTime(), request.getFile()));
+	}
+
+	@PostMapping(value = "/searchfilepathbysessionid")
+	public void searchFilePathBySessionId(String sessionId) {
+		optimizationBusiness.searchFilePathBySessionId(sessionId);
 	}
 
 	/**
@@ -88,39 +91,11 @@ public class OptimizationServiceImpl implements OptimizationService {
 		optimizationBusiness.updateState(id, state);
 	}
 
-	/**
-	 * @see OptimizationService#searchAttachmentByJobExecution(OptimizationConfigurationAttachmentRequest)
-	 */
-	@JsonIgnore
-	@PostMapping(value = "/searchattachmentbyjobexecution")
-	public FileSystemResource searchAttachmentByJobExecution(
+
+	@GetMapping(value = "/searchoptimizationconfigurationbyemail")
+	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecutionId(
 		OptimizationConfigurationAttachmentRequest request) {
-		return optimizationBusiness.searchAttachmentByJobExecution(request.getId());
-	}
 
-	/**
-	 * @see OptimizationService#searchOptimizationJobExecutionsByEmail(OptimizationJobExecutionsRequest)
-	 */
-	@PostMapping(value = "/searchoptimizationjobexecutionsbyemail")
-	public OptimizationJobExecutionsResponse searchOptimizationJobExecutionsByEmail(OptimizationJobExecutionsRequest request) {
-		return new OptimizationJobExecutionsResponse(
-			optimizationBusiness.searchOptimizationJobExecutionsByEmail(request.getEmail()));
+		return new OptimizationConfigurationAttachmentResponse();
 	}
-
-	/**
-	 * @see OptimizationService#searchLatexByExecutionId(Integer)
-	 */
-	@PostMapping(value = "/searchlatexbyexecutionid")
-	public FileSystemResource searchLatexByExecutionId(Integer id) {
-		return optimizationBusiness.searchLatexByExecutionId(id);
-	}
-
-	/**
-	 * @see OptimizationService#searchRByExecutionId(Integer)
-	 */
-	@PostMapping(value = "/searchrbyexecutionid")
-	public FileSystemResource searchRByExecutionId(Integer id) {
-		return optimizationBusiness.searchRByExecutionId(id);
-	}
-
 }

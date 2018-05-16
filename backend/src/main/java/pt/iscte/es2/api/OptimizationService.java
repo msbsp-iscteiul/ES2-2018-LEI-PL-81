@@ -1,7 +1,5 @@
 package pt.iscte.es2.api;
 
-import org.springframework.core.io.FileSystemResource;
-import pt.iscte.es2.dto.OptimizationJobExecutions;
 import pt.iscte.es2.dto.State;
 import pt.iscte.es2.dto.service.optimization.*;
 
@@ -11,22 +9,29 @@ import pt.iscte.es2.dto.service.optimization.*;
 public interface OptimizationService {
 
 	/**
-	 * Persists an OptimizationConfiguration suggested by the user which contains Variables, Objectives,
+	 * Persists the optimization suggested by the user which contains Variables, Objectives,
 	 * AlgorithmChoiceMethod and CSV File
 	 *
 	 * @param request
-	 * 			{@link SaveOptimizationConfigurationRequest}
+	 * 			SaveOptimizationConfigurationRequest
 	 *
-	 * @return {@link SaveOptimizationConfigurationResponse}
+	 * @return SaveOptimizationConfigurationResponse
 	 */
 	public SaveOptimizationConfigurationResponse saveOptimization(SaveOptimizationConfigurationRequest request);
 
 	/**
-	 * Uploads a Jar file that contains a problem to be optimized and returns a result that
-	 * contains all the necessary data such as NumberOfVariables, NumberOfObjectives.
+	 * Returns the filePath of the JAR file of the current SessionId.
+	 *
+	 * @param sessionId
+	 * 			String
+	 */
+	public void searchFilePathBySessionId(String sessionId);
+
+	/**
+	 * Uploads a Jar file that contains a problem to be optimized and returns
+	 * a result that contains all the necessary data such as NumberOfVariables, NumberOfObjectives.
 	 *
 	 * @param request
-	 * 			{@link FileUploadRequest}
 	 *
 	 * @return {@link FileUploadResponse}
 	 */
@@ -36,9 +41,9 @@ public interface OptimizationService {
 	 * Searchs for an OptimizationConfiguration by an existing Id and Email
 	 *
 	 * @param request
-	 * 			{@link SearchOptimizationConfigurationByIdAndEmailRequest}
+	 * 			SearchOptimizationConfigurationByIdAndEmailRequest
 	 *
-	 * @return {@link SearchOptimizationConfigurationByIdAndEmailResponse}
+	 * @return SearchOptimizationConfigurationByIdAndEmailResponse
 	 */
 	public SearchOptimizationConfigurationByIdAndEmailResponse searchOptimizationConfigurationByIdAndEmail(
 		SearchOptimizationConfigurationByIdAndEmailRequest request);
@@ -92,40 +97,9 @@ public interface OptimizationService {
 	 * @param request
 	 * 			OptimizationConfigurationAttachmentRequest
 	 *
-	 * @return FileSystemResource
+	 * @return OptimizationConfigurationAttachmentResponse
 	 */
-	public FileSystemResource searchAttachmentByJobExecution(
+	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecutionId(
 		OptimizationConfigurationAttachmentRequest request);
-
-	/**
-	 * Searchs for all OptimizationJobExecutions available By the User Email.
-	 *
-	 * @param request
-	 * 			{@link OptimizationJobExecutionsRequest}
-	 *
-	 * @return {@link OptimizationJobExecutionsResponse}
-	 */
-	public OptimizationJobExecutionsResponse searchOptimizationJobExecutionsByEmail(
-		OptimizationJobExecutionsRequest request);
-
-	/**
-	 * Returns the Latex file associated with the Execution By ID
-	 *
-	 * @param id
-	 * 			Integer
-	 *
-	 * @return FileSystemResource
-	 */
-	public FileSystemResource searchLatexByExecutionId(Integer id);
-
-	/**
-	 * Returns the R file associated with the Execution By ID
-	 *
-	 * @param id
-	 * 			Integer
-	 *
-	 * @return FileSystemResource
-	 */
-	public FileSystemResource searchRByExecutionId(Integer id);
 
 }

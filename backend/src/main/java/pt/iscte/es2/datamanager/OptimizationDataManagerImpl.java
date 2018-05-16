@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -61,9 +60,61 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	 */
 	public OptimizationConfiguration saveOptimization(OptimizationConfiguration optimizationConfiguration) {
 		OptimizationConfigurationEntity entity = mapper.map(optimizationConfiguration, OptimizationConfigurationEntity.class);
-		OptimizationConfigurationEntity savedOptimizationConfigurationEntity = optimizationConfigurationDao.save(entity);
-		return mapper.map(savedOptimizationConfigurationEntity, OptimizationConfiguration.class);
+		OptimizationConfigurationEntity savedOptimizationConfigurationEntity = optimizationConfigurationDao.saveAndFlush(entity);
+		OptimizationConfiguration savedOptimizationConfiguration = mapper.map(savedOptimizationConfigurationEntity, OptimizationConfiguration.class);
+
+		optimizationConfiguration.getVariables()
+			.forEach(optimizationConfigurationVariables -> {
+				OptimizationConfigurationVariablesEntity variableEntity = mapper.map(optimizationConfigurationVariables, OptimizationConfigurationVariablesEntity.class);
+				variableEntity.setOptimizationConfiguration(savedOptimizationConfigurationEntity);
+				savedOptimizationConfiguration
+					.getVariables()
+					.add(mapper.map(
+						optimizationConfigurationVariablesDao.saveAndFlush(variableEntity), OptimizationConfigurationVariables.class));
+			});
+
+		optimizationConfiguration.getAlgorithms()
+			.forEach(optimizationConfigurationAlgorithms -> {
+				OptimizationConfigurationAlgorithmsEntity algorithmsEntity = mapper.map(optimizationConfigurationAlgorithms, OptimizationConfigurationAlgorithmsEntity.class);
+				algorithmsEntity.setOptimizationConfiguration(savedOptimizationConfigurationEntity);
+				savedOptimizationConfiguration
+					.getAlgorithms()
+					.add(mapper.map(
+						optimizationConfigurationAlgorithmsDao.saveAndFlush(algorithmsEntity), OptimizationConfigurationAlgorithms.class));
+			});
+
+		optimizationConfiguration.getObjectives()
+			.forEach(optimizationConfigurationObjectives -> {
+				OptimizationConfigurationObjectivesEntity objectivesEntity = mapper.map(optimizationConfigurationObjectives, OptimizationConfigurationObjectivesEntity.class);
+				objectivesEntity.setOptimizationConfiguration(savedOptimizationConfigurationEntity);
+				savedOptimizationConfiguration
+					.getObjectives()
+					.add(mapper.map(
+						optimizationConfigurationObjectivesDao.saveAndFlush(objectivesEntity), OptimizationConfigurationObjectives.class));
+			});
+
+		optimizationConfiguration.getRestrictions()
+			.forEach(optimizationConfigurationRestrictions -> {
+				OptimizationConfigurationRestrictionsEntity restrictionsEntity = mapper.map(optimizationConfigurationRestrictions, OptimizationConfigurationRestrictionsEntity.class);
+				restrictionsEntity.setOptimizationConfiguration(savedOptimizationConfigurationEntity);
+				savedOptimizationConfiguration
+					.getRestrictions()
+					.add(mapper.map(
+						optimizationConfigurationRestrictionsDao.saveAndFlush(restrictionsEntity), OptimizationConfigurationRestrictions.class));
+			});
+
+		optimizationConfiguration.getUserSolutions()
+			.forEach(optimizationConfigurationUserSolutions -> {
+				OptimizationConfigurationUserSolutionsEntity userSolutionsEntity = mapper.map(optimizationConfigurationUserSolutions, OptimizationConfigurationUserSolutionsEntity.class);
+				userSolutionsEntity.setOptimizationConfiguration(savedOptimizationConfigurationEntity);
+				savedOptimizationConfiguration
+					.getUserSolutions()
+					.add(mapper.map(
+						optimizationConfigurationUserSolutionsDao.saveAndFlush(userSolutionsEntity), OptimizationConfigurationUserSolutions.class));
+			});
+		return savedOptimizationConfiguration;
 	}
+
 
 	/**
 	 * @see OptimizationDataManager#saveFileUpload(String, String)
@@ -80,8 +131,19 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	 * @see OptimizationDataManager#searchOptimizationConfigurationByIdAndEmail(Integer, String)
 	 */
 	public OptimizationConfiguration searchOptimizationConfigurationByIdAndEmail(Integer id, String email) {
-		return mapper.map(optimizationConfigurationDao
+		OptimizationConfiguration result = mapper.map(optimizationConfigurationDao
 			.findByIdAndEmail(id.longValue(), email), OptimizationConfiguration.class);
+		optimizationConfigurationVariablesDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getVariables().add(mapper.map(entity, OptimizationConfigurationVariables.class)));
+		optimizationConfigurationAlgorithmsDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getAlgorithms().add(mapper.map(entity, OptimizationConfigurationAlgorithms.class)));
+		optimizationConfigurationRestrictionsDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getRestrictions().add(mapper.map(entity, OptimizationConfigurationRestrictions.class)));
+		optimizationConfigurationObjectivesDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getObjectives().add(mapper.map(entity, OptimizationConfigurationObjectives.class)));
+		optimizationConfigurationUserSolutionsDao.findByOptimizationConfigurationId(result.getId().longValue())
+			.forEach(entity -> result.getUserSolutions().add(mapper.map(entity, OptimizationConfigurationUserSolutions.class)));
+		return result;
 	}
 
 	/**
@@ -98,62 +160,49 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	/**
 	 * @see OptimizationDataManager#saveExecutionOptimizationConfiguration(OptimizationConfiguration)
 	 */
-	public Integer saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
-		OptimizationConfigurationEntity optimizationConfigurationEntity = mapper
-			.map(optimizationConfiguration, OptimizationConfigurationEntity.class);
-		OptimizationJobExecutionsEntity entity = new OptimizationJobExecutionsEntity(new Date());
-		optimizationConfigurationEntity.getOptimizationJobExecutions().add(entity);
-		OptimizationConfigurationEntity savedOptimizationConfigurationEntity = optimizationConfigurationDao
-			.save(optimizationConfigurationEntity);
-		return savedOptimizationConfigurationEntity.getOptimizationJobExecutions()
-			.get(savedOptimizationConfigurationEntity.getOptimizationJobExecutions().size()-1).getId().intValue();
+	public OptimizationJobExecutions saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
+		return mapper.map(
+			optimizationJobExecutionsDao.saveAndFlush(
+				new OptimizationJobExecutionsEntity(
+					mapper.map(optimizationConfiguration, OptimizationConfigurationEntity.class), new Date(), State.Ready)),
+			OptimizationJobExecutions.class);
 	}
 
 	/**
 	 * @see OptimizationDataManager#searchOptimizationJobExecutionsById(Integer)
 	 */
 	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id) {
+		OptimizationJobExecutions optimizationJobExecutions = new OptimizationJobExecutions();
 		Optional<OptimizationJobExecutionsEntity> entity = optimizationJobExecutionsDao.findById(id.longValue());
 		if (entity.isPresent()) {
+			optimizationJobExecutions.setId(entity.get().getId().intValue());
+			optimizationJobExecutions.setStartDate(entity.get().getStartDate());
+			optimizationJobExecutions.setEndDate(entity.get().getEndDate());
+			optimizationJobExecutions.setState(entity.get().getState());
+			entity.get().getOptimizationJobSolutions()
+				.forEach(optimizationJobSolutionsEntity -> optimizationJobExecutions.getOptimizationJobSolutions()
+					.add(mapper.map(optimizationJobSolutionsEntity, OptimizationJobSolutions.class)));
 			return mapper.map(entity.get(), OptimizationJobExecutions.class);
 		}
 		return null;
 	}
 
 	/**
-	 * @see OptimizationDataManager#saveOptimizationJobSolution(Integer, List, State, String, String)
+	 * @see OptimizationDataManager#saveOptimizationJobSolution(List<OptimizationJobSolutions>)
 	 */
-	public List<OptimizationJobSolutions> saveOptimizationJobSolution(Integer id,
-		List<OptimizationJobSolutions> optimizationJobSolutions, State state, String latexPath, String rPath) {
-		Optional<OptimizationJobExecutionsEntity> optimizationJobExecutionsEntity = optimizationJobExecutionsDao
-			.findById(id.longValue());
-		if (optimizationJobExecutionsEntity.isPresent()) {
-			optimizationJobExecutionsEntity.get().setState(state);
-			optimizationJobExecutionsEntity.get().setEndDate(new Date());
-			if (latexPath.isEmpty()) {
-				optimizationJobExecutionsEntity.get().setLatexPath(null);
-			} else {
-				optimizationJobExecutionsEntity.get().setLatexPath(latexPath);
-			}
-			if (rPath.isEmpty()) {
-				optimizationJobExecutionsEntity.get().setrPath(null);
-			} else {
-				optimizationJobExecutionsEntity.get().setrPath(rPath);
-			}
-			List<OptimizationJobSolutionsEntity> solutionsEntities = optimizationJobSolutions
-				.stream()
-				.map(jobSolution -> mapper.map(jobSolution, OptimizationJobSolutionsEntity.class))
-				.collect(Collectors.toList());
-			optimizationJobExecutionsEntity.get().setOptimizationJobSolutions(solutionsEntities);
-			OptimizationJobExecutionsEntity savedEntity = optimizationJobExecutionsDao
-				.saveAndFlush(optimizationJobExecutionsEntity.get());
-			return savedEntity.getOptimizationJobSolutions()
-				.stream()
-				.map(entity -> mapper.map(entity, OptimizationJobSolutions.class))
-				.collect(Collectors.toList());
-		}
-		return new ArrayList<>();
+	public List<OptimizationJobSolutions> saveOptimizationJobSolution(
+		List<OptimizationJobSolutions> optimizationJobSolutions) {
+		List<OptimizationJobSolutionsEntity> optimizationJobSolutionsEntities = new ArrayList<>();
+		optimizationJobSolutions.forEach(optimizationSolution -> optimizationJobSolutionsEntities.add(
+			mapper.map(optimizationSolution, OptimizationJobSolutionsEntity.class)));
+		List<OptimizationJobSolutionsEntity> savedOptimizationJobSolutionsEntities = optimizationJobSolutionsDao
+			.saveAll(optimizationJobSolutionsEntities);
+		List<OptimizationJobSolutions> savedOptimizationJobSolutions = new ArrayList<>();
+		savedOptimizationJobSolutionsEntities.forEach(entity -> savedOptimizationJobSolutions
+			.add(mapper.map(entity, OptimizationJobSolutions.class)));
+		return savedOptimizationJobSolutions;
 	}
+
 
 	/**
 	 * @see OptimizationDataManager#updateState(Integer, State)
@@ -170,52 +219,9 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	}
 
 	/**
-	 * @see OptimizationDataManager#searchOptimizationJobExecutionsByOptimizationConfigurationId(Integer)
+	 * @see OptimizationDataManager#searchOptimizationJobExecutionsById(Integer)
 	 */
-	public List<OptimizationJobExecutions> searchOptimizationJobExecutionsByOptimizationConfigurationId(Integer id) {
-		List<OptimizationJobExecutions> executions = new ArrayList<>();
-		optimizationConfigurationDao.findById(id.longValue())
-			.ifPresent(entity -> {
-				executions.addAll(entity.getOptimizationJobExecutions()
-					.stream()
-					.map(executionEntity -> mapper.map(executionEntity, OptimizationJobExecutions.class))
-					.collect(Collectors.toList()));
-			});
-		return executions;
-	}
-
-	/**
-	 * @see OptimizationDataManager#searchOptimizationConfigurationByOptimizationJobExecution(OptimizationJobExecutions)
-	 */
-	public OptimizationConfiguration searchOptimizationConfigurationByOptimizationJobExecution(
-		OptimizationJobExecutions optimizationJobExecution) {
-		return mapper.map(
-			optimizationConfigurationDao.findByOptimizationJobExecutions(
-				mapper.map(optimizationJobExecution, OptimizationJobExecutionsEntity.class)),
-			OptimizationConfiguration.class);
-	}
-
-	/**
-	 * @see OptimizationDataManager#searchLatexPathByExecutionId(Integer)
-	 */
-	public String searchLatexPathByExecutionId(Integer id) {
-		String path = "";
-		Optional<OptimizationJobExecutionsEntity> executionEntity = optimizationJobExecutionsDao.findById(id.longValue());
-		if (executionEntity.isPresent()) {
-			return executionEntity.get().getLatexPath();
-		}
-		return null;
-	}
-
-	/**
-	 * @see OptimizationDataManager#searchRPathByExecutionId(Integer)
-	 */
-	public String searchRPathByExecutionId(Integer id) {
-		String path = "";
-		Optional<OptimizationJobExecutionsEntity> executionEntity = optimizationJobExecutionsDao.findById(id.longValue());
-		if (executionEntity.isPresent()) {
-			return executionEntity.get().getrPath();
-		}
-		return null;
+	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id) {
+		return mapper.map(optimizationJobExecutionsDao.findById(id.longValue()), OptimizationJobExecutions.class);
 	}
 }
