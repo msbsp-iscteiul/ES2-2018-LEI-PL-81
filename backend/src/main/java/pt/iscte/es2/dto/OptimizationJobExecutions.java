@@ -13,6 +13,7 @@ public class OptimizationJobExecutions {
 	private Date startDate;
 	private Date endDate;
 	private State state;
+	private OptimizationConfiguration optimizationConfiguration;
 	private List<OptimizationJobSolutions> optimizationJobSolutions;
 
 	public OptimizationJobExecutions() {
@@ -60,5 +61,13 @@ public class OptimizationJobExecutions {
 
 	public void setOptimizationJobSolutions(List<OptimizationJobSolutions> optimizationJobSolutions) {
 		this.optimizationJobSolutions = optimizationJobSolutions;
+	}
+
+	public OptimizationConfiguration getOptimizationConfiguration() {
+		return optimizationConfiguration;
+	}
+
+	public void setOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
+		this.optimizationConfiguration = optimizationConfiguration;
 	}
 }

@@ -90,4 +90,12 @@ public class OptimizationServiceImpl implements OptimizationService {
 	public void updateState(Integer id, State state) {
 		optimizationBusiness.updateState(id, state);
 	}
+
+
+	@GetMapping(value = "/searchoptimizationconfigurationbyemail")
+	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecutionId(
+		OptimizationConfigurationAttachmentRequest request) {
+
+		return new OptimizationConfigurationAttachmentResponse();
+	}
 }

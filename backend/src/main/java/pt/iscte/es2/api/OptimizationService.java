@@ -90,4 +90,16 @@ public interface OptimizationService {
 	 * 			State
 	 */
 	public void updateState(Integer id, State state);
+
+	/**
+	 * Returns the JAR File associated with an Job Execution By Id
+	 *
+	 * @param request
+	 * 			OptimizationConfigurationAttachmentRequest
+	 *
+	 * @return OptimizationConfigurationAttachmentResponse
+	 */
+	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecutionId(
+		OptimizationConfigurationAttachmentRequest request);
+
 }

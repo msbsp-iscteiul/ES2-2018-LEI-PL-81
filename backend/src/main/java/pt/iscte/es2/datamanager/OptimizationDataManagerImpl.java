@@ -218,4 +218,10 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 		}
 	}
 
+	/**
+	 * @see OptimizationDataManager#searchOptimizationJobExecutionsById(Integer)
+	 */
+	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id) {
+		return mapper.map(optimizationJobExecutionsDao.findById(id.longValue()), OptimizationJobExecutions.class);
+	}
 }

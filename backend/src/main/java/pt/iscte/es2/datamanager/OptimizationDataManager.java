@@ -101,4 +101,14 @@ public interface OptimizationDataManager {
 	 * @return OptimizationJobExecutions
 	 */
 	public OptimizationJobExecutions updateState(Integer id, State state);
+
+	/**
+	 * Searchs for an OptimizationJobExecutions By ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @return OptimizationJobExecutions
+	 */
+	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id);
 }
