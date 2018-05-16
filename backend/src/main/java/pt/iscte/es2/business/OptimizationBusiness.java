@@ -143,4 +143,15 @@ public interface OptimizationBusiness {
 	 * 			State
 	 */
 	public void updateState(Integer id, State state);
+
+	/**
+	 * Returns the JAR File associated with an Job Execution By Id
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @return OptimizationConfigurationAttachmentResult
+	 */
+	public OptimizationConfigurationAttachmentResult searchAttachmentByJobExecutionId(Integer id);
+
 }

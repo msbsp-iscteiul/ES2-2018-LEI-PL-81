@@ -246,6 +246,21 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 	}
 
 	/**
+	 * @see OptimizationBusiness#searchAttachmentByJobExecutionId(Integer)
+	 */
+	public OptimizationConfigurationAttachmentResult searchAttachmentByJobExecutionId(Integer id) {
+
+		OptimizationJobExecutions optimizationJobExecution = optimizationDataManager
+			.searchOptimizationJobExecutionsById(id);
+
+		System.out.println("ID Job Execution: " + optimizationJobExecution.getId());
+		System.out.println("ID Configuration Optimization: " + optimizationJobExecution
+			.getOptimizationConfiguration().getId());
+
+		return new OptimizationConfigurationAttachmentResult();
+	}
+
+	/**
 	 * @see OptimizationBusiness#updateState(Integer, State)
 	 */
 	public void updateState(@RequestParam("id") Integer id, @RequestParam("state") State state) {
