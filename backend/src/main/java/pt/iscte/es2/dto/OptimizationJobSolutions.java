@@ -8,7 +8,7 @@ public class OptimizationJobSolutions {
 	private Integer id;
 	private OptimizationJobExecutions optimizationJobExecutions;
 	private String algorithmName;
-	private String solutionName;
+	private String solution;
 	private String solutionQuality;
 	private String quality;
 
@@ -40,12 +40,12 @@ public class OptimizationJobSolutions {
 		this.algorithmName = algorithmName;
 	}
 
-	public String getSolutionName() {
-		return solutionName;
+	public String getSolution() {
+		return solution;
 	}
 
-	public void setSolutionName(String solutionName) {
-		this.solutionName = solutionName;
+	public void setSolution(String solution) {
+		this.solution = solution;
 	}
 
 	public String getSolutionQuality() {

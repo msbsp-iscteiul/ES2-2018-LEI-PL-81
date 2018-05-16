@@ -27,7 +27,7 @@ public class OptimizationJobSolutionsEntity {
 	private String algorithmName;
 
 	@NotBlank
-	private String solutionName;
+	private String solution;
 
 	@NotBlank
 	private String solutionQuality;
@@ -64,12 +64,12 @@ public class OptimizationJobSolutionsEntity {
 		this.algorithmName = algorithmName;
 	}
 
-	public String getSolutionName() {
-		return solutionName;
+	public String getSolution() {
+		return solution;
 	}
 
-	public void setSolutionName(String solutionName) {
-		this.solutionName = solutionName;
+	public void setSolution(String solution) {
+		this.solution = solution;
 	}
 
 	public String getSolutionQuality() {
