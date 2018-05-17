@@ -1,5 +1,6 @@
 package pt.iscte.es2.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pt.iscte.es2.ApplicationConstants;
@@ -91,11 +92,21 @@ public class OptimizationServiceImpl implements OptimizationService {
 		optimizationBusiness.updateState(id, state);
 	}
 
-
 	@GetMapping(value = "/searchoptimizationconfigurationbyemail")
 	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecutionId(
 		OptimizationConfigurationAttachmentRequest request) {
 
 		return new OptimizationConfigurationAttachmentResponse();
+	}
+
+	/**
+	 * @see OptimizationService#searchAttachmentByJobExecution(OptimizationConfigurationAttachmentRequest)
+	 */
+	@JsonIgnore
+	@PostMapping(value = "/searchattachmentbyjobexecution")
+	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecution(
+		OptimizationConfigurationAttachmentRequest request) {
+		return new OptimizationConfigurationAttachmentResponse(
+			optimizationBusiness.searchAttachmentByJobExecution(request.getId()));
 	}
 }

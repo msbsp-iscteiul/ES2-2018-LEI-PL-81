@@ -152,6 +152,6 @@ public interface OptimizationBusiness {
 	 *
 	 * @return OptimizationConfigurationAttachmentResult
 	 */
-	public OptimizationConfigurationAttachmentResult searchAttachmentByJobExecutionId(Integer id);
+	public OptimizationConfigurationAttachmentResult searchAttachmentByJobExecution(Integer id);
 
 }
