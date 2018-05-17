@@ -222,6 +222,14 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	 * @see OptimizationDataManager#searchOptimizationJobExecutionsById(Integer)
 	 */
 	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id) {
-		return mapper.map(optimizationJobExecutionsDao.findById(id.longValue()), OptimizationJobExecutions.class);
+		Optional<OptimizationJobExecutionsEntity> entity = optimizationJobExecutionsDao.findById(id.longValue());
+		if (entity.isPresent()) {
+			OptimizationConfiguration optimizationConfiguration = mapper
+				.map(entity.get().getOptimizationConfiguration(), OptimizationConfiguration.class);
+			OptimizationJobExecutions optimizationJobExecution = mapper.map(entity.get(), OptimizationJobExecutions.class);
+			optimizationJobExecution.setOptimizationConfiguration(optimizationConfiguration);
+			return optimizationJobExecution;
+		}
+		return null;
 	}
 }

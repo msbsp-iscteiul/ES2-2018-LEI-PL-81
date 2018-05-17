@@ -99,7 +99,7 @@ public interface OptimizationService {
 	 *
 	 * @return OptimizationConfigurationAttachmentResponse
 	 */
-	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecutionId(
+	public OptimizationConfigurationAttachmentResponse searchAttachmentByJobExecution(
 		OptimizationConfigurationAttachmentRequest request);
 
 }
