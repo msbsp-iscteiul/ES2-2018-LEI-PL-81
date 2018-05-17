@@ -1,7 +1,10 @@
 package pt.iscte.es2.business;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,10 +19,7 @@ import pt.iscte.es2.dto.*;
 import pt.iscte.es2.dto.service.optimization.*;
 
 import javax.transaction.Transactional;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -246,18 +246,26 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 	}
 
 	/**
-	 * @see OptimizationBusiness#searchAttachmentByJobExecutionId(Integer)
+	 * @see OptimizationBusiness#searchAttachmentByJobExecution(Integer)
 	 */
-	public OptimizationConfigurationAttachmentResult searchAttachmentByJobExecutionId(Integer id) {
-
+	public OptimizationConfigurationAttachmentResult searchAttachmentByJobExecution(Integer id) {
 		OptimizationJobExecutions optimizationJobExecution = optimizationDataManager
 			.searchOptimizationJobExecutionsById(id);
-
-		System.out.println("ID Job Execution: " + optimizationJobExecution.getId());
-		System.out.println("ID Configuration Optimization: " + optimizationJobExecution
-			.getOptimizationConfiguration().getId());
-
-		return new OptimizationConfigurationAttachmentResult();
+		MultipartFile file = null;
+		if (optimizationJobExecution != null) {
+			File tmpFile = new File(optimizationJobExecution.getOptimizationConfiguration().getFilePath());
+			FileInputStream input;
+			try {
+				input = new FileInputStream(tmpFile);
+				file = new MockMultipartFile("file",
+					tmpFile.getName(), MediaType.MULTIPART_FORM_DATA_VALUE, IOUtils.toByteArray(input));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return new OptimizationConfigurationAttachmentResult(file);
 	}
 
 	/**
