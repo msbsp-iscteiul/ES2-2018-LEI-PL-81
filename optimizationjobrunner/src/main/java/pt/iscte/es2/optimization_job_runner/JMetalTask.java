@@ -1,6 +1,5 @@
 package pt.iscte.es2.optimization_job_runner;
 
-import org.springframework.mail.javamail.JavaMailSender;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
@@ -37,6 +36,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
+/**
+ * The JMetal task
+ */
 @SuppressWarnings("unchecked")
 public class JMetalTask implements Callable<OptimizationJobResult> {
 
@@ -48,6 +50,14 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 	private final String experimentBaseDirectory;
 	private final String referenceFront;
 
+	/**
+	 * Constructor
+	 * @param mailSender mail sender
+	 * @param job job to execute
+	 * @param experimentName experiment name
+	 * @param experimentBaseDirectory experiment base directory
+	 * @param referenceFront the reference front path
+	 */
 	public JMetalTask(
 		MailSender mailSender, Job job,
 		String experimentName, String experimentBaseDirectory, String referenceFront
@@ -59,6 +69,15 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 		this.referenceFront = referenceFront;
 	}
 
+	/**
+	 * Run the task
+	 * @return the job result
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
 	@Override
 	public OptimizationJobResult call() throws ClassNotFoundException, IOException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		final Problem<Solution<?>> clientOptimizationProblem = new LoadClientJarProblem()
@@ -124,6 +143,15 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 		);
 	}
 
+	/**
+	 * Finds the experiment algorithms for the experiment
+	 * @param experimentProblem the experiment
+	 * @param algorithmFactoryConstructors the algorithm constructors
+	 * @return the list of algorithms
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
 	private static List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> getExperimentAlgorithms(
 		ExperimentProblem<Solution<?>> experimentProblem,
 		List<Constructor<?>> algorithmFactoryConstructors

@@ -6,8 +6,11 @@ import org.uma.jmetal.solution.Solution;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * Annotate which algorithm and solution types the factories are compatible with
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BuilderTypes {
-	Class<? extends Solution> solutionType();
 	Class<? extends Algorithm> algorithm();
+	Class<? extends Solution> solutionType();
 }

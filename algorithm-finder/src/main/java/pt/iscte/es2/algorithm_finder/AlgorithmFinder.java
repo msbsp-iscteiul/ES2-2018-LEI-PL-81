@@ -16,13 +16,24 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Finds algorithms matching a {@link Problem} type
+ */
 public class AlgorithmFinder {
 	private final Problem problem;
 
+	/**
+	 * The constructor
+	 * @param problem the problem
+	 */
 	public AlgorithmFinder(Problem problem) {
 		this.problem = problem;
 	}
 
+	/**
+	 * Execute the finder
+	 * @return finding results
+	 */
 	public AlgorithmFinderResult execute() {
 		Class<?> problemSolutionType = getSolutionTypeForProblem();
 		if (problemSolutionType == null) {
@@ -58,6 +69,10 @@ public class AlgorithmFinder {
 		return new AlgorithmFinderResult(factories, constructors, problemSolutionType.getName());
 	}
 
+	/**
+	 * Determines the type of solution for the given type
+	 * @return the type
+	 */
 	private Class<?> getSolutionTypeForProblem() {
 		final Method[] declaredMethods = problem.getClass().getDeclaredMethods();
 		for (Method declaredMethod : declaredMethods) {
@@ -68,6 +83,10 @@ public class AlgorithmFinder {
 		return null;
 	}
 
+	/**
+	 * Builds the reflector to navigate the code in search of compatible types
+	 * @return the reflector
+	 */
 	private static Reflections buildReflector() {
 		List<ClassLoader> classLoadersList = new LinkedList<>();
 		classLoadersList.add(ClasspathHelper.contextClassLoader());
@@ -86,11 +105,23 @@ public class AlgorithmFinder {
 			));
 	}
 
+	/**
+	 * The result class for {@link AlgorithmFinder}.
+	 * - List of algorithm factories compatible with a {@link Problem}.
+	 * - List of constructors compatible with a {@link Problem}
+	 * - Has the solution type name
+	 */
 	public class AlgorithmFinderResult {
 		private final List<Class<?>> algorithmFactories;
 		private final List<Constructor<?>> constructors;
 		private final String solutionTypeName;
 
+		/**
+		 * The constructor
+		 * @param algorithmFactories algorithm factories for {@link Problem}
+		 * @param constructors constructors for {@link Problem}
+		 * @param solutionTypeName solution type name for {@link Problem}
+		 */
 		private AlgorithmFinderResult(
 			List<Class<?>> algorithmFactories,
 			List<Constructor<?>> constructors,
@@ -101,22 +132,36 @@ public class AlgorithmFinder {
 			this.solutionTypeName = solutionTypeName;
 		}
 
+		/**
+		 * Empty constructor
+		 */
 		private AlgorithmFinderResult() {
-			algorithmFactories = Collections.emptyList();
-			constructors = Collections.emptyList();
-			solutionTypeName = null;
+			this(Collections.emptyList(), Collections.emptyList(), null);
 		}
 
+		/**
+		 * The list of algorithms
+		 * @return list of algorithms
+		 */
 		public List<String> getAlgorithms() {
 			return algorithmFactories.stream()
 				.map(factory -> factory.getAnnotation(BuilderTypes.class).algorithm().getName())
 				.collect(Collectors.toList());
 		}
 
+		/**
+		 * The list of constructors
+		 * @return list of constructors
+		 */
 		public List<Constructor<?>> getConstructors() {
 			return constructors;
 		}
 
+		/**
+		 * List of constructors for selected algorithms
+		 * @param selectedAlgorithms selected algorithms
+		 * @return list of constructors
+		 */
 		public List<Constructor<?>> getConstructorsForAlgorithms(List<String> selectedAlgorithms) {
 			final Map<String, String> algorithms = algorithmFactories.stream()
 				.collect(Collectors.toMap(

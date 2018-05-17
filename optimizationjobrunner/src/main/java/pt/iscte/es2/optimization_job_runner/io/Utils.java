@@ -1,10 +1,16 @@
 package pt.iscte.es2.optimization_job_runner.io;
 
-import org.springframework.mail.SimpleMailMessage;
-
 import java.io.File;
 
+/**
+ * IO utilities
+ */
 public class Utils {
+
+	/**
+	 * Delete directory
+	 * @param file directory to delete
+	 */
 	public static void deleteDir(File file) {
 		File[] contents = file.listFiles();
 		if (contents != null) {
@@ -13,13 +19,5 @@ public class Utils {
 			}
 		}
 		file.delete();
-	}
-
-	public static void sendEmail(String subject, String body) {
-		final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-		simpleMailMessage.setSubject(subject);
-		simpleMailMessage.setText(body);
-		simpleMailMessage.setTo("msbsp@iscte-iul.pt");
-		simpleMailMessage.setFrom("robot@es2.com");
 	}
 }

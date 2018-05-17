@@ -8,6 +8,11 @@ import org.uma.jmetal.util.experiment.ExperimentComponent;
 
 import java.io.File;
 
+/**
+ * Runs list of algorithms
+ * @param <S>
+ * @param <Result>
+ */
 public class OptimizationJobRunnerExecuteAlgorithms<S extends Solution<?>, Result> implements ExperimentComponent {
 	private Experiment<S, Result> experiment;
 
@@ -18,6 +23,9 @@ public class OptimizationJobRunnerExecuteAlgorithms<S extends Solution<?>, Resul
 		this.experiment = configuration;
 	}
 
+	/**
+	 * Run the algorithms
+	 */
 	@Override
 	public void run() {
 		JMetalLogger.logger.info("ExecuteAlgorithms: Preparing output directory");
@@ -41,13 +49,18 @@ public class OptimizationJobRunnerExecuteAlgorithms<S extends Solution<?>, Resul
 		}
 	}
 
-
+	/**
+	 * Prepares the output directory
+	 */
 	private void prepareOutputDirectory() {
 		if (experimentDirectoryDoesNotExist()) {
 			createExperimentDirectory();
 		}
 	}
 
+	/**
+	 * @return wether the directory is empty or not
+	 */
 	private boolean experimentDirectoryDoesNotExist() {
 		boolean result;
 		File experimentDirectory;
@@ -62,6 +75,9 @@ public class OptimizationJobRunnerExecuteAlgorithms<S extends Solution<?>, Resul
 		return result;
 	}
 
+	/**
+	 * Create the experiment directory
+	 */
 	private void createExperimentDirectory() {
 		File experimentDirectory;
 		experimentDirectory = new File(experiment.getExperimentBaseDirectory());

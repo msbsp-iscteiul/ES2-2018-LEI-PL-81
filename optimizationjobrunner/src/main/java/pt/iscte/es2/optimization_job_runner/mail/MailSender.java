@@ -6,6 +6,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+/**
+ * Send emails
+ */
 @Component
 public class MailSender {
 	@Autowired
@@ -13,6 +16,12 @@ public class MailSender {
 	@Value("${mail.admin}")
 	private String adminAddress;
 
+	/**
+	 * Send email
+	 * @param subject the subject
+	 * @param body the body
+	 * @param to the recipient
+	 */
 	public void send(String subject, String body, String to) {
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setFrom(adminAddress);

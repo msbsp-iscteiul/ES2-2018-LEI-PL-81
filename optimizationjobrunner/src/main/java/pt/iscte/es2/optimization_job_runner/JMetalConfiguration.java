@@ -16,6 +16,9 @@ import java.nio.file.Files;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+/**
+ * Runs a JMetal executor
+ */
 @Component
 public class JMetalConfiguration {
 
@@ -30,11 +33,22 @@ public class JMetalConfiguration {
 	@Value("${jmetal.reference_fronts}")
 	private String referenceFront;
 
+	/**
+	 * Constructor
+	 * @param mailSender mail sender
+	 * @param postProblemProcessor job result processor
+	 */
 	public JMetalConfiguration(MailSender mailSender, PostProblemProcessor postProblemProcessor) {
 		this.mailSender = mailSender;
 		this.postProblemProcessor = postProblemProcessor;
 	}
 
+	/**
+	 * Run the job
+	 * @param job the job to run
+	 * @throws ExecutionException
+	 * @throws InterruptedException
+	 */
 	public void execute(Job job) throws ExecutionException, InterruptedException {
 		LOGGER.info("Cleaning dir...");
 		cleanup();
@@ -50,6 +64,9 @@ public class JMetalConfiguration {
 		}
 	}
 
+	/**
+	 * Handler for timeout case
+	 */
 	private void handleTimeout() {
 		LOGGER.warning("Task timeout");
 		executor.shutdownNow();
@@ -64,10 +81,16 @@ public class JMetalConfiguration {
 		sendTimeoutEmail();
 	}
 
+	/**
+	 * Cleans experiment base directory of files
+	 */
 	private void cleanup() {
 		Utils.deleteDir(new File(experimentBaseDirectory));
 	}
 
+	/**
+	 * Sends timeout email
+	 */
 	private void sendTimeoutEmail() {
 		mailSender.send(
 			"A execução da tarefa excedeu o tempo máximo definido",

@@ -2,6 +2,9 @@ package pt.iscte.es2.client_jar_loader;
 
 import java.security.*;
 
+/**
+ * Security policy for native and client libraries
+ */
 public class SecurityPolicy extends Policy {
 
 	/**

@@ -13,8 +13,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pt.iscte.es2.client_jar_loader.SecurityPolicy;
 import pt.iscte.es2.optimization_job_runner.post_processing.*;
 
+import java.security.Policy;
 import java.util.Arrays;
 
 @SpringBootApplication

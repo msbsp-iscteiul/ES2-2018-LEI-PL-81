@@ -14,7 +14,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Processes the job result to find the best solutions
+ */
 public class BestSolutionsProcessor implements PostProblemProcessor {
+	/**
+	 * Processes the job result to find the best solutions
+	 * @param result the job result
+	 */
 	@Override
 	public void process(OptimizationJobResult result) {
 		final PostProcessingContext context = result.getContext();

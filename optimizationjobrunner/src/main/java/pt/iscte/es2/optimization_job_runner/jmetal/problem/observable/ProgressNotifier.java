@@ -7,6 +7,9 @@ import java.util.concurrent.atomic.LongAdder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Listener that notifies a user at given progress points
+ */
 public class ProgressNotifier implements SolutionEvaluationListener {
 	private static final Logger LOGGER = Logger.getLogger(ProgressNotifier.class.getName());
 
@@ -15,12 +18,21 @@ public class ProgressNotifier implements SolutionEvaluationListener {
 	private final long totalEvaluations;
 	private LongAdder counter = new LongAdder();
 
+	/**
+	 * Constructor
+	 * @param problemName the problem name
+	 * @param mailSender the mail sender
+	 * @param totalEvaluations total evaluations to compare
+	 */
 	public ProgressNotifier(String problemName, MailSender mailSender, long totalEvaluations) {
 		this.problemName = problemName;
 		this.mailSender = mailSender;
 		this.totalEvaluations = totalEvaluations;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onSolutionEvaluated(Solution solution) {
 		counter.increment();
@@ -35,14 +47,21 @@ public class ProgressNotifier implements SolutionEvaluationListener {
 		}
 
 		if (percentage != null) {
-			notifyClient(percentage);
+//			notifyClient(percentage);
 		}
 	}
 
+	/**
+	 * @return number of evaluations counted
+	 */
 	public long getCount() {
 		return counter.sum();
 	}
 
+	/**
+	 * Notifies client for the progress point
+	 * @param percentage point of notification
+	 */
 	private void notifyClient(String percentage) {
 		mailSender.send(
 			String.format("Optimização em curso: %s, %s%%", problemName, percentage),

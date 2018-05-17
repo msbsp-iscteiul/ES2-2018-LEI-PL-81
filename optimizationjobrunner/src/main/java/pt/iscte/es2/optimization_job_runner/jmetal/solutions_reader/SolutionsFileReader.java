@@ -6,11 +6,19 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solution files parser
+ * @param <P>
+ */
 public class SolutionsFileReader<P> {
 
 	private final FileReaderParser<P> parser;
 	private List<P> results = new ArrayList<>();
 
+	/**
+	 * Constructor
+	 * @param parser the parser to use
+	 */
 	public SolutionsFileReader(FileReaderParser<P> parser) {
 		this.parser = parser;
 	}
