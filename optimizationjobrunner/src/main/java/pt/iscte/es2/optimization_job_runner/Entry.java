@@ -13,6 +13,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pt.iscte.es2.optimization_job_runner.post_processing.*;
+
+import java.util.Arrays;
 
 @SpringBootApplication
 @EnableJpaRepositories
@@ -48,7 +51,7 @@ public class Entry {
 		container.setConnectionFactory(connectionFactory);
 		container.setQueueNames(QUEUE_NAME);
 		container.setMessageListener(listenerAdapter);
-		container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+		container.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return container;
 	}
 
@@ -77,6 +80,21 @@ public class Entry {
 		mailSender.setUsername(mailUsername);
 		mailSender.setPassword(mailPassword);
 		return mailSender;
+	}
+
+	@Value("${backend.host}")
+	private String backendHost;
+	@Value("${backend.port}")
+	private String backendPort;
+
+	@Bean
+	public PostProblemProcessor getPostProblemProcessorComposite() {
+		return new PostProblemProcessorComposite(Arrays.asList(
+			new LatexToPdfProcessor(),
+			new RToEpsProcessor(),
+			new BestSolutionsProcessor(),
+			new SubmissionProcessor(backendHost, backendPort)
+		));
 	}
 
 	public static void main(String[] args) {

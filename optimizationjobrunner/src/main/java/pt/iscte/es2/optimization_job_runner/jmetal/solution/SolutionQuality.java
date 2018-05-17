@@ -4,9 +4,11 @@ import java.util.List;
 
 public class SolutionQuality {
 	private final List<Double> objectivesValue;
+	private final String stringSolution;
 
-	public SolutionQuality(List<Double> objectiveValue) {
+	public SolutionQuality(List<Double> objectiveValue, String stringSolution) {
 		this.objectivesValue = objectiveValue;
+		this.stringSolution = stringSolution;
 	}
 
 	public double quality() {
@@ -17,7 +19,7 @@ public class SolutionQuality {
 		return Math.sqrt(sum);
 	}
 
-	public List<Double> getObjectivesValue() {
-		return objectivesValue;
+	public String getStringSolution() {
+		return stringSolution;
 	}
 }

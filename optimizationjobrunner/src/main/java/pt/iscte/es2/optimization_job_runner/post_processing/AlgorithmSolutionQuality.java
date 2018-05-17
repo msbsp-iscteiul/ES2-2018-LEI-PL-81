@@ -2,14 +2,14 @@ package pt.iscte.es2.optimization_job_runner.post_processing;
 
 import pt.iscte.es2.optimization_job_runner.jmetal.solution.SolutionQuality;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class AlgorithmSolutionQuality {
+public class AlgorithmSolutionQuality implements Serializable {
 	private final String algorithmName;
-	private final List<Double> solution;
+	private final String solution;
 	private final SolutionQuality solutionQuality;
 
-	public AlgorithmSolutionQuality(String algorithmName, List<Double> solution, SolutionQuality solutionQuality) {
+	public AlgorithmSolutionQuality(String algorithmName, String solution, SolutionQuality solutionQuality) {
 		this.algorithmName = algorithmName;
 		this.solution = solution;
 		this.solutionQuality = solutionQuality;
@@ -18,4 +18,17 @@ public class AlgorithmSolutionQuality {
 	public double quality() {
 		return solutionQuality.quality();
 	}
+
+	public String getAlgorithmName() {
+		return algorithmName;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public SolutionQuality getSolutionQuality() {
+		return solutionQuality;
+	}
+
 }

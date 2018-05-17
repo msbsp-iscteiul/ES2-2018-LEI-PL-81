@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Job {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
+	private Long id = 1L;
 	private String state;
 
 	public Long getId() {
@@ -16,5 +16,9 @@ public class Job {
 
 	public void complete() {
 		state = "Finished";
+	}
+
+	public long getWaitingTime() {
+		return 9999999L;
 	}
 }

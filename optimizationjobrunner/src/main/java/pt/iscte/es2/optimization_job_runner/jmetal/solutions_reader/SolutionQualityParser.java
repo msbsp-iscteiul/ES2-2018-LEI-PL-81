@@ -14,6 +14,6 @@ public class SolutionQualityParser implements FileReaderParser<SolutionQuality> 
 			.stream(positiveNegative)
 			.map(Double::parseDouble)
 			.collect(Collectors.toList());
-		return new SolutionQuality(objectiveValues);
+		return new SolutionQuality(objectiveValues, line);
 	}
 }
