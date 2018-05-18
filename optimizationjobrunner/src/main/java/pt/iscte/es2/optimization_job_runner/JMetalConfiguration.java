@@ -5,6 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import pt.iscte.es2.optimization_job_runner.io.Utils;
+import pt.iscte.es2.optimization_job_runner.jobs.BackendGateway;
 import pt.iscte.es2.optimization_job_runner.jobs.Job;
 import pt.iscte.es2.optimization_job_runner.mail.MailSender;
 import pt.iscte.es2.optimization_job_runner.post_processing.OptimizationJobResult;
@@ -25,6 +26,7 @@ public class JMetalConfiguration {
 	private static final Logger LOGGER = Logger.getLogger(JMetalConfiguration.class.getName());
 	private final MailSender mailSender;
 	private final PostProblemProcessor postProblemProcessor;
+	private final BackendGateway gateway;
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	@Value("${jmetal.experiment_name}")
 	private String experimentName;
@@ -38,9 +40,13 @@ public class JMetalConfiguration {
 	 * @param mailSender mail sender
 	 * @param postProblemProcessor job result processor
 	 */
-	public JMetalConfiguration(MailSender mailSender, PostProblemProcessor postProblemProcessor) {
+	public JMetalConfiguration(
+		MailSender mailSender, PostProblemProcessor postProblemProcessor,
+		BackendGateway gateway
+	) {
 		this.mailSender = mailSender;
 		this.postProblemProcessor = postProblemProcessor;
+		this.gateway = gateway;
 	}
 
 	/**
@@ -60,23 +66,25 @@ public class JMetalConfiguration {
 				job.getWaitingTime(), TimeUnit.SECONDS);
 			postProblemProcessor.process(optimizationJobResult);
 		} catch (TimeoutException e) {
-			handleTimeout();
+			handleTimeout(job);
 		}
 	}
 
 	/**
 	 * Handler for timeout case
+	 * @param job
 	 */
-	private void handleTimeout() {
+	private void handleTimeout(Job job) {
 		LOGGER.warning("Task timeout");
 		executor.shutdownNow();
 		try {
 			LOGGER.warning("awaiting for termination...");
-			executor.awaitTermination(10L, TimeUnit.SECONDS);
+			while (!executor.awaitTermination(10L, TimeUnit.SECONDS));
 		} catch (InterruptedException ignore) {
 			LOGGER.info("Interrupted exception...");
 		}
 		executor = Executors.newSingleThreadExecutor();
+		gateway.failOptimizationJob(job.getId());
 		LOGGER.info("Sending timeout email...");
 		sendTimeoutEmail();
 	}

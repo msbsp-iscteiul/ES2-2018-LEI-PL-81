@@ -13,7 +13,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.client.RestTemplate;
 import pt.iscte.es2.client_jar_loader.SecurityPolicy;
+import pt.iscte.es2.optimization_job_runner.jobs.BackendGateway;
 import pt.iscte.es2.optimization_job_runner.post_processing.*;
 
 import java.security.Policy;
@@ -84,18 +86,21 @@ public class Entry {
 		return mailSender;
 	}
 
-	@Value("${backend.host}")
-	private String backendHost;
-	@Value("${backend.port}")
-	private String backendPort;
+	@Value("${backend.base_url}")
+	private String backendBaseUrl;
 
 	@Bean
-	public PostProblemProcessor getPostProblemProcessorComposite() {
+	public BackendGateway getBackendGateway() {
+		return new BackendGateway(new RestTemplate(), backendBaseUrl);
+	}
+
+	@Bean
+	public PostProblemProcessor getPostProblemProcessorComposite(BackendGateway gateway) {
 		return new PostProblemProcessorComposite(Arrays.asList(
 			new LatexToPdfProcessor(),
 			new RToEpsProcessor(),
 			new BestSolutionsProcessor(),
-			new SubmissionProcessor(backendHost, backendPort)
+			new SubmissionProcessor(gateway)
 		));
 	}
 
