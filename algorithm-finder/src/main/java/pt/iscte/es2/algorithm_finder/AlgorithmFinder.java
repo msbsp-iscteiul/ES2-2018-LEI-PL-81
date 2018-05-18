@@ -36,9 +36,6 @@ public class AlgorithmFinder {
 	 */
 	public AlgorithmFinderResult execute() {
 		Class<?> problemSolutionType = getSolutionTypeForProblem();
-		if (problemSolutionType == null) {
-			return new AlgorithmFinderResult();
-		}
 
 		final List<Class<?>> factories = new ArrayList<>();
 		final List<Constructor<?>> constructors = new ArrayList<>();
@@ -80,7 +77,7 @@ public class AlgorithmFinder {
 				return declaredMethod.getParameters()[0].getType();
 			}
 		}
-		return null;
+		return Object.class;
 	}
 
 	/**
@@ -130,13 +127,6 @@ public class AlgorithmFinder {
 			this.algorithmFactories = algorithmFactories;
 			this.constructors = constructors;
 			this.solutionTypeName = solutionTypeName;
-		}
-
-		/**
-		 * Empty constructor
-		 */
-		private AlgorithmFinderResult() {
-			this(Collections.emptyList(), Collections.emptyList(), null);
 		}
 
 		/**
