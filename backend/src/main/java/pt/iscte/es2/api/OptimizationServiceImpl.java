@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pt.iscte.es2.ApplicationConstants;
 import pt.iscte.es2.business.OptimizationBusiness;
+import pt.iscte.es2.dto.State;
 import pt.iscte.es2.dto.service.optimization.*;
 
 @RestController
@@ -70,5 +71,23 @@ public class OptimizationServiceImpl implements OptimizationService {
 		ExecuteOptimizationConfigurationRequest request) {
 		return new ExecuteOptimizationConfigurationResponse(
 			optimizationBusiness.executeOptimizationConfiguration(request.getId(), request.getEmail()));
+	}
+
+	/**
+	 * @see OptimizationService#saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest)
+	 */
+	@PostMapping(value = "/saveoptimizationjobsolution")
+	public SaveOptimizationJobSolutionResponse saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest request) {
+		return new SaveOptimizationJobSolutionResponse(
+			optimizationBusiness.saveOptimizationJobSolution(
+				request.getId(), request.getState(), request.getSolutions(), request.getLatex(), request.getR()));
+	}
+
+	/**
+	 * @see OptimizationService#updateState(Integer, State)
+	 */
+	@PostMapping(value = "/updateoptimizationjobexecution")
+	public void updateState(Integer id, State state) {
+		optimizationBusiness.updateState(id, state);
 	}
 }

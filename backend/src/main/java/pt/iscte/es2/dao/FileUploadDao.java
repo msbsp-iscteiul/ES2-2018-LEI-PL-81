@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pt.iscte.es2.jpa.FileUploadEntity;
 
+import java.util.List;
+
 @Repository
 public interface FileUploadDao extends JpaRepository<FileUploadEntity, Long> {
 
@@ -15,5 +17,5 @@ public interface FileUploadDao extends JpaRepository<FileUploadEntity, Long> {
 	 *
 	 * @return String
 	 */
-	FileUploadEntity findBySessionId(String sessionId);
+	List<FileUploadEntity> findBySessionId(String sessionId);
 }

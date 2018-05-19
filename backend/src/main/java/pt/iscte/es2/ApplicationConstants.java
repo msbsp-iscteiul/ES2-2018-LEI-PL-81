@@ -29,4 +29,6 @@ public class ApplicationConstants {
 	public static final String EXECUTION_PATH = "backend/target/";
 	public static final String JARS_PATH = EXECUTION_PATH + "jars/";
 	public static final String CSV_PATH = EXECUTION_PATH + "csv/";
+	public static final String LATEX_PATH = EXECUTION_PATH + "latex/";
+	public static final String R_PATH = EXECUTION_PATH + "r/";
 }

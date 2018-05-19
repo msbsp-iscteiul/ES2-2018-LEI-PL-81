@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface JobRepository extends CrudRepository<Job, Long> {
 
-	@Query("select job from Job job where job.state='Ready'")
-	List<Job> findAwaiting();
+	@Query("select job from Job job where job.state='Ready' and id = ?1")
+	Job findAwaitingWithId(Long id);
 
 }

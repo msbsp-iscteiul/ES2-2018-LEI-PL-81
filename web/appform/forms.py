@@ -26,7 +26,7 @@ class ProblemInputUser(forms.Form):
         }),
         help_text='Write the description of the problem to solve')
     waiting_time = forms.IntegerField(
-        help_text='Write the maximum time you are willing to wait for optimization of the problem')
+        help_text='Write the maximum time you are willing to wait for optimization of the problem in SECONDS')
     input_jar = forms.FileField(label='Select a file')
 
     def clean(self):

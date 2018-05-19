@@ -1,111 +1,136 @@
 package pt.iscte.es2.optimization_job_runner;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
-import org.uma.jmetal.algorithm.Algorithm;
-import org.uma.jmetal.problem.Problem;
-import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
-import org.uma.jmetal.solution.Solution;
-import org.uma.jmetal.util.AlgorithmBuilder;
-import org.uma.jmetal.util.experiment.Experiment;
-import org.uma.jmetal.util.experiment.ExperimentBuilder;
-import org.uma.jmetal.util.experiment.component.*;
-import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
-import org.uma.jmetal.util.experiment.util.ExperimentProblem;
-import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
-import pt.iscte.es2.algorithm_finder.AlgorithmFinder;
-import pt.iscte.es2.client_jar_loader.LoadClientJarProblem;
-import pt.iscte.es2.client_jar_loader.SecurityPolicy;
-import pt.iscte.es2.optimization_job_runner.jmetal.problem.observable.EvaluationsCounter;
-import pt.iscte.es2.optimization_job_runner.jmetal.problem.observable.ObservableProblem;
-import pt.iscte.es2.optimization_job_runner.jmetal.problem.observable.ObservableProblemFactory;
-import pt.iscte.es2.optimization_job_runner.mail.MailSenderProvider;
+import org.springframework.stereotype.Component;
+import pt.iscte.es2.optimization_job_runner.io.Utils;
+import pt.iscte.es2.optimization_job_runner.jobs.BackendGateway;
+import pt.iscte.es2.optimization_job_runner.jobs.Job;
+import pt.iscte.es2.optimization_job_runner.mail.MailSender;
+import pt.iscte.es2.optimization_job_runner.post_processing.OptimizationJobResult;
+import pt.iscte.es2.optimization_job_runner.post_processing.PostProblemProcessor;
+import pt.iscte.es2.optimization_job_runner.post_processing.PostProblemProcessorComposite;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.security.Policy;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
+import java.io.File;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
-@SuppressWarnings("unchecked")
-@Service
+/**
+ * Runs a JMetal executor
+ */
+@Component
 public class JMetalConfiguration {
 
 	private static final Logger LOGGER = Logger.getLogger(JMetalConfiguration.class.getName());
-	private static final int INDEPENDENT_RUNS = 1;
+	private final MailSender mailSender;
+	private final PostProblemProcessor postProblemProcessor;
+	private final BackendGateway gateway;
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	@Value("${jmetal.experiment_name}")
+	private String experimentName;
+	@Value("${jmetal.experiment_base_directory}")
+	private String experimentBaseDirectory;
+	@Value("${jmetal.reference_fronts}")
+	private String referenceFront;
 
-	@PostConstruct
-	public void run(JavaMailSender mailSender) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
-//		setSecurityContext();
-		Problem<Solution<?>> clientOptimizationProblem = new LoadClientJarProblem()
-			.loadProblemFromJar("optimizationjobrunner/target/data/containee-1.0-SNAPSHOT-integer.jar");
-
-		// Find the compatible algorithms
-		AlgorithmFinder.AlgorithmFinderResult finderResult =
-			new AlgorithmFinder(clientOptimizationProblem).execute();
-		ObservableProblem<Solution<?>> observableProblem = new ObservableProblemFactory()
-			.createFromProblem(clientOptimizationProblem);
-		ExperimentProblem<Solution<?>> experimentProblem = new ExperimentProblem(observableProblem);
-		List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms = getExperimentAlgorithms(
-			experimentProblem,
-			finderResult.getConstructors()
-		);
-
-		// Setup evaluations counter
-		EvaluationsCounter evaluationsCounter = new EvaluationsCounter(
-			mailSender,
-			algorithms.size() * AlgorithmConstants.MAX_EVALUTIONS);
-		observableProblem.registerEvaluationListener(evaluationsCounter);
-
-		// Experiment setup
-		Experiment<Solution<?>, List<Solution<?>>> experiment =
-			new ExperimentBuilder("Experiment")
-				.setIndependentRuns(INDEPENDENT_RUNS)
-				.setProblemList(Collections.singletonList(experimentProblem))
-				.setAlgorithmList(algorithms)
-				.setNumberOfCores(Math.max(Runtime.getRuntime().availableProcessors() / 2, 1))
-				.setExperimentBaseDirectory("experimentBaseDirectory")
-				.setReferenceFrontDirectory("experimentBaseDirectory/referenceFronts")
-				.setOutputParetoFrontFileName("FUN")
-				.setOutputParetoSetFileName("VAR")
-				.setIndicatorList(Collections.singletonList(new PISAHypervolume<>()))
-				.build();
-		new ExecuteAlgorithms<>(experiment).run();
-		new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
-		new ComputeQualityIndicators<>(experiment).run();
-		new GenerateLatexTablesWithStatistics(experiment).run();
-		new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run();
-		LOGGER.log(Level.INFO, String.valueOf(evaluationsCounter.getCount()));
+	/**
+	 * Constructor
+	 * @param mailSender mail sender
+	 * @param postProblemProcessor job result processor
+	 */
+	public JMetalConfiguration(
+		MailSender mailSender, PostProblemProcessor postProblemProcessor,
+		BackendGateway gateway
+	) {
+		this.mailSender = mailSender;
+		this.postProblemProcessor = postProblemProcessor;
+		this.gateway = gateway;
 	}
 
-	private static List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> getExperimentAlgorithms(
-		ExperimentProblem<Solution<?>> experimentProblem,
-		List<Constructor<?>> algorithmFactoryConstructors
-	) throws InstantiationException, IllegalAccessException, InvocationTargetException {
-		List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms = new ArrayList<>(
-			algorithmFactoryConstructors.size());
-		for (Constructor<?> constructor : algorithmFactoryConstructors) {
-			AlgorithmBuilder clazz = (AlgorithmBuilder) constructor
-				.newInstance(experimentProblem.getProblem());
-			Algorithm algorithm = clazz.build();
-			algorithms.add(
-				new ExperimentAlgorithm<>(
-					algorithm,
-					algorithm.getName(),
-					experimentProblem.getTag()
-				)
-			);
+	/**
+	 * Run the job
+	 * @param job the job to run
+	 * @throws ExecutionException
+	 * @throws InterruptedException
+	 */
+	public void execute(Job job) throws ExecutionException, InterruptedException {
+		LOGGER.info("Cleaning dir...");
+		cleanup();
+		try {
+			final Future<OptimizationJobResult> result = executor.submit(new JMetalTask(
+				mailSender, job, experimentName, experimentBaseDirectory, referenceFront
+			));
+			gateway.runOptimizationJob(job.getId());
+			sendStartEmail(job);
+			final OptimizationJobResult optimizationJobResult = result.get(
+				job.getWaitingTime(), TimeUnit.SECONDS);
+			postProblemProcessor.process(optimizationJobResult);
+		} catch (TimeoutException e) {
+			handleTimeout(job);
 		}
-		return algorithms;
 	}
 
-	private static void setSecurityContext() {
-		Policy.setPolicy(new SecurityPolicy());
-		System.setSecurityManager(new SecurityManager());
+	/**
+	 * Handler for timeout case
+	 * @param job
+	 */
+	private void handleTimeout(Job job) {
+		LOGGER.warning("Task timeout");
+		executor.shutdownNow();
+		try {
+			LOGGER.warning("awaiting for termination...");
+			while (!executor.awaitTermination(10L, TimeUnit.SECONDS));
+		} catch (InterruptedException ignore) {
+			LOGGER.info("Interrupted exception...");
+		}
+		executor = Executors.newSingleThreadExecutor();
+		gateway.failOptimizationJob(job.getId());
+		LOGGER.info("Sending timeout email...");
+		sendTimeoutEmail();
+	}
+
+	/**
+	 * Cleans experiment base directory of files
+	 */
+	private void cleanup() {
+		Utils.deleteDir(new File(experimentBaseDirectory));
+	}
+
+	/**
+	 * Sends the started job email
+	 * @param job the job
+	 */
+	private void sendStartEmail(Job job) {
+		final String now = LocalDateTime.now(ZoneOffset.UTC).format(
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		mailSender.send(
+			String.format(
+				"Optimização em curso: %s %s",
+				"ProblemaCoiso", // TODO problem name
+				now
+			),
+			"Muito obrigado por usar esta plataforma de optimização. " +
+				"Será informado por email sobre o progresso do processo " +
+				"de optimização tiver atingido 25%, 50%, 75% do total do tempo estimado, " +
+				"e também quando o processo tiver terminado, com sucesso ou devido à ocorrência " +
+				"de erros.",
+			"mauro.s.pinto@gmail.com" // TODO email
+		);
+	}
+
+	/**
+	 * Sends timeout email
+	 */
+	private void sendTimeoutEmail() {
+		mailSender.send(
+			"A execução da tarefa excedeu o tempo máximo definido",
+			"A execução da tarefa excedeu o tempo máximo definido.",
+			"mauro.s.pinto@gmail.com" // TODO email
+		);
 	}
 }

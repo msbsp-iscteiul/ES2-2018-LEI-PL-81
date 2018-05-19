@@ -53,8 +53,8 @@ public class Application {
 	}
 
 	@Bean
-	public MessageListenerAdapter listenerAdapter(Receiver receiver) {
-		return new MessageListenerAdapter(receiver, "receiveMessage");
+	public MessageListenerAdapter listenerAdapter(Receiver1 receiver) {
+		return new MessageListenerAdapter(receiver, "receiveMessage1");
 	}
 
 	@Bean
