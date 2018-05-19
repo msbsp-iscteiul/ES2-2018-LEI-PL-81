@@ -12,15 +12,11 @@ public class SaveOptimizationConfigurationResult {
 
 	}
 
+	public SaveOptimizationConfigurationResult(Integer id) {
+		this.id = id;
+	}
+
 	public SaveOptimizationConfigurationResult(String message) {
-		this.message = message;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
 		this.message = message;
 	}
 
@@ -30,5 +26,13 @@ public class SaveOptimizationConfigurationResult {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

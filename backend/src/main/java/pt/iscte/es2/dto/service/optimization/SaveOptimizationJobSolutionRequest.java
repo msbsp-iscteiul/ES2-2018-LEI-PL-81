@@ -2,6 +2,7 @@ package pt.iscte.es2.dto.service.optimization;
 
 import org.springframework.web.multipart.MultipartFile;
 import pt.iscte.es2.dto.OptimizationJobSolutions;
+import pt.iscte.es2.dto.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 public class SaveOptimizationJobSolutionRequest {
 
 	private Integer id;
+	private State state;
 	private List<OptimizationJobSolutions> solutions;
 	private MultipartFile latex;
 	private MultipartFile r;
@@ -22,6 +24,14 @@ public class SaveOptimizationJobSolutionRequest {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 
 	public List<OptimizationJobSolutions> getSolutions() {

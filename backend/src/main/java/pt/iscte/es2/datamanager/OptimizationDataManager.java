@@ -83,9 +83,22 @@ public interface OptimizationDataManager {
 	 * Persists a list of OptimizationJobSolutions
 	 *
 	 * @param optimizationJobSolutions
-	 * 			List<OptimizationJobSolutions>
+	 * 			List
 	 *
 	 * @return OptimizationJobExecutions
 	 */
 	public List<OptimizationJobSolutions> saveOptimizationJobSolution(List<OptimizationJobSolutions> optimizationJobSolutions);
+
+	/**
+	 * Updates the state of an Execution By ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @param state
+	 * 			State
+	 *
+	 * @return OptimizationJobExecutions
+	 */
+	public OptimizationJobExecutions updateState(Integer id, State state);
 }

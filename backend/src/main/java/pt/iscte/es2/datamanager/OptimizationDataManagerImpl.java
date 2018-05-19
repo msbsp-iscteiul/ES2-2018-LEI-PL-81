@@ -203,4 +203,19 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 		return savedOptimizationJobSolutions;
 	}
 
+
+	/**
+	 * @see OptimizationDataManager#updateState(Integer, State)
+	 */
+	public OptimizationJobExecutions updateState(Integer id, State state) {
+		OptimizationJobExecutionsEntity entity = optimizationJobExecutionsDao.getOne(id.longValue());
+		entity.setState(state);
+		if (state.equals(State.Running)) {
+			return mapper.map(optimizationJobExecutionsDao.save(entity), OptimizationJobExecutions.class);
+		} else {
+			entity.setEndDate(new Date());
+			return mapper.map(optimizationJobExecutionsDao.save(entity), OptimizationJobExecutions.class);
+		}
+	}
+
 }

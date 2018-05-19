@@ -1,5 +1,6 @@
 package pt.iscte.es2.api;
 
+import pt.iscte.es2.dto.State;
 import pt.iscte.es2.dto.service.optimization.*;
 
 /**
@@ -79,4 +80,14 @@ public interface OptimizationService {
 	 */
 	public SaveOptimizationJobSolutionResponse saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest request);
 
+	/**
+	 * Updates the State of an Optimization Job Execution By ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @param state
+	 * 			State
+	 */
+	public void updateState(Integer id, State state);
 }

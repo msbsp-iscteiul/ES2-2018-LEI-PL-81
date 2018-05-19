@@ -3,7 +3,6 @@ package pt.iscte.es2.business;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.uma.jmetal.problem.Problem;
@@ -55,12 +54,12 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		StringBuilder stringBuilder = new StringBuilder();
 		if (file != null) {
 			if (file.isEmpty()) {
-				return new SaveOptimizationConfigurationResult("File Is Empty");
+				return new SaveOptimizationConfigurationResult("The File is Empty!");
 			}
 
 			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 			if (extension != null && !extension.equals("csv")) {
-				return new SaveOptimizationConfigurationResult("File Extension is incorrect.");
+				return new SaveOptimizationConfigurationResult("Incorrect Extension");
 			}
 
 			if (!file.isEmpty()) {
@@ -72,7 +71,7 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 						if (line.split("\\s+").length == objectives.size()) {
 							stringBuilder.append(line + "\n");
 						} else {
-							return new SaveOptimizationConfigurationResult("Solution Quality doesn't match. Please review the CSV file.");
+							return new SaveOptimizationConfigurationResult("Something went wrong Saving the CSV File");
 						}
 					}
 				} catch (IOException e) {
@@ -106,17 +105,13 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 				Collections.singletonList(new OptimizationConfigurationUserSolutions(stringBuilder.toString())));
 		}
 		OptimizationConfiguration savedOptimizationConfiguration = optimizationDataManager.saveOptimization(optimizationConfiguration);
-		SaveOptimizationConfigurationResult result = new SaveOptimizationConfigurationResult();
 		if (savedOptimizationConfiguration.getId() != null) {
-			result.setId(savedOptimizationConfiguration.getId());
-			result.setMessage("Success");
+			return new SaveOptimizationConfigurationResult(savedOptimizationConfiguration.getId());
 		} else {
-			result.setMessage("Error");
+			return new SaveOptimizationConfigurationResult("Failed to submit the Optimization Configuration, please try again later.");
 		}
-		return result;
 	}
 
-	// TODO - Was testing the Search... To Be Removed...
 	@Override
 	public void searchFilePathBySessionId(@RequestParam("sessionId") String sessionId) {
 		optimizationDataManager.searchFilePathBySessionId(sessionId);
@@ -208,44 +203,52 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 	}
 
 	/**
-	 * @see OptimizationBusiness#saveOptimizationJobSolution(Integer, List, MultipartFile, MultipartFile)
+	 * @see OptimizationBusiness#saveOptimizationJobSolution(Integer, State, List, MultipartFile, MultipartFile)
 	 */
 	public SaveOptimizationJobSolutionResult saveOptimizationJobSolution(
-		@RequestParam("id") Integer id, @RequestParam("solutions") List<OptimizationJobSolutions> solutions,
+		@RequestParam("id") Integer id, @RequestParam("state") State state,
+		@RequestParam("solutions") List<OptimizationJobSolutions> solutions,
 		@RequestParam("latex") MultipartFile latex, @RequestParam("r") MultipartFile r) {
 
-		// Validate Latex File
-		if (latex == null) {
-			return new SaveOptimizationJobSolutionResult("Latex File Missing!");
-		} else {
-			if (latex.isEmpty()) {
-				return new SaveOptimizationJobSolutionResult("Latex File is Empty!");
+		if (state.equals(State.Failed)) {
+			optimizationDataManager.updateState(id, state);
+			return new SaveOptimizationJobSolutionResult("FAILED");
+		} else if (state.equals(State.Finished)) {
+			if (latex != null) {
+				if (latex.isEmpty()) {
+					return new SaveOptimizationJobSolutionResult("Latex File is Empty!");
+				}
+				String extension = FilenameUtils.getExtension(latex.getOriginalFilename());
+				if (extension != null && !extension.equals("pdf")) {
+					return new SaveOptimizationJobSolutionResult("Wrong Format");
+				}
+				createAndWriteFileToDirectory(ApplicationConstants.LATEX_PATH, latex);
 			}
-			String extension = FilenameUtils.getExtension(latex.getOriginalFilename());
-			if (extension != null && !extension.equals("pdf")) {
-				return new SaveOptimizationJobSolutionResult("Wrong Format of LATEX File!");
+			if (r != null) {
+				if (r.isEmpty()) {
+					return new SaveOptimizationJobSolutionResult("R File is Empty!");
+				}
+				String extension = FilenameUtils.getExtension(r.getOriginalFilename());
+				if (extension != null && !extension.equals("eps")) {
+					return new SaveOptimizationJobSolutionResult("Wrong Format");
+				}
+				createAndWriteFileToDirectory(ApplicationConstants.R_PATH, r);
 			}
-			createAndWriteFileToDirectory(ApplicationConstants.LATEX_PATH, latex);
+			OptimizationJobExecutions optimizationJobExecutions = optimizationDataManager.searchOptimizationJobExecutionsById(id);
+			solutions.forEach(solution -> solution.setOptimizationJobExecutions(optimizationJobExecutions));
+			List<OptimizationJobSolutions> savedSolutions = optimizationDataManager.saveOptimizationJobSolution(solutions);
+			if (!savedSolutions.isEmpty()) {
+				OptimizationJobExecutions execution = optimizationDataManager.updateState(id, state);
+				return new SaveOptimizationJobSolutionResult("SUCCESS");
+			}
 		}
-
-		// Validate R File
-		if (r == null) {
-			return new SaveOptimizationJobSolutionResult("R File Missing!");
-		} else {
-			if (r.isEmpty()) {
-				return new SaveOptimizationJobSolutionResult("R File is Empty!");
-			}
-			String extension = FilenameUtils.getExtension(r.getOriginalFilename());
-			if (extension != null && !extension.equals("eps")) {
-				return new SaveOptimizationJobSolutionResult("Wrong Format of R File!");
-			}
-			createAndWriteFileToDirectory(ApplicationConstants.R_PATH, r);
-		}
-
-		OptimizationJobExecutions optimizationJobExecutions = optimizationDataManager.searchOptimizationJobExecutionsById(id);
-		solutions.forEach(solution -> solution.setOptimizationJobExecutions(optimizationJobExecutions));
-		return new SaveOptimizationJobSolutionResult("SUCCESS", optimizationDataManager
-			.saveOptimizationJobSolution(solutions));
+		return new SaveOptimizationJobSolutionResult("NO SUCCESS");
 	}
 
+	/**
+	 * @see OptimizationBusiness#updateState(Integer, State)
+	 */
+	public void updateState(@RequestParam("id") Integer id, @RequestParam("state") State state) {
+		optimizationDataManager.updateState(id, state);
+	}
 }
