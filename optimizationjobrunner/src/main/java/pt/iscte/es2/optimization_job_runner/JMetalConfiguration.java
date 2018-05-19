@@ -14,6 +14,9 @@ import pt.iscte.es2.optimization_job_runner.post_processing.PostProblemProcessor
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
@@ -62,6 +65,8 @@ public class JMetalConfiguration {
 			final Future<OptimizationJobResult> result = executor.submit(new JMetalTask(
 				mailSender, job, experimentName, experimentBaseDirectory, referenceFront
 			));
+			gateway.runOptimizationJob(job.getId());
+			sendStartEmail(job);
 			final OptimizationJobResult optimizationJobResult = result.get(
 				job.getWaitingTime(), TimeUnit.SECONDS);
 			postProblemProcessor.process(optimizationJobResult);
@@ -94,6 +99,28 @@ public class JMetalConfiguration {
 	 */
 	private void cleanup() {
 		Utils.deleteDir(new File(experimentBaseDirectory));
+	}
+
+	/**
+	 * Sends the started job email
+	 * @param job the job
+	 */
+	private void sendStartEmail(Job job) {
+		final String now = LocalDateTime.now(ZoneOffset.UTC).format(
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		mailSender.send(
+			String.format(
+				"Optimização em curso: %s %s",
+				"ProblemaCoiso", // TODO problem name
+				now
+			),
+			"Muito obrigado por usar esta plataforma de optimização. " +
+				"Será informado por email sobre o progresso do processo " +
+				"de optimização tiver atingido 25%, 50%, 75% do total do tempo estimado, " +
+				"e também quando o processo tiver terminado, com sucesso ou devido à ocorrência " +
+				"de erros.",
+			"mauro.s.pinto@gmail.com" // TODO email
+		);
 	}
 
 	/**

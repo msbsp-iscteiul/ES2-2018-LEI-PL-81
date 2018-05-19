@@ -35,6 +35,6 @@ public class Receiver {
 		System.out.println("Received <" + jobId + ">");
 //		final Job awaitingWithId = jobRepository.findAwaitingWithId(Long.valueOf(jobId));
 //		System.out.println(awaitingWithId);
-		jMetalConfiguration.execute(new Job());
+		jMetalConfiguration.execute(new Job(Long.parseLong(jobId)));
 	}
 }

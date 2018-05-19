@@ -2,6 +2,7 @@ package pt.iscte.es2.optimization_job_runner.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,10 @@ public class MailSender {
 		mailMessage.setTo(to);
 		mailMessage.setSubject(subject);
 		mailMessage.setText(body);
-		mailSender.send(mailMessage);
+		try {
+			mailSender.send(mailMessage);
+		} catch (MailException e) {
+			e.printStackTrace();
+		}
 	}
 }

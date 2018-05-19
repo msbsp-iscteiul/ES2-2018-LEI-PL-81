@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import pt.iscte.es2.optimization_job_runner.post_processing.AlgorithmSolutionQuality;
 import pt.iscte.es2.optimization_job_runner.post_processing.OptimizationJobResult;
@@ -50,9 +51,13 @@ public class BackendGateway {
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 		final HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(multiValueMap, headers);
-		restTemplate.exchange(
-			backendBaseUrl + "/api/optimization/saveoptimizationjobsolution/",
-			HttpMethod.POST, requestEntity, String.class);
+		try {
+			restTemplate.exchange(
+				backendBaseUrl + "/api/optimization/saveoptimizationjobsolution/",
+				HttpMethod.POST, requestEntity, String.class);
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -63,11 +68,35 @@ public class BackendGateway {
 		final MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
 		multiValueMap.add("id", jobId);
 		multiValueMap.add("state", "Failed");
-		restTemplate.exchange(
-			backendBaseUrl + "/api/optimization/saveoptimizationjobsolution/",
-			HttpMethod.POST,
-			new HttpEntity<>(multiValueMap),
-			String.class
-		);
+		try {
+			restTemplate.exchange(
+				backendBaseUrl + "/api/optimization/saveoptimizationjobsolution/",
+				HttpMethod.POST,
+				new HttpEntity<>(multiValueMap),
+				String.class
+			);
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 *
+	 * @param jobId the running job id
+	 */
+	public void runOptimizationJob(long jobId) {
+		final MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
+		multiValueMap.add("id", jobId);
+		multiValueMap.add("state", "Running");
+		try {
+			restTemplate.exchange(
+				backendBaseUrl + "/api/optimization/updateoptimizationjobexecution/",
+				HttpMethod.POST,
+				new HttpEntity<>(multiValueMap),
+				String.class
+			);
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		}
 	}
 }

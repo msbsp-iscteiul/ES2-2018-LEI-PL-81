@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import pt.iscte.es2.client_jar_loader.SecurityPolicy;
 import pt.iscte.es2.optimization_job_runner.jobs.BackendGateway;
+import pt.iscte.es2.optimization_job_runner.mail.MailSender;
 import pt.iscte.es2.optimization_job_runner.post_processing.*;
 
 import java.security.Policy;
@@ -95,12 +96,16 @@ public class Entry {
 	}
 
 	@Bean
-	public PostProblemProcessor getPostProblemProcessorComposite(BackendGateway gateway) {
+	public PostProblemProcessor getPostProblemProcessorComposite(
+		BackendGateway gateway,
+		MailSender mailSender
+	) {
 		return new PostProblemProcessorComposite(Arrays.asList(
 			new LatexToPdfProcessor(),
 			new RToEpsProcessor(),
 			new BestSolutionsProcessor(),
-			new SubmissionProcessor(gateway)
+			new SubmissionProcessor(gateway),
+			new NotifyClientFinishedProcessor(mailSender)
 		));
 	}
 

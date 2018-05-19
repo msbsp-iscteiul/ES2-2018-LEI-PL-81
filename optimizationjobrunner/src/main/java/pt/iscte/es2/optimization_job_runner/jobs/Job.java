@@ -10,6 +10,10 @@ public class Job {
 	private Long id = 1L;
 	private String state;
 
+	public Job(long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}

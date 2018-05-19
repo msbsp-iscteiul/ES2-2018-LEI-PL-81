@@ -47,7 +47,7 @@ public class ProgressNotifier implements SolutionEvaluationListener {
 		}
 
 		if (percentage != null) {
-//			notifyClient(percentage);
+			notifyClient(percentage);
 		}
 	}
 
