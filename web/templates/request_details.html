@@ -4,7 +4,7 @@
 
 {% block content_app %}
 
-    <div class="container">
+    <form class="container" method="post"> {% csrf_token %}
         <h1>Configuration details. Please, confirm your configuration before submit.</h1>
         <dl>
             <dt>Problem name</dt>
@@ -51,10 +51,10 @@
             {% endfor %}
 
         </dl>
-        <a class="btn btn-primary" href="{% url 'init_form' %}">Cancel</a>
+        <a class="btn btn-primary" href="{% url 'form_page1' %}">Cancel</a>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
+        <button type="submit" class="btn btn-primary" >Execute</button>
+    </form>
 
 
 
