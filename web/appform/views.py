@@ -4,11 +4,12 @@ from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from appform.decorators import enter_email
+from frontend.settings import BACKEND_URL
 
-url_upload = 'http://127.0.0.1:8080/api/optimization/fileupload/'
-url_upload2 = 'http://127.0.0.1:8080/api/optimization/save/'
-url_upload3 = 'http://127.0.0.1:8080/api/optimization/searchoptimizationconfigurationbyidandemail'
-url_upload4 = 'http://127.0.0.1:8080/api/optimization/executeoptimizationconfiguration'
+file_upload_url = BACKEND_URL + '/api/optimization/fileupload/'
+save_configuration_url = BACKEND_URL + '/api/optimization/save/'
+search_optimization_url = BACKEND_URL + '/api/optimization/searchoptimizationconfigurationbyidandemail'
+execute_optimization_url = BACKEND_URL + '/api/optimization/executeoptimizationconfiguration'
 
 
 def welcome(request):
@@ -35,7 +36,7 @@ def form_page1(request):
         data_form = {k: v for k, v in form.cleaned_data.items() if k != 'input_jar'}
         data = {'sessionId': request.session.session_key, 'data': data_form}
 
-        p = requests.post(url_upload, data=data, files=files)
+        p = requests.post(file_upload_url, data=data, files=files)
         info = p.json()
 
         request.session['data'] = info['result']
@@ -77,7 +78,7 @@ def form_page2(request):
             'objectives': objectives_list,
             'algorithms': data_form.get('choices')
         }
-        p = requests.post(url_upload2, data=data, files=files)
+        p = requests.post(save_configuration_url, data=data, files=files)
         info = p.json()
         if info['result']['id'] is None:
             error = info['result']['message']
@@ -100,7 +101,7 @@ def request_details(request, num):
             redirect('processing')
     request.session['idSubmission'] = num
     data = {'id': num, 'email': request.session.get('email')}
-    p = requests.post(url_upload3, data=data)
+    p = requests.post(search_optimization_url, data=data)
     info = p.json()
     jar = info['result']['optimizationConfiguration']['filePath'].split('/')[-1]
     info['result']['optimizationConfiguration']['filePath'] = jar
@@ -117,7 +118,7 @@ def request_details(request, num):
 
 def submit_execution_request(num, email):
     data = {'id': num, 'email': email}
-    result = requests.post(url_upload4, data=data).json()
+    result = requests.post(execute_optimization_url, data=data).json()
     if result['result']['id'] is None:
         return 'Couldn\'t submit execution request. Please try later'
 
