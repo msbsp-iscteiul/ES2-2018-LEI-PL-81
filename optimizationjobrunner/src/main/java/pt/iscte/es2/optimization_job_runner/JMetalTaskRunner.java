@@ -1,8 +1,6 @@
 package pt.iscte.es2.optimization_job_runner;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import pt.iscte.es2.optimization_job_runner.io.Utils;
 import pt.iscte.es2.optimization_job_runner.jobs.BackendGateway;
@@ -10,10 +8,8 @@ import pt.iscte.es2.optimization_job_runner.jobs.Job;
 import pt.iscte.es2.optimization_job_runner.mail.MailSender;
 import pt.iscte.es2.optimization_job_runner.post_processing.OptimizationJobResult;
 import pt.iscte.es2.optimization_job_runner.post_processing.PostProblemProcessor;
-import pt.iscte.es2.optimization_job_runner.post_processing.PostProblemProcessorComposite;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -24,9 +20,9 @@ import java.util.logging.Logger;
  * Runs a JMetal executor
  */
 @Component
-public class JMetalConfiguration {
+public class JMetalTaskRunner {
 
-	private static final Logger LOGGER = Logger.getLogger(JMetalConfiguration.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(JMetalTaskRunner.class.getName());
 	private final MailSender mailSender;
 	private final PostProblemProcessor postProblemProcessor;
 	private final BackendGateway gateway;
@@ -43,7 +39,7 @@ public class JMetalConfiguration {
 	 * @param mailSender mail sender
 	 * @param postProblemProcessor job result processor
 	 */
-	public JMetalConfiguration(
+	public JMetalTaskRunner(
 		MailSender mailSender, PostProblemProcessor postProblemProcessor,
 		BackendGateway gateway
 	) {
@@ -91,7 +87,7 @@ public class JMetalConfiguration {
 		executor = Executors.newSingleThreadExecutor();
 		gateway.failOptimizationJob(job.getId());
 		LOGGER.info("Sending timeout email...");
-		sendTimeoutEmail();
+		sendTimeoutEmail(job);
 	}
 
 	/**
@@ -111,7 +107,7 @@ public class JMetalConfiguration {
 		mailSender.send(
 			String.format(
 				"Optimização em curso: %s %s",
-				"ProblemaCoiso", // TODO problem name
+				job.getProblemName(),
 				now
 			),
 			"Muito obrigado por usar esta plataforma de optimização. " +
@@ -119,18 +115,19 @@ public class JMetalConfiguration {
 				"de optimização tiver atingido 25%, 50%, 75% do total do tempo estimado, " +
 				"e também quando o processo tiver terminado, com sucesso ou devido à ocorrência " +
 				"de erros.",
-			"mauro.s.pinto@gmail.com" // TODO email
+			job.getUserEmail()
 		);
 	}
 
 	/**
 	 * Sends timeout email
+	 * @param job
 	 */
-	private void sendTimeoutEmail() {
+	private void sendTimeoutEmail(Job job) {
 		mailSender.send(
 			"A execução da tarefa excedeu o tempo máximo definido",
 			"A execução da tarefa excedeu o tempo máximo definido.",
-			"mauro.s.pinto@gmail.com" // TODO email
+			job.getUserEmail()
 		);
 	}
 }

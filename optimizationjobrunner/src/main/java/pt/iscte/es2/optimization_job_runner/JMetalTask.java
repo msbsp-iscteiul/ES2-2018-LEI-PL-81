@@ -81,7 +81,7 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 	@Override
 	public OptimizationJobResult call() throws ClassNotFoundException, IOException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		final Problem<Solution<?>> clientOptimizationProblem = new LoadClientJarProblem()
-			.loadProblemFromJar("optimizationjobrunner/target/data/containee-1.0-SNAPSHOT-double.jar");
+			.loadProblemFromJar(job.getJarPath());
 
 		// Find the compatible algorithms
 		final AlgorithmFinder.AlgorithmFinderResult finderResult =
@@ -96,7 +96,7 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 		// Setup evaluations counter
 		final int totalEvaluations = INDEPENDENT_RUNS * algorithms.size() * AlgorithmConstants.MAX_EVALUTIONS;
 		final ProgressNotifier progressNotifier = new ProgressNotifier(
-			experimentProblem.getProblem().getName(),
+			job,
 			mailSender,
 			totalEvaluations);
 		observableProblem.registerEvaluationListener(progressNotifier);
@@ -134,11 +134,10 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 		return new OptimizationJobResult(
 			new PostProcessingContext(
 				experimentName,
-				clientOptimizationProblem.getName(),
 				referenceFront,
 				experimentBaseDirectory + "/" + experimentName,
 				algorithms,
-				job.getId()
+				job
 			)
 		);
 	}
