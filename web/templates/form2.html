@@ -1,54 +1,18 @@
 {% extends "base.html" %}
-
 {% load bootstrap4 %}
+{% block title %}Configuration: Step 2{% endblock %}
 
 {% block body_scripts %}
-    <script>
-        var $choices = $('[name=choices]');
-        $('#id_algorithm_choice_method').change(function () {
-            var method = $(this).val();
-            if (method === 'Manual') {
-                enableChoices();
-            } else if (method === 'Automatic') {
-                randomizeChoices();
-                disableChoices();
-            } else if (method === 'Mixed') {
-                randomizeChoices();
-                enableChoices();
-            }
-        });
-
-        function enableChoices() {
-            $choices.each(function () {
-                $(this).unbind('click');
-            })
-        }
-
-        function disableChoices() {
-            $choices.each(function () {
-                $(this).click(function () {
-                    return false;
-                });
-            });
-        }
-
-        function randomizeChoices() {
-            do {
-                $choices.each(function () {
-                    $(this).prop('checked', Math.random() > .5);
-                });
-            } while ($choices.filter(function () {
-                return $(this).prop('checked');
-            }).length === 0)
-        }
-    </script>
+    {% load static %}
+    <script src="{% static "JS/form2.js" %}" defer></script>
 {% endblock %}
 
 {% block content_app %}
 
     <div class="container">
+        <h1>Configuration: Step 2</h1>
 
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action class="mt-5" method="post" enctype="multipart/form-data">
             {% if error is not None %}
                 <div class="alert alert-dismissible alert-danger">
                     <button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>

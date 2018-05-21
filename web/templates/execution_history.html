@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% block title %}Execution history{% endblock %}
+
+{% block body_scripts %}
+    {% load static %}
+    <script src="{% static "JS/CreateTableFromJSON.js" %}" defer></script>
+    <script src="{% static "JS/HistoryTableFilters.js" %}" defer></script>
+    <script>
+        window.SESSION_EMAIL = '{{ user_email }}';
+    </script>
+{% endblock %}
+{% block content_app %}
+
+    <div class="container">
+        <h1>Execution history</h1>
+
+        <div class="panel panel-primary filterable mt-5">
+            <table class="table table-striped table-bordered text-center">
+                <thead>
+                <tr class="filters">
+                    <th><input type="text" onkeyup="myFunction()" class="form-control" placeholder="Problem Name"
+                               enabled></th>
+                    <th><input type="date" onkeyup="myFunction()" class="form-control"
+                               placeholder="Initial Date (dd-mm-yyyy)" enabled></th>
+                    <th><input type="date" onkeyup="myFunction()" class="form-control"
+                               placeholder="End Date (dd-mm-yyyy)" enabled></th>
+                    <th>
+                        <button class="btn btn-primary">
+                            <span class="oi oi-x"></span>
+                            Reset filter
+                        </button>
+                    </th>
+
+                </tr>
+                <tr>
+                    <th scope="col">Problem Name</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="tableDiv">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}

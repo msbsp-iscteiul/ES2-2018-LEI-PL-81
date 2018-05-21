@@ -1,28 +1,35 @@
 {% extends "base.html" %}
+{% block title %}FAQ{% endblock %}
 
 {% block content_app %}
     <div class="container">
         <h1>Frequently Asked Questions</h1>
-        <h4>If I don't have a .csv with the best solutions, what should I do?</h4>
-        <p>Don't worry. It's not a required field. You can submit your problem anyway.</p>
-        <br>
-        <h4>Am I required to fill in the name of the variables and objectives?</h4>
-        <p>No, if you don't want to fill the names, we can take care of it for you.</p>
-        <br>
-        <h4>Why did my problem failed?</h4>
-        <p>Your problem can fail for many reasons. Most likely, the .jar is not suitable. If your problem persist
-            contact us, so we can help you.</p>
-        <br>
-        <h4>Why do I have to insert my email?</h4>
-        <p>So that we can inform you the progress of cenas :)</p>
-        <br>
-        <h4>What the .jar should contain?</h4>
-        <p>Mauro, manual the instruções! GO!</p>
-        <br>
-        <h4>Question</h4>
-        <p>Answer</p>
-        <br>
-        <h4>If you need further informations, please <a href="/contacts/">contact us.</a></h4>
-
+        <dl>
+            <dt>If I don't have a .csv with the best solutions, what should I do?</dt>
+            <dd><p>Don't worry. It's not a required field. You can submit your problem anyway.</p></dd>
+            <dt>Am I required to fill in the name of the variables and objectives?</dt>
+            <dd><p>No, if you don't want to fill the names, we can take care of it for you.</p></dd>
+            <dt>Why did my problem fail?</dt>
+            <dd>
+                <p>Your problem can fail for many reasons. Most likely, the .jar is not suitable.</p>
+                <p>If your problem persists, please contact us, so we can help you.</p>
+            </dd>
+            <dt>Why do I have to insert my email?</dt>
+            <dd><p>You will be notified of the progress of your optimization problem.</p></dd>
+            <dt>How do I build a suitable jar?</dt>
+            <dd>
+                <p>You must create a class named "pt.iscte.es2.Plugin" that must implement one of JMetal's Problem interfaces:</p>
+                <ul>
+                    <li>AbstractIntegerProblem</li>
+                    <li>AbstractBinaryProblem</li>
+                    <li>AbstractDoubleProblem</li>
+                    <li>Problem</li>
+                </ul>
+            </dd>
+            <dt>Still have questions?</dt>
+            <dd>
+                Please use the <a href="{% url 'send_email' %}">contact form</a>.
+            </dd>
+        </dl>
     </div>
 {% endblock %}

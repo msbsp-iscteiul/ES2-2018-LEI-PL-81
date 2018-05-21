@@ -5,10 +5,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from appform.decorators import enter_email
 
-url_upload = 'http://172.17.10.175:8080/api/optimization/fileupload/'
-url_upload2 = 'http://172.17.10.175:8080/api/optimization/save/'
-url_upload3 = 'http://172.17.10.175:8080/api/optimization/searchoptimizationconfigurationbyidandemail'
-url_upload4 = 'http://172.17.10.175:8080/api/optimization/executeoptimizationconfiguration'
+url_upload = 'http://127.0.0.1:8080/api/optimization/fileupload/'
+url_upload2 = 'http://127.0.0.1:8080/api/optimization/save/'
+url_upload3 = 'http://127.0.0.1:8080/api/optimization/searchoptimizationconfigurationbyidandemail'
+url_upload4 = 'http://127.0.0.1:8080/api/optimization/executeoptimizationconfiguration'
 
 
 def welcome(request):
@@ -26,8 +26,7 @@ def request_email(request):
 
 @enter_email
 def form_page1(request):
-    form = ProblemInputUser(request.POST or None, request.FILES or None)
-    error = None
+    form = ProblemInputUser(request.POST or None, request.FILES or None, initial=request.session.get('data'))
     if form.is_valid():
         upload = request.FILES['input_jar']
         files = {
@@ -59,26 +58,31 @@ def form_page2(request):
             files = {
                 'file': (upload.name,
                          open(upload.file.name, 'rb'))}
-        variablesList = []
-        objectivesList = []
+        variables_list = []
         for i in range(info.get('variables')):
-            variablesList.append(form.cleaned_data.get('variable_name_%s' % i))
+            variables_list.append(form.cleaned_data.get('variable_name_%s' % i))
+        objectives_list = []
         for i in range(info.get('objectives')):
-            objectivesList.append(form.cleaned_data.get('objectives_name_%s' % i))
+            objectives_list.append(form.cleaned_data.get('objectives_name_%s' % i))
 
         data_form = {k: v for k, v in form.cleaned_data.items() if k != 'input_csv'}
-        data = {'sessionId': request.session.session_key, 'problemName': info.get('name'),
-                'email': request.session.get('email'), 'description': info.get('description'),
-                'executionMaxWaitTime': info.get('waiting_time'),
-                'algorithmChoiceMethod': data_form.get('algorithm_choice_method'),
-                'variables': variablesList, 'objectives': objectivesList, 'algorithms': data_form.get('choices')
-                }
+        data = {
+            'sessionId': request.session.session_key,
+            'problemName': info.get('name'),
+            'email': request.session.get('email'),
+            'description': info.get('description'),
+            'executionMaxWaitTime': info.get('waiting_time'),
+            'algorithmChoiceMethod': data_form.get('algorithm_choice_method'),
+            'variables': variables_list,
+            'objectives': objectives_list,
+            'algorithms': data_form.get('choices')
+        }
         p = requests.post(url_upload2, data=data, files=files)
         info = p.json()
-        if info['result']['id'] == None:
+        if info['result']['id'] is None:
             error = info['result']['message']
         else:
-            return redirect('/requestdetails/' + str(info['result']['id']))
+            return redirect('request_details', info['result']['id'])
 
     return render(request, 'form2.html', {
         'form': form, 'variables': extra_data['variables'],
@@ -89,27 +93,37 @@ def form_page2(request):
 
 @enter_email
 def request_details(request, num):
+    error = None
     if request.POST:
-        return redirect('/processing/' + str(num))
+        error = submit_execution_request(num, request.session.get('email'))
+        if error is None:
+            redirect('processing')
     request.session['idSubmission'] = num
     data = {'id': num, 'email': request.session.get('email')}
     p = requests.post(url_upload3, data=data)
     info = p.json()
     jar = info['result']['optimizationConfiguration']['filePath'].split('/')[-1]
     info['result']['optimizationConfiguration']['filePath'] = jar
-    listAlgo = []
+    list_algo = []
     for var in info['result']['optimizationConfiguration']['algorithms']:
-        listAlgo.append(var['name'].split('.')[-1])
+        list_algo.append(var['name'].split('.')[-1])
     # data = info['result']['optimizationConfiguration']
-    info['result']['optimizationConfiguration']['algorithms'] = listAlgo
-    return render(request, 'request_details.html', {'details': info['result']['optimizationConfiguration']})
+    info['result']['optimizationConfiguration']['algorithms'] = list_algo
+    return render(request, 'configuration_details.html', {
+        'details': info['result']['optimizationConfiguration'],
+        'error': error
+    })
 
 
-def submit_problem(request, num):
-    data = {'id': num, 'email': request.session.get('email')}
-    # p vem com id
-    p = requests.post(url_upload4, data=data)
-    return render(request, 'submit_page.html', {'num': num})
+def submit_execution_request(num, email):
+    data = {'id': num, 'email': email}
+    result = requests.post(url_upload4, data=data).json()
+    if result['result']['id'] is None:
+        return 'Couldn\'t submit execution request. Please try later'
+
+
+def processing(request):
+    return render(request, 'processing.html')
 
 
 def faq_page(request):
@@ -117,19 +131,19 @@ def faq_page(request):
 
 
 @enter_email
-def saved_conf(request):
+def my_configurations(request):
     email_conf = request.session.get('email')
-    return render(request, 'save_conf.html', {'user_email': email_conf})
+    return render(request, 'my_configurations.html', {'user_email': email_conf})
 
 
 @enter_email
-def history(request):
+def execution_history(request):
     email_conf = request.session.get('email')
-    return render(request, 'history.html', {'user_email': email_conf})
+    return render(request, 'execution_history.html', {'user_email': email_conf})
 
 
 @enter_email
-def details(request, num):
+def configuration_detail(request, num):
     return render(request, 'details.html')
 
 

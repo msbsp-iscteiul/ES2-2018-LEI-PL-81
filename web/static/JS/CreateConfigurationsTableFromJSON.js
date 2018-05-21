@@ -8,7 +8,6 @@ $(function () {
             tableContent += '<td>' + data.result.summary[i].description + '</td>';
             tableContent += '<td>' + new Date(data.result.summary[i].createdDate).toLocaleDateString() + '</td>';
             tableContent += '<td><a href="/requestdetails/' + data.result.summary[i].id + '" class="btn btn-primary">Open</a></td>';
-            tableContent += '<td><a href="/processing/' + data.result.summary[i].id + '" class="btn btn-primary">Execute</a></td>';
             tableContent += '</tr>';
         });
         $('#tableDiv').html(tableContent);

@@ -1,7 +1,12 @@
+import re
+
 from django import forms
-
-
 # Formulário que trata o pedido de email, caso não exista em sessão
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+from appform.validators import validate_file_ext
+
+
 class RequestEmailForm(forms.Form):
     email = forms.EmailField(label='Email',
                              help_text='Please, enter your email -- Acrescentar algo')
@@ -14,10 +19,12 @@ class RequestEmailForm(forms.Form):
 
 
 class ProblemInputUser(forms.Form):
-    name = forms.CharField(
+    name = forms.RegexField(
         max_length=30,
         label='Problem name',
-        help_text='Write the problem name using Java Class Name Convention')
+        help_text='Write the problem name using Java Class Name Convention',
+        regex=re.compile('^[A-Z][\w$]+$', re.UNICODE)  # https://regex101.com/r/vR0iK3/5
+    )
     description = forms.CharField(
         label='Description',
         max_length=500,
@@ -26,8 +33,15 @@ class ProblemInputUser(forms.Form):
         }),
         help_text='Write the description of the problem to solve')
     waiting_time = forms.IntegerField(
-        help_text='Write the maximum time you are willing to wait for optimization of the problem in SECONDS')
-    input_jar = forms.FileField(label='Select a file')
+        label='Max execution time (0 - 3600 seconds)',
+        help_text='Write the maximum time you are willing to wait for optimization of the problem in SECONDS',
+        validators=[MinValueValidator(0), MaxValueValidator(3600)]
+    )
+    input_jar = forms.FileField(
+        label='Select the problem jar file',
+        help_text='If you need help, consult the FAQ section',
+        validators=[validate_file_ext(['.jar'])]
+    )
 
     def clean(self):
         cleaned_data = super(ProblemInputUser, self).clean()
@@ -63,8 +77,11 @@ class ProblemInputVariable(forms.Form):
         self.fields['variables'].initial = variables
         self.fields['variable_type'].initial = variable_type
         self.fields['objectives'].initial = objectives
-        self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have',
-                                                   required=False)
+        self.fields['input_csv'] = forms.FileField(
+            label='Select the csv or rs file with the best solutions you have',
+            required=False,
+            validators=[validate_file_ext(['.csv', '.rf'])]
+        )
         self.fields['algorithm_choice_method'] = forms.ChoiceField(
             label='Select the algorithm choice method',
             choices=(
