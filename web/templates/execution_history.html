@@ -31,7 +31,7 @@
                         <th class="align-middle" scope="row">{{ execution.problemName }}</th>
                         <td class="align-middle">{{ execution.startDate|parse_date|date:'Y-m-d \a\t H:i:s' }}</td>
                         <td class="align-middle">{{ execution.endDate|parse_date|date:'Y-m-d \a\t H:i:s' }}</td>
-                        <td class="align-middle"><a href="{% url 'history_details' execution.id %}" class="btn btn-primary">Open</a></td>
+                        <td class="align-middle"><a href="{% url 'history_details' execution.executionId %}" class="btn btn-primary">Open</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

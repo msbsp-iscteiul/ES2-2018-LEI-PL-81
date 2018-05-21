@@ -1,3 +1,5 @@
+import json
+
 import requests
 from django.contrib import messages
 from django.urls import reverse
@@ -15,7 +17,7 @@ save_configuration_url = BACKEND_URL + '/api/optimization/save/'
 search_optimization_url = BACKEND_URL + '/api/optimization/searchoptimizationconfigurationbyidandemail'
 execute_optimization_url = BACKEND_URL + '/api/optimization/executeoptimizationconfiguration'
 configuration_history_url = BACKEND_URL + '/api/optimization/searchoptimizationconfigurationbyemail/'
-execution_history_url = BACKEND_URL + '/api/history/'
+search_execution_url = BACKEND_URL + '/api/optimization/searchoptimizationjobexecutionsbyemail'
 
 
 def welcome(request):
@@ -152,8 +154,9 @@ def my_configurations(request):
 
 @requires_email
 def execution_history(request):
-    executions = requests.get(execution_history_url, params={'email': request.session.get('email')})\
-        .json()['result']['nodes']
+    executions = requests.post(search_execution_url, data={'email': request.session.get('email')})\
+        .json()['result']['executions']
+    print(executions)
     return render(request, 'execution_history.html', {
         'executions': executions
     })
@@ -162,6 +165,18 @@ def execution_history(request):
 @requires_email
 def configuration_detail(request, num):
     return render(request, 'details.html')
+
+
+@requires_email
+def execution_details(request, num):
+    result = requests.post(search_execution_url, {
+        'email': request.session.get('email')
+    }).json()
+
+    return render(request, 'details.html', {
+        'title': result['result']['problemName'],
+        'result': json.dumps(result)
+    })
 
 
 @requires_email

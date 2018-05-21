@@ -6,4 +6,4 @@ register = template.Library()
 
 @register.filter(expects_localtime=True)
 def parse_date(value):
-    return parse(value)
+    return value and parse(value) or ''
