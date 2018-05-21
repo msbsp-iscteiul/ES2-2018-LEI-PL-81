@@ -1,10 +1,13 @@
 package pt.iscte.es2.optimization_job_runner;
 
 import org.springframework.stereotype.Component;
+import pt.iscte.es2.optimization_job_runner.jobs.BackendGateway;
 import pt.iscte.es2.optimization_job_runner.jobs.Job;
-import pt.iscte.es2.optimization_job_runner.jobs.JobRepository;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The rabbitmq message receiver
@@ -12,29 +15,30 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class Receiver {
 
-	private final JMetalConfiguration jMetalConfiguration;
-	private final JobRepository jobRepository;
+	private static final Logger LOGGER = Logger.getLogger(Receiver.class.getName());
+
+	private final JMetalTaskRunner jMetalTaskRunner;
+	private final BackendGateway backendGateway;
 
 	/**
 	 * Constructor
-	 * @param jMetalConfiguration the jmetal task executor
-	 * @param jobRepository the job repository
+	 * @param jMetalTaskRunner the jmetal task executor
+	 * @param backendGateway
 	 */
-	public Receiver(JMetalConfiguration jMetalConfiguration, JobRepository jobRepository) {
-		this.jMetalConfiguration = jMetalConfiguration;
-		this.jobRepository = jobRepository;
+	public Receiver(JMetalTaskRunner jMetalTaskRunner, BackendGateway backendGateway) {
+		this.jMetalTaskRunner = jMetalTaskRunner;
+		this.backendGateway = backendGateway;
 	}
 
 	/**
 	 * Receive a message
-	 * @param jobId the message
-	 * @throws ExecutionException
-	 * @throws InterruptedException
+	 * @param idEmailStruct the message
 	 */
-	public void receiveMessage(String jobId) throws ExecutionException, InterruptedException {
-		System.out.println("Received <" + jobId + ">");
-//		final Job awaitingWithId = jobRepository.findAwaitingWithId(Long.valueOf(jobId));
-//		System.out.println(awaitingWithId);
-		jMetalConfiguration.execute(new Job(Long.parseLong(jobId)));
+	public void receiveMessage(Object[] idEmailStruct) throws IOException, ExecutionException, InterruptedException {
+		long id = (long) idEmailStruct[0];
+		String email = (String) idEmailStruct[1];
+		Job job = backendGateway.getConfigurationOfId(id, email);
+		LOGGER.log(Level.INFO, email + " " + id);
+		jMetalTaskRunner.execute(job);
 	}
 }

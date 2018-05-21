@@ -2,6 +2,7 @@ package pt.iscte.es2.optimization_job_runner.post_processing;
 
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
+import pt.iscte.es2.optimization_job_runner.jobs.Job;
 
 import java.util.List;
 
@@ -10,31 +11,28 @@ import java.util.List;
  */
 public class PostProcessingContext {
 	private final String experimentName;
-	private final String problemName;
 	private final String solutionsPath;
 	private final String experimentPath;
 	private final List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms;
-	private final Long jobId;
+	private final Job job;
 
 	/**
 	 * Constructor
 	 * @param experimentName experiment name
-	 * @param problemName problem name
 	 * @param solutionsPath solutions path
 	 * @param experimentPath experiment path
 	 * @param algorithms chosen algorithms
-	 * @param jobId the job id
+	 * @param job the job id
 	 */
 	public PostProcessingContext(
-		String experimentName, String problemName, String solutionsPath, String experimentPath,
-		List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms, Long jobId
+		String experimentName, String solutionsPath, String experimentPath,
+		List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms, Job job
 	) {
 		this.experimentName = experimentName;
-		this.problemName = problemName;
 		this.solutionsPath = solutionsPath;
 		this.experimentPath = experimentPath;
 		this.algorithms = algorithms;
-		this.jobId = jobId;
+		this.job = job;
 	}
 
 	/**
@@ -42,13 +40,6 @@ public class PostProcessingContext {
 	 */
 	public String getExperimentName() {
 		return experimentName;
-	}
-
-	/**
-	 * @return problem name
-	 */
-	public String getProblemName() {
-		return problemName;
 	}
 
 	/**
@@ -75,7 +66,7 @@ public class PostProcessingContext {
 	/**
 	 * @return the job id
 	 */
-	public Long getJobId() {
-		return jobId;
+	public Job getJob() {
+		return job;
 	}
 }

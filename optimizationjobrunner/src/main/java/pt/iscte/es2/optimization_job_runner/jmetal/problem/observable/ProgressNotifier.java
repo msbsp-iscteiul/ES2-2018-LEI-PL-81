@@ -1,6 +1,7 @@
 package pt.iscte.es2.optimization_job_runner.jmetal.problem.observable;
 
 import org.uma.jmetal.solution.Solution;
+import pt.iscte.es2.optimization_job_runner.jobs.Job;
 import pt.iscte.es2.optimization_job_runner.mail.MailSender;
 
 import java.util.concurrent.atomic.LongAdder;
@@ -13,19 +14,19 @@ import java.util.logging.Logger;
 public class ProgressNotifier implements SolutionEvaluationListener {
 	private static final Logger LOGGER = Logger.getLogger(ProgressNotifier.class.getName());
 
-	private final String problemName;
+	private final Job job;
 	private final MailSender mailSender;
 	private final long totalEvaluations;
 	private LongAdder counter = new LongAdder();
 
 	/**
 	 * Constructor
-	 * @param problemName the problem name
+	 * @param job the job
 	 * @param mailSender the mail sender
 	 * @param totalEvaluations total evaluations to compare
 	 */
-	public ProgressNotifier(String problemName, MailSender mailSender, long totalEvaluations) {
-		this.problemName = problemName;
+	public ProgressNotifier(Job job, MailSender mailSender, long totalEvaluations) {
+		this.job = job;
 		this.mailSender = mailSender;
 		this.totalEvaluations = totalEvaluations;
 	}
@@ -64,9 +65,9 @@ public class ProgressNotifier implements SolutionEvaluationListener {
 	 */
 	private void notifyClient(String percentage) {
 		mailSender.send(
-			String.format("Optimização em curso: %s, %s%%", problemName, percentage),
+			String.format("Optimização em curso: %s, %s%%", job.getProblemName(), percentage),
 			String.format("Actualmente a %s%%", percentage),
-			"msbsp@iscte-iul.pt" // TODO email
+			job.getUserEmail()
 		);
 		LOGGER.log(Level.INFO, String.valueOf(counter));
 	}
