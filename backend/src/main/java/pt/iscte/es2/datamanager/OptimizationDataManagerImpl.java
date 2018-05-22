@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Transactional
@@ -41,13 +42,17 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	private OptimizationJobExecutionsDao optimizationJobExecutionsDao;
 
 	@Autowired
+	private OptimizationJobSolutionsDao optimizationJobSolutionsDao;
+
+	@Autowired
 	private Mapper mapper;
 
 	/**
 	 * @see OptimizationDataManager#searchFilePathBySessionId(String)
 	 */
 	public String searchFilePathBySessionId(String sessionId) {
-		return fileUploadDao.findBySessionId(sessionId).getFilePath();
+		List<FileUploadEntity> list = fileUploadDao.findBySessionId(sessionId);
+		return list.get(list.size() - 1).getFilePath();
 	}
 
 	/**
@@ -161,6 +166,56 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 				new OptimizationJobExecutionsEntity(
 					mapper.map(optimizationConfiguration, OptimizationConfigurationEntity.class), new Date(), State.Ready)),
 			OptimizationJobExecutions.class);
+	}
+
+	/**
+	 * @see OptimizationDataManager#searchOptimizationJobExecutionsById(Integer)
+	 */
+	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id) {
+		OptimizationJobExecutions optimizationJobExecutions = new OptimizationJobExecutions();
+		Optional<OptimizationJobExecutionsEntity> entity = optimizationJobExecutionsDao.findById(id.longValue());
+		if (entity.isPresent()) {
+			optimizationJobExecutions.setId(entity.get().getId().intValue());
+			optimizationJobExecutions.setStartDate(entity.get().getStartDate());
+			optimizationJobExecutions.setEndDate(entity.get().getEndDate());
+			optimizationJobExecutions.setState(entity.get().getState());
+			entity.get().getOptimizationJobSolutions()
+				.forEach(optimizationJobSolutionsEntity -> optimizationJobExecutions.getOptimizationJobSolutions()
+					.add(mapper.map(optimizationJobSolutionsEntity, OptimizationJobSolutions.class)));
+			return mapper.map(entity.get(), OptimizationJobExecutions.class);
+		}
+		return null;
+	}
+
+	/**
+	 * @see OptimizationDataManager#saveOptimizationJobSolution(List<OptimizationJobSolutions>)
+	 */
+	public List<OptimizationJobSolutions> saveOptimizationJobSolution(
+		List<OptimizationJobSolutions> optimizationJobSolutions) {
+		List<OptimizationJobSolutionsEntity> optimizationJobSolutionsEntities = new ArrayList<>();
+		optimizationJobSolutions.forEach(optimizationSolution -> optimizationJobSolutionsEntities.add(
+			mapper.map(optimizationSolution, OptimizationJobSolutionsEntity.class)));
+		List<OptimizationJobSolutionsEntity> savedOptimizationJobSolutionsEntities = optimizationJobSolutionsDao
+			.saveAll(optimizationJobSolutionsEntities);
+		List<OptimizationJobSolutions> savedOptimizationJobSolutions = new ArrayList<>();
+		savedOptimizationJobSolutionsEntities.forEach(entity -> savedOptimizationJobSolutions
+			.add(mapper.map(entity, OptimizationJobSolutions.class)));
+		return savedOptimizationJobSolutions;
+	}
+
+
+	/**
+	 * @see OptimizationDataManager#updateState(Integer, State)
+	 */
+	public OptimizationJobExecutions updateState(Integer id, State state) {
+		OptimizationJobExecutionsEntity entity = optimizationJobExecutionsDao.getOne(id.longValue());
+		entity.setState(state);
+		if (state.equals(State.Running)) {
+			return mapper.map(optimizationJobExecutionsDao.save(entity), OptimizationJobExecutions.class);
+		} else {
+			entity.setEndDate(new Date());
+			return mapper.map(optimizationJobExecutionsDao.save(entity), OptimizationJobExecutions.class);
+		}
 	}
 
 }

@@ -26,7 +26,7 @@ class ProblemInputUser(forms.Form):
         }),
         help_text='Write the description of the problem to solve')
     waiting_time = forms.IntegerField(
-        help_text='Write the maximum time you are willing to wait for optimization of the problem')
+        help_text='Write the maximum time you are willing to wait for optimization of the problem in SECONDS')
     input_jar = forms.FileField(label='Select a file')
 
     def clean(self):
@@ -63,7 +63,8 @@ class ProblemInputVariable(forms.Form):
         self.fields['variables'].initial = variables
         self.fields['variable_type'].initial = variable_type
         self.fields['objectives'].initial = objectives
-        self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have', required=False)
+        self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have',
+                                                   required=False)
         self.fields['algorithm_choice_method'] = forms.ChoiceField(
             label='Select the algorithm choice method',
             choices=(
@@ -107,4 +108,3 @@ class SendEmail(forms.Form):
         max_length=500,
         widget=forms.Textarea(),
         help_text='Tell us about your questions')
-

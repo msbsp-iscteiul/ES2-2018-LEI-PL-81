@@ -41,7 +41,7 @@ CREATE TABLE optimization_job_executions (
   id_optimization_configuration INT NOT NULL,
   start_date DATETIME NOT NULL,
   end_date DATETIME NULL,
-  state ENUM('Ready', 'Running', 'Finished') NULL,
+  state ENUM('Ready', 'Running', 'Finished', 'Failed') NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_job_executions(id_optimization_configuration)
@@ -55,8 +55,9 @@ CREATE TABLE optimization_job_solutions (
   id INT NOT NULL AUTO_INCREMENT,
   id_optimization_job_executions INT NOT NULL,
   algorithm_name VARCHAR(255) NOT NULL,
-  solution_name VARCHAR(100) NOT NULL,
+  solution TEXT NOT NULL,
   solution_quality TEXT NOT NULL,
+  quality VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_job_solutions(id_optimization_job_executions)

@@ -1,20 +1,37 @@
 package pt.iscte.es2.optimization_job_runner.jobs;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name="optimization_job_executions")
 public class Job {
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	private String state;
+	private long id;
+	private final String problemName;
+	private final String jarPath;
+	private final String userEmail;
+	private final int waitingTime;
 
-	public Long getId() {
+	public Job(long id, String problemName, String jarPath, String userEmail, int waitingTime) {
+		this.id = id;
+		this.problemName = problemName;
+		this.jarPath = jarPath;
+		this.userEmail = userEmail;
+		this.waitingTime = waitingTime;
+	}
+
+	public long getId() {
 		return id;
 	}
 
-	public void complete() {
-		state = "Finished";
+	public String getProblemName() {
+		return problemName;
+	}
+
+	public String getJarPath() {
+		return jarPath;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public int getWaitingTime() {
+		return waitingTime;
 	}
 }

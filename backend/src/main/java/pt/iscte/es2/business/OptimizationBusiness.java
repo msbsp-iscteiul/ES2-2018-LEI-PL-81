@@ -22,13 +22,13 @@ public interface OptimizationBusiness {
 	 * @param sessionId
 	 * 			String
 	 * @param variables
-	 * 			List<OptimizationConfigurationVariables>
+	 * 			List
 	 * @param objectives
-	 * 			List<OptimizationConfigurationObjectives>
+	 * 			List
 	 * @param algorithms
-	 * 			List<OptimizationConfigurationAlgorithms>
+	 * 			List
 	 * @param restrictions
-	 * 			List<OptimizationConfigurationRestrictions>
+	 * 			List
 	 * @param algorithmChoiceMethod
 	 * 			AlgorithmChoiceMethod
 	 * @param executionMaxWaitTime
@@ -78,6 +78,7 @@ public interface OptimizationBusiness {
 	 *
 	 * @param id
 	 * 			Integer
+	 *
 	 * @param email
 	 * 			String
 	 *
@@ -100,10 +101,46 @@ public interface OptimizationBusiness {
 	 *
 	 * @param id
 	 * 			Integer
+	 *
 	 * @param email
 	 * 			String
 	 *
 	 * @return ExecuteOptimizationConfigurationResult
 	 */
 	public ExecuteOptimizationConfigurationResult executeOptimizationConfiguration(Integer id, String email);
+
+	/**
+	 * Saves a list of OptimizationJobSolution By OptimizationJobExecution ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @param state
+	 * 			State
+	 *
+	 * @param solutions
+	 * 			List
+	 *
+	 * @param latex
+	 * 			MultipartFile
+	 *
+	 * @param r
+	 * 			MultipartFile
+	 *
+	 * @return SaveOptimizationJobSolutionResult
+	 */
+	public SaveOptimizationJobSolutionResult saveOptimizationJobSolution(
+		Integer id, State state, List<OptimizationJobSolutions> solutions, MultipartFile latex, MultipartFile r);
+
+
+	/**
+	 * Updates the State of an Optimization Job Execution By ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @param state
+	 * 			State
+	 */
+	public void updateState(Integer id, State state);
 }

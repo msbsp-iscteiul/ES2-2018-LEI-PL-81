@@ -1,13 +1,13 @@
 package pt.iscte.es2.algorithm_finder;
 
 import org.junit.jupiter.api.Test;
-import org.uma.jmetal.problem.impl.AbstractBinaryProblem;
-import org.uma.jmetal.problem.impl.AbstractIntegerProblem;
-import org.uma.jmetal.solution.BinarySolution;
-import org.uma.jmetal.solution.IntegerSolution;
+import pt.iscte.es2.algorithm_finder.fixtures.SomeBinaryProblem;
+import pt.iscte.es2.algorithm_finder.fixtures.SomeIncompatibleProblem;
+import pt.iscte.es2.algorithm_finder.fixtures.SomeIntegerProblem;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +21,6 @@ class AlgorithmFinderTest {
 		final SomeBinaryProblem binaryProblem = new SomeBinaryProblem();
 		final List<Constructor<?>> algorithmBuilderConstructors =
 			new AlgorithmFinder(binaryProblem).execute().getConstructors();
-		System.out.println(algorithmBuilderConstructors);
 		algorithmBuilderConstructors.forEach(constructor -> {
 			try {
 				assertNotNull(constructor.newInstance(binaryProblem));
@@ -36,7 +35,6 @@ class AlgorithmFinderTest {
 		final SomeIntegerProblem integerProblem = new SomeIntegerProblem();
 		final List<Constructor<?>> algorithmBuilderConstructors =
 			new AlgorithmFinder(integerProblem).execute().getConstructors();
-		System.out.println(algorithmBuilderConstructors);
 		algorithmBuilderConstructors.forEach(constructor -> {
 			try {
 				assertNotNull(constructor.newInstance(integerProblem));
@@ -53,24 +51,22 @@ class AlgorithmFinderTest {
 		assertEquals("org.uma.jmetal.solution.BinarySolution", solutionTypeName);
 	}
 
-	private class SomeIntegerProblem extends AbstractIntegerProblem {
-
-		@Override
-		public void evaluate(IntegerSolution solution) {
-
-		}
+	@Test
+	void findsConstructorsByAlgorithmName() {
+		final SomeBinaryProblem problem = new SomeBinaryProblem();
+		final AlgorithmFinder.AlgorithmFinderResult result = new AlgorithmFinder(problem).execute();
+		final List<Constructor<?>> constructorsForAlgorithms = result
+			.getConstructorsForAlgorithms(Arrays.asList(
+				"org.uma.jmetal.algorithm.multiobjective.mocell.MOCell",
+				"org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII"
+			));
+		assertEquals(2, constructorsForAlgorithms.size());
 	}
 
-	private class SomeBinaryProblem extends AbstractBinaryProblem {
-
-		@Override
-		protected int getBitsPerVariable(int index) {
-			return 0;
-		}
-
-		@Override
-		public void evaluate(BinarySolution solution) {
-
-		}
+	@Test
+	void returnsEmptyWhenNoCompatibleMatches() {
+		final SomeIncompatibleProblem incompatibleProblem = new SomeIncompatibleProblem();
+		final AlgorithmFinder.AlgorithmFinderResult result = new AlgorithmFinder(incompatibleProblem).execute();
+		assertEquals(0, result.getAlgorithms().size());
 	}
 }

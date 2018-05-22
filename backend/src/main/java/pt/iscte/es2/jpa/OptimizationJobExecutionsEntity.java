@@ -7,6 +7,7 @@ import pt.iscte.es2.dto.State;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,6 +71,9 @@ public class OptimizationJobExecutionsEntity {
 	}
 
 	public List<OptimizationJobSolutionsEntity> getOptimizationJobSolutions() {
+		if (optimizationJobSolutions == null) {
+			optimizationJobSolutions = new ArrayList<>();
+		}
 		return optimizationJobSolutions;
 	}
 
@@ -100,4 +104,6 @@ public class OptimizationJobExecutionsEntity {
 	public void setState(State state) {
 		this.state = state;
 	}
+
+
 }

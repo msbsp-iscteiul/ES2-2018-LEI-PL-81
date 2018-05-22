@@ -5,8 +5,16 @@ import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.problem.IntegerProblem;
 import org.uma.jmetal.problem.Problem;
 
+/**
+ * Observable {@link Problem} factory for finding the most suitable observable encapsulator
+ */
 public class ObservableProblemFactory {
 
+	/**
+	 * Encapsulates a {@link Problem} with an observable
+	 * @param problem the encapsulated problem
+	 * @return the observable problem
+	 */
 	public ObservableProblem createFromProblem(Problem problem) {
 
 		if (problem instanceof DoubleProblem) {
