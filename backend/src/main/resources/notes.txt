@@ -3,3 +3,6 @@
 
 
 -- Vem Variaveis, Objectivos, CSV, Algoritmos, (Mixed, Manual, Automatic)
+
+
+

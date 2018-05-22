@@ -1,12 +1,13 @@
 package pt.iscte.es2.dto;
 
 /**
- * DTO for the Optimization Job Solutions
+ * DTO of OptimizationJobSolutions
+ *
+ * Solution DTO that contains an id, algorithmName, solution, solutionQuality and quality.
  */
 public class OptimizationJobSolutions {
 
 	private Integer id;
-	private OptimizationJobExecutions optimizationJobExecutions;
 	private String algorithmName;
 	private String solution;
 	private String solutionQuality;
@@ -22,14 +23,6 @@ public class OptimizationJobSolutions {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public OptimizationJobExecutions getOptimizationJobExecutions() {
-		return optimizationJobExecutions;
-	}
-
-	public void setOptimizationJobExecutions(OptimizationJobExecutions optimizationJobExecutions) {
-		this.optimizationJobExecutions = optimizationJobExecutions;
 	}
 
 	public String getAlgorithmName() {

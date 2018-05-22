@@ -44,20 +44,6 @@ public class Application {
 	}
 
 	@Bean
-	public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
-		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-		container.setConnectionFactory(connectionFactory);
-		container.setQueueNames(queueName);
-		container.setMessageListener(listenerAdapter);
-		return container;
-	}
-
-	@Bean
-	public MessageListenerAdapter listenerAdapter(Receiver1 receiver) {
-		return new MessageListenerAdapter(receiver, "receiveMessage1");
-	}
-
-	@Bean
 	public DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean() {
 		return new DozerBeanMapperFactoryBean();
 	}

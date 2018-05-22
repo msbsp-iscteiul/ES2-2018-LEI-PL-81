@@ -2,6 +2,8 @@ package pt.iscte.es2.dto.service.optimization;
 
 /**
  * DTO FileUpload Response
+ *
+ * Contains the sessionId of the User and a {@link FileUploadResult}.
  */
 public class FileUploadResponse {
 

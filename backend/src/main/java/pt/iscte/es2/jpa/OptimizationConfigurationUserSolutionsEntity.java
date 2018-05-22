@@ -18,10 +18,6 @@ public class OptimizationConfigurationUserSolutionsEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_optimization_configuration", nullable = false)
-	private OptimizationConfigurationEntity optimizationConfiguration;
-
 	@NotBlank
 	private String solutionQuality;
 
@@ -30,20 +26,16 @@ public class OptimizationConfigurationUserSolutionsEntity {
 	@CreatedDate
 	private Date createdAt;
 
+	public OptimizationConfigurationUserSolutionsEntity() {
+
+	}
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public OptimizationConfigurationEntity getOptimizationConfiguration() {
-		return optimizationConfiguration;
-	}
-
-	public void setOptimizationConfiguration(OptimizationConfigurationEntity optimizationConfiguration) {
-		this.optimizationConfiguration = optimizationConfiguration;
 	}
 
 	public String getSolutionQuality() {

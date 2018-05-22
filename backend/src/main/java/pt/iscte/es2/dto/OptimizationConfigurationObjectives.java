@@ -1,28 +1,16 @@
 package pt.iscte.es2.dto;
 
 /**
- * DTO of the OptimizationConfigurationObjectives
+ * DTO of OptimizationConfigurationObjectives
+ *
+ * Objective DTO that contains the name
  */
 public class OptimizationConfigurationObjectives {
 
-	private Integer id;
 	private String name;
 
 	public OptimizationConfigurationObjectives() {
 
-	}
-
-	public OptimizationConfigurationObjectives(String name) {
-		this.name = name;
-	}
-
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {

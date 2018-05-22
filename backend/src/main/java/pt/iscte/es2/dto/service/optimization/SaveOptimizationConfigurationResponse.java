@@ -1,7 +1,9 @@
 package pt.iscte.es2.dto.service.optimization;
 
 /**
- * DTO OptimizationConfiguration Response
+ * DTO Save OptimizationConfiguration Response
+ *
+ * Contains the save result {@link SaveOptimizationConfigurationResult} of the submitted problem
  */
 public class SaveOptimizationConfigurationResponse {
 

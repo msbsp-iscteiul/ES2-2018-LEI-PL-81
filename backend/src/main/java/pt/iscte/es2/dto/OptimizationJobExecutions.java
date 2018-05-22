@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * DTO for the Optimization Job Executions
+ * DTO of OptimizationJobExecutions
+ *
+ * Execution DTO that contains the id, startDate, endDate, state and possibly
+ * a list of solutions {@link OptimizationJobSolutions}
  */
 public class OptimizationJobExecutions {
 
@@ -13,8 +16,7 @@ public class OptimizationJobExecutions {
 	private Date startDate;
 	private Date endDate;
 	private State state;
-	private OptimizationConfiguration optimizationConfiguration;
-	private List<OptimizationJobSolutions> optimizationJobSolutions;
+	private List<OptimizationJobSolutions> solutions;
 
 	public OptimizationJobExecutions() {
 
@@ -52,22 +54,14 @@ public class OptimizationJobExecutions {
 		this.state = state;
 	}
 
-	public List<OptimizationJobSolutions> getOptimizationJobSolutions() {
-		if (optimizationJobSolutions == null) {
-			optimizationJobSolutions = new ArrayList<>();
+	public List<OptimizationJobSolutions> getSolutions() {
+		if (solutions == null) {
+			solutions = new ArrayList<>();
 		}
-		return optimizationJobSolutions;
+		return solutions;
 	}
 
-	public void setOptimizationJobSolutions(List<OptimizationJobSolutions> optimizationJobSolutions) {
-		this.optimizationJobSolutions = optimizationJobSolutions;
-	}
-
-	public OptimizationConfiguration getOptimizationConfiguration() {
-		return optimizationConfiguration;
-	}
-
-	public void setOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration) {
-		this.optimizationConfiguration = optimizationConfiguration;
+	public void setSolutions(List<OptimizationJobSolutions> solutions) {
+		this.solutions = solutions;
 	}
 }

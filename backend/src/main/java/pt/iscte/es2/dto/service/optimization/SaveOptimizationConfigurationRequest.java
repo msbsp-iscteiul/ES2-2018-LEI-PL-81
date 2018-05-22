@@ -7,7 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DTO Optimization Request
+ * DTO Save OptimizationConfiguration Request
+ *
+ * Contains an OptimizationConfiguration to be Persisted, suggested by the User
+ * 		problemName - Just a simple problem name
+ * 		description - Description of what the problem consists
+ * 		email - Email of the user that is submitting the OptimizationConfiguration
+ * 		sessionId - Unique Session ID
+ * 		variables - List of {@link OptimizationConfigurationVariables} of the problem
+ * 		objectives - List of {@link OptimizationConfigurationObjectives} of the problem
+ * 		algorithms - List of {@link OptimizationConfigurationAlgorithms} of the problem
+ * 		restrictions - List of {@link OptimizationConfigurationRestrictions} of the problem
+ * 		algorithmChoiceMethod - {@link AlgorithmChoiceMethod} on how the problem should be ran
+ * 		executionMaxWaitTime - Max wait time for the execution to complete
+ * 		file - CVS File that the User can submit with the his Solutions for the problem to be solved
  */
 public class SaveOptimizationConfigurationRequest {
 
@@ -22,6 +35,10 @@ public class SaveOptimizationConfigurationRequest {
 	private AlgorithmChoiceMethod algorithmChoiceMethod;
 	private Integer executionMaxWaitTime;
 	private MultipartFile file;
+
+	public SaveOptimizationConfigurationRequest() {
+
+	}
 
 	public String getProblemName() {
 		return problemName;
@@ -56,6 +73,9 @@ public class SaveOptimizationConfigurationRequest {
 	}
 
 	public List<OptimizationConfigurationVariables> getVariables() {
+		if (variables == null) {
+			this.variables = new ArrayList<>();
+		}
 		return variables;
 	}
 
@@ -64,6 +84,9 @@ public class SaveOptimizationConfigurationRequest {
 	}
 
 	public List<OptimizationConfigurationObjectives> getObjectives() {
+		if (objectives == null) {
+			this.objectives = new ArrayList<>();
+		}
 		return objectives;
 	}
 
@@ -72,6 +95,9 @@ public class SaveOptimizationConfigurationRequest {
 	}
 
 	public List<OptimizationConfigurationAlgorithms> getAlgorithms() {
+		if (algorithms == null) {
+			this.algorithms = new ArrayList<>();
+		}
 		return algorithms;
 	}
 

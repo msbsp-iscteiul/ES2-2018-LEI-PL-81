@@ -10,13 +10,13 @@ import java.util.List;
 @Repository
 public interface OptimizationConfigurationRestrictionsDao extends JpaRepository<OptimizationConfigurationRestrictionsEntity, Long> {
 
-	/**
-	 * Searchs for all Restrictions associated with a given OptimizationConfigurationId
-	 *
-	 * @param id
-	 * 			Long
-	 *
-	 * @return List<OptimizationConfigurationRestrictionsEntity>
-	 */
-	List<OptimizationConfigurationRestrictionsEntity> findByOptimizationConfigurationId(Long id);
+//	/**
+//	 * Searchs for all Restrictions associated with a given OptimizationConfigurationId
+//	 *
+//	 * @param id
+//	 * 			Long
+//	 *
+//	 * @return List<OptimizationConfigurationRestrictionsEntity>
+//	 */
+//	List<OptimizationConfigurationRestrictionsEntity> findByOptimizationConfigurationId(Long id);
 }
