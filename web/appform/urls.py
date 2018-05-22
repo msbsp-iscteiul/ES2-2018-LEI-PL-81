@@ -13,7 +13,7 @@ urlpatterns = [
     path('execution_history/', views.execution_history, name='history'),
     path('configurations/', views.my_configurations, name='saved_conf'),
     path('contacts/', views.send_email, name='send_email'),
-    path('history/details/<int:num>', views.configuration_detail, name='history_details'),
+    path('history/details/<int:optimization_configuration_id>/<int:execution_id>', views.execution_details, name='history_details'),
     path('submission_success', views.submission_success, name='submission_success'),
     path('logout', views.logout, name='logout'),
 ]

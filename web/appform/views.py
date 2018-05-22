@@ -163,19 +163,18 @@ def execution_history(request):
 
 
 @requires_email
-def configuration_detail(request, num):
-    return render(request, 'details.html')
-
-
-@requires_email
-def execution_details(request, num):
-    result = requests.post(search_execution_url, {
-        'email': request.session.get('email')
-    }).json()
+def execution_details(request, optimization_configuration_id, execution_id):
+    configuration = requests.post(search_optimization_url, data={
+        'email': request.session.get('email'),
+        'id': optimization_configuration_id
+    }).json()['result']['optimizationConfiguration']
+    execution = next(obj for obj in configuration['executions'] if obj['id'] == execution_id)
+    objectives = [obj['name'] for obj in configuration['objectives']]
 
     return render(request, 'details.html', {
-        'title': result['result']['problemName'],
-        'result': json.dumps(result)
+        'configuration': configuration,
+        'execution': execution,
+        'objectives': objectives
     })
 
 

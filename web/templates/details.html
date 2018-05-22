@@ -6,9 +6,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"
             integrity="sha256-XF29CBwU1MWLaGEnsELogU6Y6rcc5nCkhhx89nFMIDQ=" crossorigin="anonymous"></script>
     <script>
-
-        var coiso = {{ result|safe }};
-
         function getRandomColor() {
             var letters = '0123456789ABCDEF'.split('');
             var color = '#';
@@ -18,33 +15,7 @@
             return color;
         }
 
-        {#var rawData = $.get(#}
-        {#    'http://172.17.3.156:8080/api/optimization/searchoptimizationjobexecutionsbyemail',#}
-        {#    {email: window.SESSION_EMAIL, }#}
-        {#);#}
-
-        var rawData = {
-            "id": 8,
-            "startDate": "2018-05-19T16:30:02.000+0000",
-            "endDate": "2018-05-20T12:55:50.000+0000",
-            "state": "Finished",
-            "solutions": [
-                {
-                    "id": 13,
-                    "algorithmName": "Complex Algorithm :D",
-                    "solution": "0.0101010101 0.1010101001",
-                    "solutionQuality": "0.1010102 0.0222124 0.23333455",
-                    "quality": "0.102012 0.123415"
-                },
-                {
-                    "id": 14,
-                    "algorithmName": "Another Complex Algorithm :D",
-                    "solution": "0.0101010101 0.1010101001",
-                    "solutionQuality": "0.5125525 0.124125 0.12341255",
-                    "quality": "0.124512 0.125516"
-                }
-            ]
-        };
+        var rawData = {{ execution|safe }};
 
         var datasets = rawData.solutions.map(function (value) {
             var data = value.solutionQuality.split(/\s+/);
@@ -62,13 +33,12 @@
         var config = {
             type: 'line',
             data: {
-                labels: ['Obj1', 'Obj2'],
+                labels: {{ objectives|safe }},
                 datasets: datasets
             }
         };
 
         window.onload = function () {
-            console.log(document.getElementById('chart'));
             var ctx = document.getElementById('chart').getContext('2d');
             window.myLine = new Chart(ctx, config);
         };
@@ -78,14 +48,12 @@
 {% block content_app %}
 
     <div class="container">
-        <h1>Request Detail</h1>
+        <h1 class="mb-5">Request Detail for '<a href="{% url 'request_details' configuration.id %}">{{ configuration.problemName }}</a>'</h1>
 
         <div class="main">
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-sm">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti et illo laudantium libero
-                    officiis, pariatur perferendis provident quaerat quas! Alias autem beatae, eaque earum error illo
-                    non repellat repudiandae voluptate.
+                    {{ configuration.description }}
                 </div>
             </div>
 
