@@ -156,7 +156,6 @@ def my_configurations(request):
 def execution_history(request):
     executions = requests.post(search_execution_url, data={'email': request.session.get('email')})\
         .json()['result']['executions']
-    print(executions)
     return render(request, 'execution_history.html', {
         'executions': executions
     })
