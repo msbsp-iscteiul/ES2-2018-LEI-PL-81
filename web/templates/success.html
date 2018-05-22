@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% block title %}Success{% endblock %}
+{% block head %}
+    <meta http-equiv="refresh" content="3; url={{ next }}"/>
+{% endblock %}
+
+{% block content_app %}
+
+    <div class="container">
+        {% include 'messages.html' %}
+        <p>Please wait while we redirect you, or click <a href="{{ next }}">here</a>.</p>
+    </div>
+
+{% endblock %}

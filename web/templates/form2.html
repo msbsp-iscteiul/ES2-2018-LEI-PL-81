@@ -10,26 +10,14 @@
 {% block content_app %}
 
     <div class="container">
-        <h1>Configuration: Step 2</h1>
+        <h1>Optimization configuration: Step 2</h1>
 
         <form action class="mt-5" method="post" enctype="multipart/form-data">
-            {% if error is not None %}
-                <div class="alert alert-dismissible alert-danger">
-                    <button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>
-                    <strong>{{ error }}</strong>
-
-                </div>
-
-            {% endif %}
+            {% include 'messages.html' %}
             {% csrf_token %}
-
             {% bootstrap_form form %}
-
-
             <a class="btn btn-primary" href="{% url 'form_page1' %}">Back</a>
-
             <button type="submit" class="btn btn-primary">Confirm</button>
-
         </form>
     </div>
 

@@ -1,0 +1,14 @@
+{
+    "name": "Optimization On Demand",
+    "short_name": "Optimization On Demand",
+    "icons": [
+        {
+            "src": "/static/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

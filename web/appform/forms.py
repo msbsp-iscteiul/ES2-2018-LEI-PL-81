@@ -33,9 +33,10 @@ class ProblemInputUser(forms.Form):
         }),
         help_text='Write the description of the problem to solve')
     waiting_time = forms.IntegerField(
-        label='Max execution time (0 - 3600 seconds)',
+        label='Max execution time (1800 - 3600 seconds)',
         help_text='Write the maximum time you are willing to wait for optimization of the problem in SECONDS',
-        validators=[MinValueValidator(0), MaxValueValidator(3600)]
+        validators=[MinValueValidator(1800), MaxValueValidator(3600)],
+        initial=1800
     )
     input_jar = forms.FileField(
         label='Select the problem jar file',
@@ -118,7 +119,7 @@ class ProblemInputVariable(forms.Form):
 
 class SendEmail(forms.Form):
     subject = forms.CharField(
-        max_length=30,
+        max_length=255,
         label='Subject')
     message = forms.CharField(
         label='Message',

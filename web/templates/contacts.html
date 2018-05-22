@@ -5,16 +5,12 @@
 {% block content_app %}
 
     <div class="container">
-        <h1>Contact us</h1>
-
+        <h1 class="mb-5">Contact us</h1>
         <form action="" method="post" enctype="multipart/form-data">
-
+            {% include 'messages.html' %}
             {% csrf_token %}
-
             {% bootstrap_form email_request %}
-
             <button type="submit" class="btn btn-primary">Submit</button>
-
         </form>
     </div>
 

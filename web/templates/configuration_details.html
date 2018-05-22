@@ -5,7 +5,7 @@
 {% block content_app %}
 
     <form class="container" method="post"> {% csrf_token %}
-        <h1>Configuration details.</h1>
+        <h1 class="mb-5">Configuration details</h1>
         {% if error is not None %}
             <div class="alert alert-dismissible alert-danger">
                 <button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>
@@ -27,7 +27,7 @@
                     <dt>Jar name</dt>
                     <dd class="ml-4">{{ details.filePath }}</dd>
 
-                    <dt>Best solution</dt>
+                    <dt>User solutions</dt>
                     {% if details.userSolutions|length > 0 %}
                         <dd class="ml-4">Submitted</dd>
                     {% else %}
@@ -48,7 +48,7 @@
                     <dt>Variables quantity</dt>
                     <dd class="ml-4"> {{ details.variablesQuantity }}</dd>
 
-                    <dt>Variables name</dt>
+                    <dt>Variable names</dt>
                     {% for var in details.variables %}
                         <dd class="ml-4"> {{ var.name }}</dd>
                     {% endfor %}
@@ -59,7 +59,7 @@
                     <dt>Objectives quantity</dt>
                     <dd class="ml-4">{{ details.objectivesQuantity }}</dd>
 
-                    <dt>Objectives name</dt>
+                    <dt>Objective names</dt>
                     {% for obj in details.objectives %}
                         <dd class="ml-4"> {{ obj.name }}</dd>
                     {% endfor %}

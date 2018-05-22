@@ -1,11 +1,15 @@
 import requests
+from django.contrib import messages
+from django.urls import reverse
+
 from appform.forms import ProblemInputUser, ProblemInputVariable, SendEmail, RequestEmailForm
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from appform.decorators import enter_email
-from frontend.settings import BACKEND_URL
+from appform.decorators import requires_email
+from frontend.settings import env
 
+BACKEND_URL = env.str('BACKEND_URL')
 file_upload_url = BACKEND_URL + '/api/optimization/fileupload/'
 save_configuration_url = BACKEND_URL + '/api/optimization/save/'
 search_optimization_url = BACKEND_URL + '/api/optimization/searchoptimizationconfigurationbyidandemail'
@@ -21,11 +25,11 @@ def request_email(request):
 
     if form.is_valid():
         request.session['email'] = form.cleaned_data.get('email')
-        return redirect('welcome')
+        return redirect('submission_success')
     return render(request, 'request_email.html', {'form': form})
 
 
-@enter_email
+@requires_email
 def form_page1(request):
     form = ProblemInputUser(request.POST or None, request.FILES or None, initial=request.session.get('data'))
     if form.is_valid():
@@ -41,17 +45,18 @@ def form_page1(request):
 
         request.session['data'] = info['result']
         request.session['data'].update(data_form)
-        return redirect('/form2')
+        request.session['next'] = reverse('form_page2')
+        messages.success(request, 'Form submitted successfully!')
+        return redirect('submission_success')
     return render(request, 'form.html', {'form': form})
 
 
-@enter_email
+@requires_email
 def form_page2(request):
     extra_data = {k: v for k, v in request.session.get('data').items()
                   if k in ['algorithms', 'variables', 'objectives', 'variable_type']}
     form = ProblemInputVariable(request.POST or None, request.FILES or None, **extra_data)
     info = request.session.get('data')
-    error = None
     if form.is_valid():
         files = None
         if request.FILES:
@@ -81,24 +86,28 @@ def form_page2(request):
         p = requests.post(save_configuration_url, data=data, files=files)
         info = p.json()
         if info['result']['id'] is None:
-            error = info['result']['message']
+            messages.error(request, info['result']['message'])
         else:
-            return redirect('request_details', info['result']['id'])
+            del request.session['data']
+            request.session['next'] = reverse('request_details', args=[info['result']['id']])
+            messages.success(request, 'Your configuration was submitted successfully!')
+            return redirect('submission_success')
 
     return render(request, 'form2.html', {
         'form': form, 'variables': extra_data['variables'],
         'objectives': extra_data['objectives'],
-        'error': error
     })
 
 
-@enter_email
-def request_details(request, num):
-    error = None
+@requires_email
+def configuration_details(request, num):
     if request.POST:
-        error = submit_execution_request(num, request.session.get('email'))
-        if error is None:
-            redirect('processing')
+        if submit_execution_request(num, request.session.get('email')):
+            request.session['next'] = reverse('history')
+            messages.success(request, 'Execution request sent successfully!')
+            return redirect('submission_success')
+        else:
+            messages.error(request, 'Couldn\'t submit execution request. Please try later')
     request.session['idSubmission'] = num
     data = {'id': num, 'email': request.session.get('email')}
     p = requests.post(search_optimization_url, data=data)
@@ -112,17 +121,17 @@ def request_details(request, num):
     info['result']['optimizationConfiguration']['algorithms'] = list_algo
     return render(request, 'configuration_details.html', {
         'details': info['result']['optimizationConfiguration'],
-        'error': error
     })
 
 
+@requires_email
 def submit_execution_request(num, email):
     data = {'id': num, 'email': email}
     result = requests.post(execute_optimization_url, data=data).json()
-    if result['result']['id'] is None:
-        return 'Couldn\'t submit execution request. Please try later'
+    return result['result']['id']
 
 
+@requires_email
 def processing(request):
     return render(request, 'processing.html')
 
@@ -131,37 +140,50 @@ def faq_page(request):
     return render(request, 'faq.html')
 
 
-@enter_email
+@requires_email
 def my_configurations(request):
     email_conf = request.session.get('email')
     return render(request, 'my_configurations.html', {'user_email': email_conf})
 
 
-@enter_email
+@requires_email
 def execution_history(request):
     email_conf = request.session.get('email')
     return render(request, 'execution_history.html', {'user_email': email_conf})
 
 
-@enter_email
+@requires_email
 def configuration_detail(request, num):
     return render(request, 'details.html')
 
 
-@enter_email
+@requires_email
 def send_email(request):
-    if request.method == 'POST':
-        email_request = SendEmail(request.POST)
-        if email_request.is_valid():
-            subject = email_request.cleaned_data['subject']
-            message = email_request.cleaned_data['message']
-            from_email = request.session.get('email')
-            if subject and message and from_email:
-                try:
-                    send_mail(subject, message, from_email, ['mj-17.94@hotmail.com'])
-                except BadHeaderError:
-                    return HttpResponse('Invalid header found.')
-
-    else:
-        email_request = SendEmail()
+    email_request = SendEmail(request.POST or None)
+    if email_request.is_valid():
+        subject = email_request.cleaned_data['subject']
+        message = email_request.cleaned_data['message']
+        from_email = request.session.get('email')
+        if subject and message and from_email:
+            try:
+                send_mail(subject, message, env.str('EMAIL_ADMIN'), [env.str('EMAIL_ADMIN')])
+                request.session['next'] = request.path
+                messages.success(request, 'Message sent successfully!')
+                return redirect('submission_success')
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
     return render(request, 'contacts.html', {'email_request': email_request})
+
+
+def submission_success(request):
+    return render(request, 'success.html', {
+        'next': request.session.pop('next')
+    })
+
+
+@requires_email
+def logout(request):
+    del(request.session['email'])
+    request.session['next'] = reverse('welcome')
+    messages.success(request, 'Logged out successfully!')
+    return redirect('submission_success')
