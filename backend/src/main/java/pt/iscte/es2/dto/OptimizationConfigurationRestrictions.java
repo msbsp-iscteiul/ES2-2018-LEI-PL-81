@@ -13,10 +13,6 @@ public class OptimizationConfigurationRestrictions {
 
 	}
 
-	public OptimizationConfigurationRestrictions(String name) {
-		this.name = name;
-	}
-
 	public String getName() {
 		return name;
 	}

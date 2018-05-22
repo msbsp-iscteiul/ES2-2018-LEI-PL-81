@@ -13,10 +13,6 @@ public class OptimizationConfigurationObjectives {
 
 	}
 
-	public OptimizationConfigurationObjectives(String name) {
-		this.name = name;
-	}
-
 	public String getName() {
 		return name;
 	}
