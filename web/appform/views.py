@@ -14,6 +14,8 @@ file_upload_url = BACKEND_URL + '/api/optimization/fileupload/'
 save_configuration_url = BACKEND_URL + '/api/optimization/save/'
 search_optimization_url = BACKEND_URL + '/api/optimization/searchoptimizationconfigurationbyidandemail'
 execute_optimization_url = BACKEND_URL + '/api/optimization/executeoptimizationconfiguration'
+configuration_history_url = BACKEND_URL + '/api/optimization/searchoptimizationconfigurationbyemail/'
+execution_history_url = BACKEND_URL + '/api/history/'
 
 
 def welcome(request):
@@ -124,7 +126,6 @@ def configuration_details(request, num):
     })
 
 
-@requires_email
 def submit_execution_request(num, email):
     data = {'id': num, 'email': email}
     result = requests.post(execute_optimization_url, data=data).json()
@@ -142,14 +143,20 @@ def faq_page(request):
 
 @requires_email
 def my_configurations(request):
-    email_conf = request.session.get('email')
-    return render(request, 'my_configurations.html', {'user_email': email_conf})
+    configurations = requests.get(configuration_history_url, params={'email': request.session.get('email')})\
+        .json()['result']['summary']
+    return render(request, 'my_configurations.html', {
+        'configurations': configurations,
+    })
 
 
 @requires_email
 def execution_history(request):
-    email_conf = request.session.get('email')
-    return render(request, 'execution_history.html', {'user_email': email_conf})
+    executions = requests.get(execution_history_url, params={'email': request.session.get('email')})\
+        .json()['result']['nodes']
+    return render(request, 'execution_history.html', {
+        'executions': executions
+    })
 
 
 @requires_email
