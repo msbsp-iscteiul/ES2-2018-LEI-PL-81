@@ -12,7 +12,7 @@ public class Sender {
 		this.rabbitTemplate = rabbitTemplate;
 	}
 
-	public void sendMessage(Integer id) {
-		rabbitTemplate.convertAndSend(Application.topicExchangeName, "pt.iscte.es2", id);
+	public void sendMessage(Object[] idEmail) {
+		rabbitTemplate.convertAndSend(Application.topicExchangeName, "pt.iscte.es2", idEmail);
 	}
 }

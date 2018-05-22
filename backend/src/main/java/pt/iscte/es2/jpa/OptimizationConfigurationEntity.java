@@ -55,22 +55,28 @@ public class OptimizationConfigurationEntity {
 	@CreatedDate
 	private Date createdAt;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "id_optimization_configuration", nullable = false)
 	private List<OptimizationConfigurationVariablesEntity> optimizationConfigurationVariables;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "id_optimization_configuration", nullable = false)
 	private List<OptimizationConfigurationObjectivesEntity> optimizationConfigurationObjectives;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "id_optimization_configuration", nullable = false)
 	private List<OptimizationConfigurationRestrictionsEntity> optimizationConfigurationRestrictions;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "id_optimization_configuration", nullable = false)
 	private List<OptimizationConfigurationAlgorithmsEntity> optimizationConfigurationAlgorithms;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "id_optimization_configuration", nullable = false)
 	private List<OptimizationConfigurationUserSolutionsEntity> optimizationConfigurationUserSolutions;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationConfiguration")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "id_optimization_configuration", nullable = false)
 	private List<OptimizationJobExecutionsEntity> optimizationJobExecutions;
 
 	public Long getId() {
@@ -205,17 +211,6 @@ public class OptimizationConfigurationEntity {
 		this.optimizationConfigurationAlgorithms = optimizationConfigurationAlgorithms;
 	}
 
-	public List<OptimizationJobExecutionsEntity> getOptimizationJobExecutions() {
-		if (optimizationJobExecutions == null) {
-			optimizationJobExecutions = new ArrayList<>();
-		}
-		return optimizationJobExecutions;
-	}
-
-	public void setOptimizationJobExecutions(List<OptimizationJobExecutionsEntity> optimizationJobExecutions) {
-		this.optimizationJobExecutions = optimizationJobExecutions;
-	}
-
 	public List<OptimizationConfigurationUserSolutionsEntity> getOptimizationConfigurationUserSolutions() {
 		if (optimizationConfigurationUserSolutions == null) {
 			optimizationConfigurationUserSolutions = new ArrayList<>();
@@ -225,6 +220,17 @@ public class OptimizationConfigurationEntity {
 
 	public void setOptimizationConfigurationUserSolutions(List<OptimizationConfigurationUserSolutionsEntity> optimizationConfigurationUserSolutions) {
 		this.optimizationConfigurationUserSolutions = optimizationConfigurationUserSolutions;
+	}
+
+	public List<OptimizationJobExecutionsEntity> getOptimizationJobExecutions() {
+		if (optimizationJobExecutions == null) {
+			optimizationJobExecutions = new ArrayList<>();
+		}
+		return optimizationJobExecutions;
+	}
+
+	public void setOptimizationJobExecutions(List<OptimizationJobExecutionsEntity> optimizationJobExecutions) {
+		this.optimizationJobExecutions = optimizationJobExecutions;
 	}
 
 	public Date getCreatedAt() {

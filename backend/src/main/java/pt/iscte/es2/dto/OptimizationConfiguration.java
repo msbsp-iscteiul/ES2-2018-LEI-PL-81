@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DTO of the OptimizationConfiguration
+ * DTO of OptimizationConfiguration
  */
 public class OptimizationConfiguration {
 
@@ -24,7 +24,11 @@ public class OptimizationConfiguration {
 	private List<OptimizationConfigurationRestrictions> restrictions;
 	private List<OptimizationConfigurationAlgorithms> algorithms;
 	private List<OptimizationConfigurationUserSolutions> userSolutions;
-	private List<OptimizationJobExecutions> optimizationJobExecutions;
+	private List<OptimizationJobExecutions> executions;
+
+	public OptimizationConfiguration() {
+
+	}
 
 	public Integer getId() {
 		return id;
@@ -169,14 +173,14 @@ public class OptimizationConfiguration {
 		this.userSolutions = userSolutions;
 	}
 
-	public List<OptimizationJobExecutions> getOptimizationJobExecutions() {
-		if (optimizationJobExecutions == null) {
-			optimizationJobExecutions = new ArrayList<>();
+	public List<OptimizationJobExecutions> getExecutions() {
+		if (executions == null) {
+			executions = new ArrayList<>();
 		}
-		return optimizationJobExecutions;
+		return executions;
 	}
 
-	public void setOptimizationJobExecutions(List<OptimizationJobExecutions> optimizationJobExecutions) {
-		this.optimizationJobExecutions = optimizationJobExecutions;
+	public void setExecutions(List<OptimizationJobExecutions> executions) {
+		this.executions = executions;
 	}
 }

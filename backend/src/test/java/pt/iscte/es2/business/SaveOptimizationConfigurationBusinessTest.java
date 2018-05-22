@@ -51,8 +51,10 @@ public class SaveOptimizationConfigurationBusinessTest {
 		optimizationConfiguration.setEmail("email@email.com");
 		optimizationConfiguration.setFilePath("/file/path");
 		optimizationConfiguration.setExecutionMaxWaitTime(20);
-		optimizationConfiguration.setVariables(Collections.singletonList(getOptimizationConfigurationVariables()));
-		optimizationConfiguration.setObjectives(Collections.singletonList(getOptimizationConfigurationObjectives()));
+		optimizationConfiguration.setVariables(
+			Collections.singletonList(getOptimizationConfigurationVariables()));
+		optimizationConfiguration.setObjectives(
+			Collections.singletonList(getOptimizationConfigurationObjectives()));
 		optimizationConfiguration.setAlgorithmChoiceMethod(AlgorithmChoiceMethod.Automatic);
 		return optimizationConfiguration;
 	}

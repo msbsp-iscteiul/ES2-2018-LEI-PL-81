@@ -2,6 +2,11 @@ package pt.iscte.es2.dto.service.optimization;
 
 import pt.iscte.es2.dto.OptimizationConfiguration;
 
+/**
+ * DTO OptimizationConfiguration Result
+ *
+ * Result that contains an {@link OptimizationConfiguration}
+ */
 public class OptimizationConfigurationResult {
 
 	private OptimizationConfiguration optimizationConfiguration;
