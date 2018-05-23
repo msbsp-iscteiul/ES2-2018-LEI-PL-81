@@ -8,29 +8,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
-import pt.iscte.es2.client_jar_loader.SecurityPolicy;
 import pt.iscte.es2.optimization_job_runner.jobs.BackendGateway;
 import pt.iscte.es2.optimization_job_runner.mail.MailSender;
 import pt.iscte.es2.optimization_job_runner.post_processing.*;
 
-import java.security.Policy;
 import java.util.Arrays;
 
 @SpringBootApplication
-@EnableJpaRepositories
 @EnableTransactionManagement
-@EnableJpaAuditing
 public class Entry {
 
-	static final String TOPIC_EXCHANGE_NAME = "spring-boot-exchange";
-
-	private static final String QUEUE_NAME = "spring-boot";
+	static final String TOPIC_EXCHANGE_NAME = "optimization-job-executions-exchange";
+	private static final String QUEUE_NAME = "optimization-job-executions";
+	private static final String ROUTING_KEY = "pt.iscte.#";
 
 	@Bean
 	Queue queue() {
@@ -44,7 +38,7 @@ public class Entry {
 
 	@Bean
 	Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+		return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
 	}
 
 	@Bean
