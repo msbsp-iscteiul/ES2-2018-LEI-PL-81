@@ -13,6 +13,10 @@ public class OptimizationConfigurationAlgorithms {
 
 	}
 
+	public OptimizationConfigurationAlgorithms(String name) {
+		this.name = name;
+	}
+
 	public String getName() {
 		return name;
 	}
