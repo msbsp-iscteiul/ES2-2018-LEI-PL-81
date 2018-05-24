@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% block title %}Configuration details{% endblock %}
+
+{% block content_app %}
+
+    <form class="container" method="post"> {% csrf_token %}
+        <h1 class="mb-5">Configuration details</h1>
+        {% if error is not None %}
+            <div class="alert alert-dismissible alert-danger">
+                <button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>
+                <strong>{{ error }}</strong>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-sm">
+                <dl>
+                    <dt>Problem name</dt>
+                    <dd class="ml-4"> {{ details.problemName }}</dd>
+
+                    <dt>Problem description</dt>
+                    <dd class="ml-4">{{ details.description }}</dd>
+
+                    <dt>Waiting time</dt>
+                    <dd class="ml-4">{{ details.executionMaxWaitTime }}</dd>
+
+                    <dt>User solutions</dt>
+                    {% if details.userSolutions|length > 0 %}
+                        <dd class="ml-4">Submitted</dd>
+                    {% else %}
+                        <dd class="ml-4">Not submitted</dd>
+                    {% endif %}
+
+                    <dt>Algorithm choice method</dt>
+                    <dd class="ml-4"> {{ details.algorithmChoiceMethod }}</dd>
+
+                    <dt>Selected algorithms</dt>
+                    {% for alg in details.algorithms %}
+                        <dd class="ml-4"> {{ alg }}</dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            <div class="col-sm">
+                <dl>
+                    <dt>Variables quantity</dt>
+                    <dd class="ml-4"> {{ details.variablesQuantity }}</dd>
+
+                    <dt>Variable names</dt>
+                    {% for var in details.variables %}
+                        <dd class="ml-4"> {{ var.name }}</dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            <div class="col-sm">
+                <dl>
+                    <dt>Objectives quantity</dt>
+                    <dd class="ml-4">{{ details.objectivesQuantity }}</dd>
+
+                    <dt>Objective names</dt>
+                    {% for obj in details.objectives %}
+                        <dd class="ml-4"> {{ obj.name }}</dd>
+                    {% endfor %}
+                </dl>
+            </div>
+        </div>
+        <a class="btn btn-primary" href="{% url 'saved_conf' %}">
+            <span class="oi oi-list"></span>
+            Back to my configurations</a>
+
+        <button type="submit" class="btn btn-warning float-right"
+                onclick="return confirm('Are you sure you want to execute this task?')">
+            Submit execution request
+            <span class="oi oi-media-play"></span></button>
+    </form>
+
+{% endblock %}

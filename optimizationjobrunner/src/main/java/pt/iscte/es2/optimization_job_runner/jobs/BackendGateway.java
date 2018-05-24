@@ -106,15 +106,16 @@ public class BackendGateway {
 
 	/**
 	 * Get the queued job from the backend
-	 * @param id the job id
+	 * @param configurationId the job id
+	 * @param jobId
 	 * @param email the client email
 	 * @return
 	 * @throws RestClientException
 	 * @throws IOException
 	 */
-	public Job getConfigurationOfId(long id, String email) throws RestClientException, IOException {
+	public Job getConfigurationOfId(long configurationId, long jobId, String email) throws RestClientException, IOException {
 		final MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
-		multiValueMap.add("id", id);
+		multiValueMap.add("id", configurationId);
 		multiValueMap.add("email", email);
 		final OptimizationConfiguration configuration = restTemplate.exchange(
 			backendBaseUrl + "/api/optimization/searchoptimizationconfigurationbyidandemail/",
@@ -122,8 +123,15 @@ public class BackendGateway {
 			new HttpEntity<>(multiValueMap),
 			OptimizationConfiguration.class
 		).getBody();
-		final String jarPath = downloadProblem(id);
-		return new Job(id, configuration.getProblemName(), jarPath, configuration.getEmail(), configuration.getWaitingTime());
+		final String jarPath = downloadProblem(jobId);
+		return new Job(
+			jobId,
+			configuration.getProblemName(),
+			jarPath,
+			configuration.getEmail(),
+			configuration.getWaitingTime(),
+			configuration.getAlgorithms()
+		);
 	}
 
 	/**

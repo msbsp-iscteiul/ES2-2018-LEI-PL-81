@@ -32,13 +32,14 @@ public class Receiver {
 
 	/**
 	 * Receive a message
-	 * @param idEmailStruct the message
+	 * @param idsEmailStruct the message
 	 */
-	public void receiveMessage(Object[] idEmailStruct) throws IOException, ExecutionException, InterruptedException {
-		long id = (long) idEmailStruct[0];
-		String email = (String) idEmailStruct[1];
-		Job job = backendGateway.getConfigurationOfId(id, email);
-		LOGGER.log(Level.INFO, email + " " + id);
+	public void receiveMessage(Object[] idsEmailStruct) throws IOException, ExecutionException, InterruptedException {
+		long configurationId = (long) idsEmailStruct[0];
+		long jobId = (long) idsEmailStruct[1];
+		String email = (String) idsEmailStruct[2];
+		Job job = backendGateway.getConfigurationOfId(configurationId, jobId, email);
+		LOGGER.log(Level.INFO, email + " " + configurationId);
 		jMetalTaskRunner.execute(job);
 	}
 }

@@ -10,13 +10,13 @@ import java.util.List;
 @Repository
 public interface OptimizationConfigurationAlgorithmsDao extends JpaRepository<OptimizationConfigurationAlgorithmsEntity, Long> {
 
-	/**
-	 * Searchs for all Algorithms associated with a given OptimizationConfigurationId
-	 *
-	 * @param id
-	 * 			Long
-	 *
-	 * @return List<OptimizationConfigurationAlgorithmsEntity>
-	 */
-	List<OptimizationConfigurationAlgorithmsEntity> findByOptimizationConfigurationId(Long id);
+//	/**
+//	 * Searchs for all Algorithms associated with a given OptimizationConfigurationId
+//	 *
+//	 * @param id
+//	 * 			Long
+//	 *
+//	 * @return List<OptimizationConfigurationAlgorithmsEntity>
+//	 */
+//	List<OptimizationConfigurationAlgorithmsEntity> findByOptimizationConfigurationId(Long id);
 }

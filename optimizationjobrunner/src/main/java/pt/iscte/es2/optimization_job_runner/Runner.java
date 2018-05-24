@@ -128,8 +128,8 @@ public class Runner implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		String file = backendGateway.downloadProblem(1);
-		System.out.println(file);
+//		String file = backendGateway.downloadProblem(1);
+//		System.out.println(file);
 
 //		Object[] idEmail = new Object[]{10L, "coiso@coiso.com"};
 //		rabbitTemplate.convertAndSend(Entry.TOPIC_EXCHANGE_NAME, "pt.iscte.#", idEmail);

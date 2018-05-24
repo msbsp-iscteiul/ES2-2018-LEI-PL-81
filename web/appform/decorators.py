@@ -2,11 +2,12 @@ from functools import wraps
 from django.shortcuts import redirect
 
 
-def enter_email(view_func):
+def requires_email(view_func):
 
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
-        if request.session.get('email') is None:
+        if not request.session.get('email'):
+            request.session['next'] = request.path
             return redirect('request_email')
         return view_func(request, *args, **kwargs)
 

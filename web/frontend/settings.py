@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import appform
+import environ
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'q8lcyqvv21eeo-*76$)*5r8e%+a9igfhzvx!=u%52+v&+&9c#='
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', False)
 
 ALLOWED_HOSTS = []
 
@@ -129,9 +132,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-#Settings do mailtrp.io
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = '378d365bfcf1e8'
-EMAIL_HOST_PASSWORD = '411205a635b0cb'
-EMAIL_PORT = '2525'
-
+# Settings do mailtrap.io
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = env('EMAIL_PORT')

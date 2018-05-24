@@ -42,6 +42,8 @@ CREATE TABLE optimization_job_executions (
   start_date DATETIME NOT NULL,
   end_date DATETIME NULL,
   state ENUM('Ready', 'Running', 'Finished', 'Failed') NULL,
+  latex_path VARCHAR(100) NULL,
+  r_path VARCHAR(100) NULL,
   created_at TIMESTAMP NOT NULL,
   CONSTRAINT PRIMARY KEY (id),
   CONSTRAINT FOREIGN KEY fk_optimization_job_executions(id_optimization_configuration)

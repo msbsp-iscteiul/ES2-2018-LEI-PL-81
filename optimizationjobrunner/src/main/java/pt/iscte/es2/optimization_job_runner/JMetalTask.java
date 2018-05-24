@@ -2,6 +2,7 @@ package pt.iscte.es2.optimization_job_runner;
 
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.Problem;
+import org.uma.jmetal.qualityindicator.impl.Spread;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmBuilder;
@@ -91,7 +92,7 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 		final ExperimentProblem<Solution<?>> experimentProblem = new ExperimentProblem(observableProblem);
 		final List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms = getExperimentAlgorithms(
 			experimentProblem,
-			finderResult.getConstructors()
+			finderResult.getConstructorsForAlgorithms(job.getAlgorithms())
 		);
 		// Setup evaluations counter
 		final int totalEvaluations = INDEPENDENT_RUNS * algorithms.size() * AlgorithmConstants.MAX_EVALUTIONS;
@@ -112,7 +113,7 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 				.setReferenceFrontDirectory(referenceFront)
 				.setOutputParetoFrontFileName("FUN")
 				.setOutputParetoSetFileName("VAR")
-				.setIndicatorList(Collections.singletonList(new PISAHypervolume<>()))
+				.setIndicatorList(Collections.singletonList(new Spread<>()))
 				.build();
 
 		final List<ExperimentComponent> components = Arrays.asList(

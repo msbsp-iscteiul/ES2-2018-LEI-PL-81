@@ -1,7 +1,10 @@
 package pt.iscte.es2.dto.service.optimization;
 
 /**
- * DTO OptimizationConfiguration Result
+ * DTO Save OptimizationConfiguration Result
+ *
+ * Result of the saved OptimizationConfiguration that contains the id of the persisted OptimizationConfiguration
+ * and a message in case of Success or Failure
  */
 public class SaveOptimizationConfigurationResult {
 

@@ -1,5 +1,11 @@
 package pt.iscte.es2.dto.service.optimization;
 
+/**
+ * DTO OptimizationConfiguration Request
+ *
+ * Contains the email of the User and the ID of the OptimizationConfiguration and
+ * searchs for the complete OptimizationConfiguration
+ */
 public class SearchOptimizationConfigurationByIdAndEmailRequest {
 
 	private Integer id;

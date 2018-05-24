@@ -61,7 +61,7 @@ public class JMetalTaskRunner {
 			final Future<OptimizationJobResult> result = executor.submit(new JMetalTask(
 				mailSender, job, experimentName, experimentBaseDirectory, referenceFront
 			));
-			gateway.runOptimizationJob(job.getId());
+			gateway.runOptimizationJob(job.getJobId());
 			sendStartEmail(job);
 			final OptimizationJobResult optimizationJobResult = result.get(
 				job.getWaitingTime(), TimeUnit.SECONDS);
@@ -85,7 +85,7 @@ public class JMetalTaskRunner {
 			LOGGER.info("Interrupted exception...");
 		}
 		executor = Executors.newSingleThreadExecutor();
-		gateway.failOptimizationJob(job.getId());
+		gateway.failOptimizationJob(job.getJobId());
 		LOGGER.info("Sending timeout email...");
 		sendTimeoutEmail(job);
 	}

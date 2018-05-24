@@ -9,13 +9,13 @@ import java.util.List;
 @Repository
 public interface OptimizationConfigurationVariablesDao extends JpaRepository<OptimizationConfigurationVariablesEntity, Long> {
 
-	/**
-	 * Searchs for all Variables associated with a given OptimizationConfigurationId
-	 *
-	 * @param id
-	 * 			Long
-	 *
-	 * @return List<OptimizationConfigurationVariablesEntity>
-	 */
-	List<OptimizationConfigurationVariablesEntity> findByOptimizationConfigurationId(Long id);
+//	/**
+//	 * Searchs for all Variables associated with a given OptimizationConfigurationId
+//	 *
+//	 * @param id
+//	 * 			Long
+//	 *
+//	 * @return List<OptimizationConfigurationVariablesEntity>
+//	 */
+//	List<OptimizationConfigurationVariablesEntity> findByOptimizationConfigurationId(Long id);
 }

@@ -1,27 +1,31 @@
 package pt.iscte.es2.dto.service.optimization;
 
-import pt.iscte.es2.dto.OptimizationJobExecutions;
-
+/**
+ * DTO ExecuteOptimizationConfiguration Result
+ *
+ * Result that contains an id, {@link Integer}, of the started execution of an OptimizationConfiguration. Also contains a
+ * message, {@link String}, to control the Success/Failure of the application
+ */
 public class ExecuteOptimizationConfigurationResult {
 
-	private OptimizationJobExecutions optimizationJobExecution;
+	private Integer id;
 	private String message;
 
 	public ExecuteOptimizationConfigurationResult() {
 
 	}
 
-	public ExecuteOptimizationConfigurationResult(OptimizationJobExecutions optimizationJobExecution, String message) {
-		this.optimizationJobExecution = optimizationJobExecution;
+	public ExecuteOptimizationConfigurationResult(Integer id, String message) {
+		this.id = id;
 		this.message = message;
 	}
 
-	public OptimizationJobExecutions getOptimizationJobExecution() {
-		return optimizationJobExecution;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setOptimizationJobExecution(OptimizationJobExecutions optimizationJobExecution) {
-		this.optimizationJobExecution = optimizationJobExecution;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getMessage() {

@@ -5,6 +5,8 @@ import java.util.List;
 
 /**
  * DTO FileUpload Result
+ *
+ * Contains the number of Variables, Objectives, VariableType and the Algorithms for the problem uploaded by the User
  */
 public class FileUploadResult {
 

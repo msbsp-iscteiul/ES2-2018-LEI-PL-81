@@ -1,11 +1,12 @@
 package pt.iscte.es2.dto;
 
 /**
- * DTO of the OptimizationConfigurationRestrictions
+ * DTO of OptimizationConfigurationRestrictions
+ *
+ * Restrictions DTO that contains the name
  */
 public class OptimizationConfigurationRestrictions {
 
-	private Integer id;
 	private String name;
 
 	public OptimizationConfigurationRestrictions() {
@@ -14,14 +15,6 @@ public class OptimizationConfigurationRestrictions {
 
 	public OptimizationConfigurationRestrictions(String name) {
 		this.name = name;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {
