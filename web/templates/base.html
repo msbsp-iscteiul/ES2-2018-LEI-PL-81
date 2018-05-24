@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>{% block title %}Optimization platform{% endblock %}</title>
     <link rel="apple-touch-icon" sizes="152x152" href="{% static 'apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
@@ -15,7 +15,7 @@
     {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <img class="navbar-brand" src="{% static 'favicon-32x32.png' %}" alt="logo">
     <a class="navbar-brand" href="{% url 'welcome' %}">Home</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"

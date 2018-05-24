@@ -17,7 +17,7 @@ public class RToEpsProcessor implements PostProblemProcessor {
 	public void process(OptimizationJobResult result) {
 		try {
 			final PostProcessingContext context = result.getContext();
-			final File rEps = new RToEpsCompiler().compile(context.getExperimentPath() + "/R/HV.Boxplot.R");
+			final File rEps = new RToEpsCompiler().compile(context.getExperimentPath() + "/R/SPREAD.Boxplot.R");
 			result.setrEps(rEps.getAbsolutePath());
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();

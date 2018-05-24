@@ -1,4 +1,5 @@
 import json
+import math
 
 import requests
 from django.contrib import messages
@@ -18,6 +19,8 @@ search_optimization_url = BACKEND_URL + '/api/optimization/searchoptimizationcon
 execute_optimization_url = BACKEND_URL + '/api/optimization/executeoptimizationconfiguration'
 configuration_history_url = BACKEND_URL + '/api/optimization/searchoptimizationconfigurationbyemail/'
 search_execution_url = BACKEND_URL + '/api/optimization/searchoptimizationjobexecutionsbyemail'
+download_latex_url = BACKEND_URL + '/api/optimization/searchlatexbyexecutionid/'
+download_r_url = BACKEND_URL + '/api/optimization/searchrbyexecutionid/'
 
 
 def welcome(request):
@@ -89,8 +92,8 @@ def form_page2(request):
         }
         p = requests.post(save_configuration_url, data=data, files=files)
         info = p.json()
-        if info['result']['id'] is None:
-            messages.error(request, info['result']['message'])
+        if 'result' not in info:
+            messages.error(request, info['message'], 'danger')
         else:
             del request.session['data']
             request.session['next'] = reverse('request_details', args=[info['result']['id']])
@@ -168,13 +171,31 @@ def execution_details(request, optimization_configuration_id, execution_id):
         'id': optimization_configuration_id
     }).json()['result']['optimizationConfiguration']
     execution = next(obj for obj in configuration['executions'] if obj['id'] == execution_id)
+    solutions = sorted(execution['solutions'], key=lambda solution: solution['quality'])
     objectives = [obj['name'] for obj in configuration['objectives']]
 
     return render(request, 'details.html', {
         'configuration': configuration,
         'execution': execution,
-        'objectives': objectives
+        'objectives': objectives,
+        'solutions': solutions
     })
+
+
+@requires_email
+def download_latex(request, execution_id):
+    file = requests.post(download_latex_url, data={'id': execution_id})
+    response = HttpResponse(file, 'application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="latex.pdf"'
+    return response
+
+
+@requires_email
+def download_r(request, execution_id):
+    file = requests.post(download_r_url, data={'id': execution_id})
+    response = HttpResponse(file, 'application/postscript')
+    response['Content-Disposition'] = 'attachment; filename="r.eps"'
+    return response
 
 
 @requires_email

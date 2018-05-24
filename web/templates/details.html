@@ -15,50 +15,164 @@
             return color;
         }
 
-        var rawData = {{ execution|safe }};
-
-        var datasets = rawData.solutions.map(function (value) {
-            var data = value.solutionQuality.split(/\s+/);
-            var label = value.algorithmName;
+        var solutions = {{ solutions|safe }};
+        var objectivesChartDataset = solutions.map(function (value, index) {
             var randomColor = getRandomColor();
             return {
-                label: label,
+                label: value.algorithmName + " (" + index + ")",
+                data: value.solutionQuality.trim().split(/\s+/).map(function (val) {
+                    return parseFloat(val);
+                }),
                 backgroundColor: randomColor,
                 borderColor: randomColor,
-                data: data,
-                fill: false
+                fill: false,
+                quality: parseFloat(value.quality),
+                lineTension: 0
             }
         });
-
-        var config = {
-            type: 'line',
-            data: {
-                labels: {{ objectives|safe }},
-                datasets: datasets
-            }
-        };
+        var userSolutions = {{ configuration.userSolutions|safe }};
+        objectivesChartDataset = objectivesChartDataset.concat(userSolutions.map(function (value, i) {
+            var randomColor = getRandomColor();
+            var data = value.solutionQuality.trim().split(/\s+/)
+                .map(function (val) {
+                    return parseFloat(val);
+                });
+            var quality = Math.sqrt(data.map(function (val) {
+                return val * val;
+            })
+                .reduce(function (sum, val) {
+                    return sum + val;
+                }));
+            return {
+                label: "UserSolution " + i,
+                data: data,
+                backgroundColor: randomColor,
+                borderColor: randomColor,
+                fill: false,
+                quality: quality,
+                lineTension: 0
+            };
+        }));
+        objectivesChartDataset.sort(function (a, b) {
+            return a.quality - b.quality;
+        });
+        var overallQualityDataset = objectivesChartDataset.map(function (value) {
+            var dupl = Object.assign({}, value);
+            dupl.data = [1 - dupl.quality];
+            return dupl;
+        });
 
         window.onload = function () {
-            var ctx = document.getElementById('chart').getContext('2d');
-            window.myLine = new Chart(ctx, config);
+            var type = 'linear';
+            var objChart = new Chart(document.getElementById('ObjectivesChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: {{ objectives|safe }},
+                    datasets: objectivesChartDataset
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            type: type
+                        }]
+                    }
+                }
+            });
+            document.getElementById('ScaleTrigger').addEventListener('click', function () {
+                if (type === 'logarithmic') {
+                    type = 'linear';
+                    document.getElementById('CurrentScale').innerText = 'Linear';
+                    objChart.options.scales.yAxes[0] = {
+                        display: true,
+                        type: type
+                    };
+                } else {
+                    type = 'logarithmic';
+                    document.getElementById('CurrentScale').innerText = 'Logarithmic';
+                    objChart.options.scales.yAxes[0] = {
+                        display: true,
+                        type: type
+                    };
+                }
+                objChart.update();
+            });
+            new Chart(document.getElementById('OverallQualityChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Quality (Higher is best)'],
+                    datasets: overallQualityDataset
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                max: 1
+                            }
+                        }]
+                    }
+                }
+            })
         };
     </script>
 {% endblock %}
 
 {% block content_app %}
 
-    <div class="container">
-        <h1 class="mb-5">Request Detail for '<a href="{% url 'request_details' configuration.id %}">{{ configuration.problemName }}</a>'</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+                <ul class="nav nav-pills flex-column text-right">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Main">Main</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Objectives">Graphs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Quality">Quality</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Downloads">Downloads</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Solutions">Solutions</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-10">
+                <h1 id="Main">Request Detail for '<a
+                        href="{% url 'request_details' configuration.id %}">{{ configuration.problemName }}</a>'</h1>
 
-        <div class="main">
-            <div class="row mb-5">
-                <div class="col-sm">
-                    {{ configuration.description }}
+                <div>
+                    <p>{{ configuration.description }}</p>
+
+                    {% if execution.state == 'Finished' %}
+                        <h3 id="Objectives" class="mt-5">Solution quality by objective (<span id="CurrentScale">Linear</span>
+                            scale)</h3>
+                        <div class="row mb-2">
+                            <div class="col-8">
+                                <p>Ordered by best to worst (best on the left).</p>
+                            </div>
+                            <div class="col-4 text-right">
+                                <button id="ScaleTrigger" type="button" class="btn btn-primary">Toggle scale</button>
+                            </div>
+                        </div>
+                        <canvas id="ObjectivesChart"></canvas>
+                        <h3 id="Quality" class="mt-5">Overall solution quality (higher is better)</h3>
+                        <canvas id="OverallQualityChart"></canvas>
+                        <h3 id="Downloads" class="mt-5">Downloads</h3>
+                        <p><a class="btn btn-primary" href="{% url 'download_latex' execution.id %}">Download latex</a>
+                            <a class="btn btn-primary" href="{% url 'download_r' execution.id %}">Download boxplot</a></p>
+                        <h3 id="Solutions" class="mt-5">Solutions</h3>
+                        {% for solution in solutions %}
+                            <h4 class="mt-3">{{ solution.algorithmName }} ({{ forloop.counter }})</h4>
+                            <input onclick="this.setSelectionRange(0, this.value.length)" class="form-control" type="text" readonly value="{{ solution.solution }}">
+                        {% endfor %}
+
+                    {% endif %}
                 </div>
             </div>
-
-            <canvas id="chart" class="Graph"></canvas>
-
         </div>
     </div>
 

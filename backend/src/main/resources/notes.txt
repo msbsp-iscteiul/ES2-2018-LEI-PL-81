@@ -1,5 +1,0 @@
-
--- Comparar o numero de colunas com o numero que está configurado no JAR
-
-
--- Vem Variaveis, Objectivos, CSV, Algoritmos, (Mixed, Manual, Automatic)

@@ -20,7 +20,7 @@ class RequestEmailForm(forms.Form):
 
 class ProblemInputUser(forms.Form):
     name = forms.RegexField(
-        max_length=30,
+        max_length=127,
         label='Problem name',
         help_text='Write the problem name using Java Class Name Convention',
         regex=re.compile('^[A-Z][\w$]+$', re.UNICODE)  # https://regex101.com/r/vR0iK3/5
