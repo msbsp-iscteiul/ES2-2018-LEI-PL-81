@@ -9,10 +9,7 @@ import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
-import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
-import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
-import org.uma.jmetal.util.experiment.component.GenerateLatexTablesWithStatistics;
-import org.uma.jmetal.util.experiment.component.GenerateReferenceParetoSetAndFrontFromDoubleSolutions;
+import org.uma.jmetal.util.experiment.component.*;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
@@ -118,7 +115,7 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 
 		final List<ExperimentComponent> components = Arrays.asList(
 			new OptimizationJobRunnerExecuteAlgorithms<>(experiment),
-			new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment),
+			new GenerateReferenceParetoFront(experiment),
 			new ComputeQualityIndicators<>(experiment),
 			new GenerateLatexTablesWithStatistics(experiment),
 			new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1)
