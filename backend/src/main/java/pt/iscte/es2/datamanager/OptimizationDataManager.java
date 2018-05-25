@@ -20,7 +20,9 @@ public interface OptimizationDataManager {
 	 * Persists the given OptimizationConfiguration
 	 *
 	 * @param optimizationConfiguration
-	 * 			OptimizationConfiguration
+	 * 			{@link OptimizationConfiguration}
+	 *
+	 * @return {@link OptimizationConfiguration}
 	 */
 	public OptimizationConfiguration saveOptimization(OptimizationConfiguration optimizationConfiguration);
 
@@ -33,7 +35,7 @@ public interface OptimizationDataManager {
 	 * @param filePath
 	 * 			String
 	 *
-	 * @return FileUpload
+	 * @return {@link FileUpload}
 	 */
 	public FileUpload saveFileUpload(String sessionId, String filePath);
 
@@ -45,7 +47,7 @@ public interface OptimizationDataManager {
 	 * @param email
 	 * 			String
 	 *
-	 * @return OptimizationConfiguration
+	 * @return {@link OptimizationConfiguration}
 	 */
 	public OptimizationConfiguration searchOptimizationConfigurationByIdAndEmail(Integer id, String email);
 
@@ -55,7 +57,7 @@ public interface OptimizationDataManager {
 	 * @param email
 	 * 			String
 	 *
-	 * @return List<SummaryOptimizationConfiguration>
+	 * @return List {@link SummaryOptimizationConfiguration}
 	 */
 	public List<SummaryOptimizationConfiguration> searchOptimizationConfigurationByEmail(String email);
 
@@ -63,9 +65,9 @@ public interface OptimizationDataManager {
 	 * Persists an OptimizationConfiguration By ID
 	 *
 	 * @param optimizationConfiguration
-	 * 			OptimizationConfiguration
+	 * 			{@link OptimizationConfiguration}
 	 *
-	 * @return OptimizationJobExecutions
+	 * @return Integer
 	 */
 	public Integer saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration);
 
@@ -75,7 +77,7 @@ public interface OptimizationDataManager {
 	 * @param id
 	 * 			Integer
 	 *
-	 * @return OptimizationJobExecutions
+	 * @return {@link OptimizationJobExecutions}
 	 */
 	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id);
 
@@ -97,7 +99,7 @@ public interface OptimizationDataManager {
 	 * @param rPath
 	 * 			String
 	 *
-	 * @return List<OptimizationJobSolutions>
+	 * @return List {@link OptimizationJobSolutions}
 	 */
 	public List<OptimizationJobSolutions> saveOptimizationJobSolution(
 		Integer id, List<OptimizationJobSolutions> optimizationJobSolutions, State state, String latexPath, String rPath);
@@ -111,7 +113,7 @@ public interface OptimizationDataManager {
 	 * @param state
 	 * 			State
 	 *
-	 * @return OptimizationJobExecutions
+	 * @return {@link OptimizationJobExecutions}
 	 */
 	public OptimizationJobExecutions updateState(Integer id, State state);
 
@@ -121,7 +123,7 @@ public interface OptimizationDataManager {
 	 * @param id
 	 * 			Integer
 	 *
-	 * @return List<OptimizationJobExecutions>
+	 * @return List {@link OptimizationJobExecutions}
 	 */
 	public List<OptimizationJobExecutions> searchOptimizationJobExecutionsByOptimizationConfigurationId(Integer id);
 
@@ -129,9 +131,9 @@ public interface OptimizationDataManager {
 	 * Searchs for an OptimizationJobExecutions By ID
 	 *
 	 * @param optimizationJobExecutions
-	 * 			OptimizationJobExecutions
+	 * 			{@link OptimizationJobExecutions}
 	 *
-	 * @return OptimizationConfiguration
+	 * @return {@link OptimizationConfiguration}
 	 */
 	public OptimizationConfiguration searchOptimizationConfigurationByOptimizationJobExecution(
 		OptimizationJobExecutions optimizationJobExecutions);

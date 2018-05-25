@@ -16,7 +16,7 @@ import pt.iscte.es2.datamanager.OptimizationDataManager;
 import pt.iscte.es2.dto.*;
 import pt.iscte.es2.dto.service.optimization.*;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
