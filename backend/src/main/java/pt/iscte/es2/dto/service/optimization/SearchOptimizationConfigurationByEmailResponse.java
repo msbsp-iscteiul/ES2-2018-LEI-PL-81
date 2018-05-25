@@ -1,5 +1,10 @@
 package pt.iscte.es2.dto.service.optimization;
 
+/**
+ * DTO Search OptimizationConfiguration Response
+ *
+ * Contains a {@link SummaryOptimizationConfigurationResult} which contains a list of Summaries.
+ */
 public class SearchOptimizationConfigurationByEmailResponse {
 
 	private SummaryOptimizationConfigurationResult result;

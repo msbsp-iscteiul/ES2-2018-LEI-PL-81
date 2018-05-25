@@ -3,7 +3,7 @@ package pt.iscte.es2.dto;
 /**
  * DTO of OptimizationConfigurationAlgorithms
  *
- * Algorithm DTO that contains the name
+ * Contains the name of the Algorithm
  */
 public class OptimizationConfigurationAlgorithms {
 

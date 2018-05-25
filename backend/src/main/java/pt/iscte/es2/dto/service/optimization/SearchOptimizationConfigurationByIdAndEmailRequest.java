@@ -1,10 +1,12 @@
 package pt.iscte.es2.dto.service.optimization;
 
+import pt.iscte.es2.dto.OptimizationConfiguration;
+
 /**
  * DTO OptimizationConfiguration Request
  *
- * Contains the email of the User and the ID of the OptimizationConfiguration and
- * searchs for the complete OptimizationConfiguration
+ * Contains an email of the User and the ID of the OptimizationConfiguration with the purpose of searching
+ * for an {@link OptimizationConfiguration}
  */
 public class SearchOptimizationConfigurationByIdAndEmailRequest {
 

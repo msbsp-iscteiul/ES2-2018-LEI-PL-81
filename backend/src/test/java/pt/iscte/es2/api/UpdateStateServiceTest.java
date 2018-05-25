@@ -8,13 +8,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import pt.iscte.es2.business.OptimizationBusiness;
-import pt.iscte.es2.dto.service.optimization.FileUploadRequest;
-import pt.iscte.es2.dto.service.optimization.FileUploadResult;
+import pt.iscte.es2.dto.State;
 
 /**
- * Tests for the OptimizationConfiguration Service when a file is uploaded
+ * Tests for the OptimizationConfiguration Service when updating a State of an execution
  */
-public class FileUploadOptimizationConfigurationServiceTest {
+public class UpdateStateServiceTest {
 
 	@Mock
 	private OptimizationBusiness optimizationBusiness;
@@ -29,8 +28,8 @@ public class FileUploadOptimizationConfigurationServiceTest {
 	}
 
 	@Test
-	public void fileUploadServiceCallTest() {
-		Mockito.when(optimizationBusiness.fileUpload(Mockito.any(), Mockito.any())).thenReturn(new FileUploadResult());
-		Assert.assertNotNull(optimizationService.fileUpload(new FileUploadRequest()));
+	public void successCall() {
+		optimizationBusiness.updateState(Mockito.anyInt(), Mockito.any());
+		optimizationService.updateState(1, State.Finished);
 	}
 }
