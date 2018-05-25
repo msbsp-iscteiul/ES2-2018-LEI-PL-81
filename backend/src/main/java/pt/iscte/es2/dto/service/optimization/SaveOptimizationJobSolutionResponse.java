@@ -1,5 +1,12 @@
 package pt.iscte.es2.dto.service.optimization;
 
+import pt.iscte.es2.dto.OptimizationJobSolutions;
+
+/**
+ * DTO Save OptimizationJobSolution Response
+ *
+ * Contains a {@link SaveOptimizationJobSolutionResult} from the resulting saved {@link OptimizationJobSolutions}
+ */
 public class SaveOptimizationJobSolutionResponse {
 
 	private SaveOptimizationJobSolutionResult result;

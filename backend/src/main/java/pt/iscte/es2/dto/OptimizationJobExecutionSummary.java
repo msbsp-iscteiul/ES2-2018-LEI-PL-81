@@ -5,8 +5,8 @@ import java.util.Date;
 /**
  * DTO of OptimizationJobExecutionSummary
  *
- * Execution Summary DTO that contains an executionId, optimizationConfigurationId,
- * problemName, startDate, endDate and State of the Execution
+ * Consists of a Summary that contains an executionId, optimizationConfigurationId,
+ * problemName, startDate, endDate and state of the Execution
  */
 public class OptimizationJobExecutionSummary {
 

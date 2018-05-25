@@ -1,18 +1,19 @@
 package pt.iscte.es2.api;
 
 import org.springframework.core.io.FileSystemResource;
-import pt.iscte.es2.dto.OptimizationJobExecutions;
-import pt.iscte.es2.dto.State;
+import pt.iscte.es2.dto.*;
 import pt.iscte.es2.dto.service.optimization.*;
 
 /**
  * OptimizationConfiguration Service API
+ *
+ * This service will provide all the incoming requests associated with all related {@link OptimizationConfiguration}
+ * operations, delivering the appropriate responses.
  */
 public interface OptimizationService {
 
 	/**
-	 * Persists an OptimizationConfiguration suggested by the user which contains Variables, Objectives,
-	 * AlgorithmChoiceMethod and CSV File
+	 * Persists an {@link OptimizationConfiguration} suggested by the user.
 	 *
 	 * @param request
 	 * 			{@link SaveOptimizationConfigurationRequest}
@@ -22,8 +23,8 @@ public interface OptimizationService {
 	public SaveOptimizationConfigurationResponse saveOptimization(SaveOptimizationConfigurationRequest request);
 
 	/**
-	 * Uploads a Jar file that contains a problem to be optimized and returns a result that
-	 * contains all the necessary data such as NumberOfVariables, NumberOfObjectives.
+	 * Uploads a Jar file that contains a problem to be solved, returning all necessary
+	 * data such as NumberOfVariables, NumberOfObjectives.
 	 *
 	 * @param request
 	 * 			{@link FileUploadRequest}
@@ -33,7 +34,7 @@ public interface OptimizationService {
 	public FileUploadResponse fileUpload(FileUploadRequest request);
 
 	/**
-	 * Searchs for an OptimizationConfiguration by an existing Id and Email
+	 * Searchs for an {@link OptimizationConfiguration} by id and user email.
 	 *
 	 * @param request
 	 * 			{@link SearchOptimizationConfigurationByIdAndEmailRequest}
@@ -44,61 +45,60 @@ public interface OptimizationService {
 		SearchOptimizationConfigurationByIdAndEmailRequest request);
 
 	/**
-	 * Searchs for all SummaryOptimizationConfiguration by Email
+	 * Searchs for all {@link SummaryOptimizationConfiguration} by email.
 	 *
 	 * @param request
-	 * 			SearchOptimizationConfigurationByEmailRequest
+	 * 			{@link SearchOptimizationConfigurationByEmailRequest}
 	 *
-	 * @return SearchOptimizationConfigurationByEmailResponse
+	 * @return {@link SearchOptimizationConfigurationByEmailResponse}
 	 */
 	public SearchOptimizationConfigurationByEmailResponse searchOptimizationConfigurationByEmail(
 		SearchOptimizationConfigurationByEmailRequest request);
 
 	/**
-	 * Executes an OptimizationConfiguration By ID and the User Email
+	 * Executes an {@link OptimizationConfiguration} by id and user email.
 	 *
 	 * @param request
-	 * 			ExecuteOptimizationConfigurationRequest
+	 * 			{@link ExecuteOptimizationConfigurationRequest}
 	 *
-	 * @return ExecuteOptimizationConfigurationResponse
+	 * @return {@link ExecuteOptimizationConfigurationResponse}
 	 */
 	public ExecuteOptimizationConfigurationResponse executeOptimizationConfiguration(
 		ExecuteOptimizationConfigurationRequest request);
 
 	/**
-	 * Persists a list of OptimizationJobSolution given an OptimizationJobExecution ID
+	 * Persists a list of {@link OptimizationJobSolutions} given an {@link OptimizationJobExecutions} id.
 	 *
 	 * @param request
-	 * 			ExecuteOptimizationConfigurationRequest
+	 * 			{@link SaveOptimizationJobSolutionRequest}
 	 *
-	 * @return ExecuteOptimizationConfigurationResponse
+	 * @return {@link SaveOptimizationJobSolutionResponse}
 	 */
 	public SaveOptimizationJobSolutionResponse saveOptimizationJobSolution(SaveOptimizationJobSolutionRequest request);
 
 	/**
-	 * Updates the State of an Optimization Job Execution By ID
+	 * Updates the State of an {@link OptimizationJobExecutions} by id.
 	 *
-	 * @param id
+	 * @param id - ID of the Execution
 	 * 			Integer
 	 *
-	 * @param state
-	 * 			State
+	 * @param state - State of the Execution
+	 * 			{@link State}
 	 */
 	public void updateState(Integer id, State state);
 
 	/**
-	 * Returns the JAR File associated with an Job Execution By Id
+	 * Returns the Problem (jar file) associated with an {@link OptimizationJobExecutions} by id.
 	 *
 	 * @param request
-	 * 			OptimizationConfigurationAttachmentRequest
+	 * 			{@link OptimizationConfigurationAttachmentRequest}
 	 *
 	 * @return FileSystemResource
 	 */
-	public FileSystemResource searchAttachmentByJobExecution(
-		OptimizationConfigurationAttachmentRequest request);
+	public FileSystemResource searchAttachmentByJobExecution(OptimizationConfigurationAttachmentRequest request);
 
 	/**
-	 * Searchs for all OptimizationJobExecutions available By the User Email.
+	 * Searchs for all {@link OptimizationJobExecutions} available by user email.
 	 *
 	 * @param request
 	 * 			{@link OptimizationJobExecutionsRequest}
@@ -109,7 +109,7 @@ public interface OptimizationService {
 		OptimizationJobExecutionsRequest request);
 
 	/**
-	 * Returns the Latex file associated with the Execution By ID
+	 * Returns the Latex file associated with {@link OptimizationJobExecutions} by id.
 	 *
 	 * @param id
 	 * 			Integer
@@ -119,7 +119,7 @@ public interface OptimizationService {
 	public FileSystemResource searchLatexByExecutionId(Integer id);
 
 	/**
-	 * Returns the R file associated with the Execution By ID
+	 * Returns the R file associated with the {@link OptimizationJobExecutions} by id.
 	 *
 	 * @param id
 	 * 			Integer
