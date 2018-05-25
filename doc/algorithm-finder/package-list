@@ -1,0 +1,5 @@
+pt.iscte.es2.algorithm_finder
+pt.iscte.es2.algorithm_finder.annotations
+pt.iscte.es2.algorithm_finder.factories.multiobjective
+pt.iscte.es2.algorithm_finder.factories.singleobjective
+pt.iscte.es2.algorithm_finder.factories.singleobjective.evolutionstrategy
