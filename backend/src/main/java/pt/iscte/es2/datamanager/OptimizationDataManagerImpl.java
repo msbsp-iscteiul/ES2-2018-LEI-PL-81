@@ -7,7 +7,7 @@ import pt.iscte.es2.dao.*;
 import pt.iscte.es2.dto.*;
 import pt.iscte.es2.jpa.*;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

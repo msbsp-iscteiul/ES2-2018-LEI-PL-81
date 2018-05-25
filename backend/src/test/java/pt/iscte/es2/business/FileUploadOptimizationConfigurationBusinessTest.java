@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import pt.iscte.es2.client_jar_loader.LoadClientJarProblem;
 import pt.iscte.es2.datamanager.OptimizationDataManager;
 import pt.iscte.es2.dto.FileUpload;
 import java.io.IOException;
@@ -23,6 +24,9 @@ public class FileUploadOptimizationConfigurationBusinessTest {
 
 	@InjectMocks
 	private OptimizationBusiness optimizationBusiness;
+
+	@Mock
+	private LoadClientJarProblem loadClientJarProblem;
 
 	@Before
 	public void setup() {
