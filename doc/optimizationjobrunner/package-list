@@ -1,0 +1,10 @@
+pt.iscte.es2.optimization_job_runner
+pt.iscte.es2.optimization_job_runner.io
+pt.iscte.es2.optimization_job_runner.jmetal.problem.observable
+pt.iscte.es2.optimization_job_runner.jmetal.solution
+pt.iscte.es2.optimization_job_runner.jmetal.solutions_reader
+pt.iscte.es2.optimization_job_runner.jmetal.util.experiment
+pt.iscte.es2.optimization_job_runner.jobs
+pt.iscte.es2.optimization_job_runner.mail
+pt.iscte.es2.optimization_job_runner.post_processing
+pt.iscte.es2.optimization_job_runner.post_processing.result_compilers
