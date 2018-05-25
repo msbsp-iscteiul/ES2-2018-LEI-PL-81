@@ -1,15 +1,15 @@
 import re
 
 from django import forms
-# Formulário que trata o pedido de email, caso não exista em sessão
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from appform.validators import validate_file_ext
 
 
 class RequestEmailForm(forms.Form):
+    """Login form"""
     email = forms.EmailField(label='Email',
-                             help_text='Please, enter your email -- Acrescentar algo')
+                             help_text='Please, enter your email to login into the system')
 
     def clean(self):
         cleaned_data = super(RequestEmailForm, self).clean()
@@ -19,6 +19,7 @@ class RequestEmailForm(forms.Form):
 
 
 class ProblemInputUser(forms.Form):
+    """First part of the problem configuration creation form"""
     name = forms.RegexField(
         max_length=127,
         label='Problem name',
@@ -55,7 +56,7 @@ class ProblemInputUser(forms.Form):
 
 
 class ProblemInputVariable(forms.Form):
-
+    """Second part of the problem configuration creation form"""
     def __init__(self, *args, **kwargs):
         algorithms = kwargs.pop('algorithms')
         variables = kwargs.pop('variables')
@@ -118,6 +119,7 @@ class ProblemInputVariable(forms.Form):
 
 
 class SendEmail(forms.Form):
+    """Support request email form"""
     subject = forms.CharField(
         max_length=255,
         label='Subject')

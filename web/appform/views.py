@@ -1,15 +1,12 @@
-import json
-import math
-
 import requests
 from django.contrib import messages
-from django.urls import reverse
-
-from appform.forms import ProblemInputUser, ProblemInputVariable, SendEmail, RequestEmailForm
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
+
 from appform.decorators import requires_email
+from appform.forms import ProblemInputUser, ProblemInputVariable, SendEmail, RequestEmailForm
 from frontend.settings import env
 
 BACKEND_URL = env.str('BACKEND_URL')
@@ -24,10 +21,15 @@ download_r_url = BACKEND_URL + '/api/optimization/searchrbyexecutionid/'
 
 
 def welcome(request):
+    """
+    Welcome page
+    :rtype: object
+    """
     return render(request, 'welcome.html')
 
 
 def request_email(request):
+    """Login page that requests an email"""
     form = RequestEmailForm(request.POST or None)
 
     if form.is_valid():
@@ -38,6 +40,7 @@ def request_email(request):
 
 @requires_email
 def form_page1(request):
+    """First page for the creation of problem configurations"""
     form = ProblemInputUser(request.POST or None, request.FILES or None, initial=request.session.get('data'))
     if form.is_valid():
         upload = request.FILES['input_jar']
@@ -60,6 +63,7 @@ def form_page1(request):
 
 @requires_email
 def form_page2(request):
+    """Second and final page for the creation of problem configurations"""
     extra_data = {k: v for k, v in request.session.get('data').items()
                   if k in ['algorithms', 'variables', 'objectives', 'variable_type']}
     form = ProblemInputVariable(request.POST or None, request.FILES or None, **extra_data)
@@ -108,6 +112,10 @@ def form_page2(request):
 
 @requires_email
 def configuration_details(request, num):
+    """
+    Problem configuration details page controller
+    :type num: int
+    """
     if request.POST:
         if submit_execution_request(num, request.session.get('email')):
             request.session['next'] = reverse('history')
@@ -132,6 +140,11 @@ def configuration_details(request, num):
 
 
 def submit_execution_request(num, email):
+    """
+    Submits a problem configuration for execution
+    :type num: int
+    :type email: str
+    """
     data = {'id': num, 'email': email}
     result = requests.post(execute_optimization_url, data=data).json()
     return result['result']['id']
@@ -139,15 +152,18 @@ def submit_execution_request(num, email):
 
 @requires_email
 def processing(request):
+    """Processing status page"""
     return render(request, 'processing.html')
 
 
 def faq_page(request):
+    """FAQ page"""
     return render(request, 'faq.html')
 
 
 @requires_email
 def my_configurations(request):
+    """Problem configuration list page"""
     configurations = requests.get(configuration_history_url, params={'email': request.session.get('email')})\
         .json()['result']['summary']
     return render(request, 'my_configurations.html', {
@@ -157,6 +173,7 @@ def my_configurations(request):
 
 @requires_email
 def execution_history(request):
+    """Execution list page"""
     executions = requests.post(search_execution_url, data={'email': request.session.get('email')})\
         .json()['result']['executions']
     return render(request, 'execution_history.html', {
@@ -166,6 +183,11 @@ def execution_history(request):
 
 @requires_email
 def execution_details(request, optimization_configuration_id, execution_id):
+    """
+    A problem configuration execution detail page
+    :type optimization_configuration_id: int
+    :type execution_id: int
+    """
     configuration = requests.post(search_optimization_url, data={
         'email': request.session.get('email'),
         'id': optimization_configuration_id
@@ -184,6 +206,10 @@ def execution_details(request, optimization_configuration_id, execution_id):
 
 @requires_email
 def download_latex(request, execution_id):
+    """
+    Download latex file
+    :type execution_id: int
+    """
     file = requests.post(download_latex_url, data={'id': execution_id})
     response = HttpResponse(file, 'application/pdf')
     response['Content-Disposition'] = 'attachment; filename="latex.pdf"'
@@ -192,6 +218,10 @@ def download_latex(request, execution_id):
 
 @requires_email
 def download_r(request, execution_id):
+    """
+    Download R file
+    :type execution_id: int
+    """
     file = requests.post(download_r_url, data={'id': execution_id})
     response = HttpResponse(file, 'application/postscript')
     response['Content-Disposition'] = 'attachment; filename="r.eps"'
@@ -200,6 +230,7 @@ def download_r(request, execution_id):
 
 @requires_email
 def send_email(request):
+    """Send support request email"""
     email_request = SendEmail(request.POST or None)
     if email_request.is_valid():
         subject = email_request.cleaned_data['subject']
@@ -217,6 +248,7 @@ def send_email(request):
 
 
 def submission_success(request):
+    """Generic success page that redirects to a page set in a session variable"""
     return render(request, 'success.html', {
         'next': request.session.pop('next')
     })
@@ -224,6 +256,7 @@ def submission_success(request):
 
 @requires_email
 def logout(request):
+    """Logout page that removes the email inserted by the client"""
     del(request.session['email'])
     request.session['next'] = reverse('welcome')
     messages.success(request, 'Logged out successfully!')
