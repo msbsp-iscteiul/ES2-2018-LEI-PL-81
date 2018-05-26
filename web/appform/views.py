@@ -98,6 +98,8 @@ def form_page2(request):
         info = p.json()
         if 'result' not in info:
             messages.error(request, info['message'], 'danger')
+        elif info['result']['message']:
+            messages.error(request, info['result']['message'], 'danger')
         else:
             del request.session['data']
             request.session['next'] = reverse('request_details', args=[info['result']['id']])
