@@ -141,8 +141,7 @@
                 </ul>
             </div>
             <div class="col-sm-10">
-                <h1 id="Main">Request Detail for '<a href="{% url 'request_details' configuration.id %}">
-                    {{ configuration.problemName }}</a>'</h1>
+                <h1 id="Main">Request Detail for '<a href="{% url 'request_details' configuration.id %}">{{ configuration.problemName }}</a>'</h1>
 
                 <p>{{ configuration.description }}</p>
 
