@@ -3,7 +3,7 @@ package pt.iscte.es2.dto;
 /**
  * DTO of OptimizationConfigurationUserSolutions
  *
- * UserSolutions DTO that contains the solution quality
+ * Contains the solution quality of the User
  */
 public class OptimizationConfigurationUserSolutions {
 
@@ -11,6 +11,10 @@ public class OptimizationConfigurationUserSolutions {
 
 	public OptimizationConfigurationUserSolutions() {
 
+	}
+
+	public OptimizationConfigurationUserSolutions(String solutionQuality) {
+		this.solutionQuality = solutionQuality;
 	}
 
 	public String getSolutionQuality() {

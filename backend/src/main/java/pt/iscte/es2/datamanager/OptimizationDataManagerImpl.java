@@ -7,7 +7,7 @@ import pt.iscte.es2.dao.*;
 import pt.iscte.es2.dto.*;
 import pt.iscte.es2.jpa.*;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,25 +25,7 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	private OptimizationConfigurationDao optimizationConfigurationDao;
 
 	@Autowired
-	private OptimizationConfigurationVariablesDao optimizationConfigurationVariablesDao;
-
-	@Autowired
-	private OptimizationConfigurationObjectivesDao optimizationConfigurationObjectivesDao;
-
-	@Autowired
-	private OptimizationConfigurationAlgorithmsDao optimizationConfigurationAlgorithmsDao;
-
-	@Autowired
-	private OptimizationConfigurationRestrictionsDao optimizationConfigurationRestrictionsDao;
-
-	@Autowired
-	private OptimizationConfigurationUserSolutionsDao optimizationConfigurationUserSolutionsDao;
-
-	@Autowired
 	private OptimizationJobExecutionsDao optimizationJobExecutionsDao;
-
-	@Autowired
-	private OptimizationJobSolutionsDao optimizationJobSolutionsDao;
 
 	@Autowired
 	private Mapper mapper;
@@ -199,7 +181,6 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	 * @see OptimizationDataManager#searchLatexPathByExecutionId(Integer)
 	 */
 	public String searchLatexPathByExecutionId(Integer id) {
-		String path = "";
 		Optional<OptimizationJobExecutionsEntity> executionEntity = optimizationJobExecutionsDao.findById(id.longValue());
 		if (executionEntity.isPresent()) {
 			return executionEntity.get().getLatexPath();
@@ -211,7 +192,6 @@ public class OptimizationDataManagerImpl implements OptimizationDataManager {
 	 * @see OptimizationDataManager#searchRPathByExecutionId(Integer)
 	 */
 	public String searchRPathByExecutionId(Integer id) {
-		String path = "";
 		Optional<OptimizationJobExecutionsEntity> executionEntity = optimizationJobExecutionsDao.findById(id.longValue());
 		if (executionEntity.isPresent()) {
 			return executionEntity.get().getrPath();

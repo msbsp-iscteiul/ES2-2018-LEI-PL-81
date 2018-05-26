@@ -3,7 +3,7 @@ package pt.iscte.es2.dto;
 /**
  * DTO of OptimizationConfigurationVariables
  *
- * Variables DTO that contains the name
+ * Contains the name of the Variable
  */
 public class OptimizationConfigurationVariables {
 

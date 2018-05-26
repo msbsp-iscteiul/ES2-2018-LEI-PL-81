@@ -23,11 +23,8 @@ public class ApplicationConstants {
 	 * Root path for the service endpoints
 	 */
 	public static final String APPLICATION_PATH = "api";
-	public static final String UPLOAD_PATH = APPLICATION_PATH + "/upload";
-	public static final String HISTORY_PATH = APPLICATION_PATH + "/history";
 	public static final String OPTIMIZATION_PATH = APPLICATION_PATH + "/optimization";
 	public static final String EXECUTION_PATH = "backend/target/";
-	public static final String TMP_PATH = EXECUTION_PATH + "tmp/";
 	public static final String JARS_PATH = EXECUTION_PATH + "jars/";
 	public static final String CSV_PATH = EXECUTION_PATH + "csv/";
 	public static final String LATEX_PATH = EXECUTION_PATH + "latex/";

@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * DTO of SummaryOptimizationConfiguration
  *
- * OptimizationConfiguration Summary DTO that represents a summary of a OptimizationConfiguration
+ * Contains a Summary of an {@link OptimizationConfiguration}
  */
 public class SummaryOptimizationConfiguration {
 

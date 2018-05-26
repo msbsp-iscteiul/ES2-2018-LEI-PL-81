@@ -16,17 +16,15 @@ import pt.iscte.es2.datamanager.OptimizationDataManager;
 import pt.iscte.es2.dto.*;
 import pt.iscte.es2.dto.service.optimization.*;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -62,35 +60,7 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 				return new SaveOptimizationConfigurationResult("Incorrect Extension");
 			}
 			if (!file.isEmpty()) {
-				File newFile = null;
-				try {
-					newFile = File.createTempFile(ApplicationConstants.CSV_PATH, file.getOriginalFilename());
-					file.transferTo(newFile);
-				} catch (IOException e) {
-					e.printStackTrace();
-					newFile.delete();
-					return null;
-				}
-				createAndWriteFileToDirectory(ApplicationConstants.CSV_PATH, newFile);
-				File fileToDelete = new File(ApplicationConstants.CSV_PATH + newFile.getName());
-				String line = "";
-				try (BufferedReader bufferedReader = new BufferedReader(new FileReader(newFile.getPath()))) {
-					while ((line = bufferedReader.readLine()) != null) {
-						if (line.split("\\s+").length == objectives.size()) {
-							OptimizationConfigurationUserSolutions userSolutions = new OptimizationConfigurationUserSolutions();
-							userSolutions.setSolutionQuality(line);
-							solutions.add(userSolutions);
-						} else {
-							fileToDelete.delete();
-							return new SaveOptimizationConfigurationResult("The User Solutions must match the Number of Objectives");
-						}
-					}
-				} catch (IOException e) {
-					fileToDelete.delete();
-					e.printStackTrace();
-				}
-				// Delete the current CSV file after processing
-				fileToDelete.delete();
+				processCSV(file, objectives.size(), solutions);
 			}
 		}
 
@@ -118,6 +88,36 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		} else {
 			return new SaveOptimizationConfigurationResult("Failed to submit the Optimization Configuration, please try again later.");
 		}
+	}
+
+	private void processCSV(MultipartFile file, Integer size, List<OptimizationConfigurationUserSolutions> solutions) {
+		File newFile = null;
+		try {
+			newFile = File.createTempFile(ApplicationConstants.CSV_PATH, file.getOriginalFilename());
+			file.transferTo(newFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+			newFile.delete();
+		}
+		createAndWriteFileToDirectory(ApplicationConstants.CSV_PATH, newFile);
+		File fileToDelete = new File(ApplicationConstants.CSV_PATH + newFile.getName());
+		String line = "";
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(newFile.getPath()))) {
+			while ((line = bufferedReader.readLine()) != null) {
+				if (line.split("\\s+").length == size) {
+					OptimizationConfigurationUserSolutions userSolutions = new OptimizationConfigurationUserSolutions();
+					userSolutions.setSolutionQuality(line);
+					solutions.add(userSolutions);
+				} else {
+					fileToDelete.delete();
+				}
+			}
+		} catch (IOException e) {
+			fileToDelete.delete();
+			e.printStackTrace();
+		}
+		// Delete the current CSV file after processing
+		fileToDelete.delete();
 	}
 
 	/**

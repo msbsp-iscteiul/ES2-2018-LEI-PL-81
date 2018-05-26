@@ -9,6 +9,9 @@ import pt.iscte.es2.business.OptimizationBusiness;
 import pt.iscte.es2.dto.State;
 import pt.iscte.es2.dto.service.optimization.*;
 
+/**
+ * @see OptimizationService
+ */
 @RestController
 @RequestMapping(value = ApplicationConstants.OPTIMIZATION_PATH)
 public class OptimizationServiceImpl implements OptimizationService {

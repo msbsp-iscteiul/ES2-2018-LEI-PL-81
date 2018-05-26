@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import pt.iscte.es2.client_jar_loader.LoadClientJarProblem;
 import pt.iscte.es2.datamanager.OptimizationDataManager;
 import pt.iscte.es2.dto.FileUpload;
 import java.io.IOException;
@@ -24,6 +25,9 @@ public class FileUploadOptimizationConfigurationBusinessTest {
 	@InjectMocks
 	private OptimizationBusiness optimizationBusiness;
 
+	@Mock
+	private LoadClientJarProblem loadClientJarProblem;
+
 	@Before
 	public void setup() {
 		optimizationBusiness = new OptimizationBusinessImpl();
@@ -33,7 +37,7 @@ public class FileUploadOptimizationConfigurationBusinessTest {
 	@Test
 	public void uploadFileWithSuccess() {
 		String sessionId = "someSessionId";
-		Path path = Paths.get("src/test/resources/data/containee-1.0-SNAPSHOT.jar");
+		Path path = Paths.get("src/test/resources/data/containee-1.0-SNAPSHOT-integer_2.jar");
 		String name = "containee-1.0-SNAPSHOT.jar";
 		String originalFileName = "containee-1.0-SNAPSHOT.jar";
 		String contentType = "text/plain";
