@@ -98,7 +98,6 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		} catch (IOException e) {
 			e.printStackTrace();
 			newFile.delete();
-			// return null;
 		}
 		createAndWriteFileToDirectory(ApplicationConstants.CSV_PATH, newFile);
 		File fileToDelete = new File(ApplicationConstants.CSV_PATH + newFile.getName());
@@ -111,7 +110,6 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 					solutions.add(userSolutions);
 				} else {
 					fileToDelete.delete();
-					// return new SaveOptimizationConfigurationResult("The User Solutions must match the Number of Objectives");
 				}
 			}
 		} catch (IOException e) {
