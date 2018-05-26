@@ -76,9 +76,9 @@ tarefas colocadas na fila.
 
 ### Persistência de configurações
 
-Em vez de fazer com que o cliente tenha de descarregar cada configuração que tenha feito na aplicação, decidimos
-persistir estas configurações numa base de dados relacional [MariaDB](https://mariadb.org/). Julgamos que desta a
-aplicação torna-se mais user friendly para os clientes.
+Em vez de fazer o cliente descarregar cada configuração que tenha feito na aplicação, decidimos persistir estas
+configurações numa base de dados relacional [MariaDB](https://mariadb.org/). Julgamos que desta a aplicação torna-se
+mais user friendly para os clientes.
 
 ### Gráficos
 
@@ -108,6 +108,15 @@ progresso relativo à estimativa do total de iterações esperadas.
 Assim, chamo a vossa atenção para o package [optimizationjobrunner/src/main/java/pt/iscte/es2/optimization_job_runner/jmetal/problem/observable](optimizationjobrunner/src/main/java/pt/iscte/es2/optimization_job_runner/jmetal/problem/observable)
 
 ## Instruções de instalação e execução
+
+### MariaDB e RabbitMQ
+
+0. Requisitos:
+    * [Docker](https://www.docker.com/)
+0. Deslocar-se para a pasta `_docker`, copiar o ficheiro `.env.example` para `.env` e configurar a gosto
+0. Correr `docker-compose up -d` (`sudo` pode ser necessário)
+0. Correr o DDL presente em [backend/src/main/resources/sql/DDL.sql](backend/src/main/resources/sql/DDL.sql) no Mariadb
+para construir a estrutura da base de dados necessária
 
 ### Frontend
 
