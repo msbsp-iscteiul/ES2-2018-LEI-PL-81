@@ -4,20 +4,24 @@
     {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>{% block title %}Polyplot{% endblock %}</title>
-    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#d55b6d">
-    <meta name="msapplication-TileColor" content="#b91d47">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png?0526">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png?0526">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png?0526">
+    <link rel="manifest" href="/static/site.webmanifest?0526">
+    <link rel="mask-icon" href="/static/safari-pinned-tab.svg?0526" color="#2a5c78">
+    <link rel="shortcut icon" href="/static/favicon.ico?0526">
+    <meta name="apple-mobile-web-app-title" content="Polyplot">
+    <meta name="application-name" content="Polyplot">
+    <meta name="msapplication-TileColor" content="#2a5c78">
+    <meta name="msapplication-config" content="/static/browserconfig.xml?0526">
     <meta name="theme-color" content="#ffffff">
     {% block head %}
     {% endblock %}
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <img class="navbar-brand" src="{% static 'favicon-32x32.png' %}" alt="logo">
-    <a class="navbar-brand text-uppercase" href="{% url 'welcome' %}">Polyplot</a>
+    <a class="navbar-brand text-uppercase" href="{% url 'welcome' %}">
+        <img class="navbar-brand" src="{% static 'logo.png' %}" alt="Polyglot"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
