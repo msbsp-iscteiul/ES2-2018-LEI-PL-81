@@ -115,10 +115,10 @@ public class SaveOptimizationConfigurationBusinessTest {
 	 */
 	@Test
 	public void saveOptimizationConfigurationWithNoCSVExtension() {
-		String strPath = "src/test/resources/data/empty.txt";
-		Path path = Paths.get("src/test/resources/data/empty.txt");
-		String name = "empty.txt";
-		String originalFileName = "empty.txt";
+		String strPath = "src/test/resources/data/noCSVExtentionButWithContent.txt";
+		Path path = Paths.get("src/test/resources/data/noCSVExtentionButWithContent.txt");
+		String name = "noCSVExtentionButWithContent.txt";
+		String originalFileName = "noCSVExtentionButWithContent.txt";
 		String contentType = "text/plain";
 		byte[] content = null;
 		try {
