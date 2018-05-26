@@ -53,11 +53,14 @@ def form_page1(request):
         p = requests.post(file_upload_url, data=data, files=files)
         info = p.json()
 
-        request.session['data'] = info['result']
-        request.session['data'].update(data_form)
-        request.session['next'] = reverse('form_page2')
-        messages.success(request, 'Form submitted successfully!')
-        return redirect('submission_success')
+        if not info['result']['algorithms']:
+            messages.error(request, 'Uploaded jar isn\'t compatible with any algorithm in our catalog', 'danger')
+        else:
+            request.session['data'] = info['result']
+            request.session['data'].update(data_form)
+            request.session['next'] = reverse('form_page2')
+            messages.success(request, 'Form submitted successfully!')
+            return redirect('submission_success')
     return render(request, 'form.html', {'form': form})
 
 

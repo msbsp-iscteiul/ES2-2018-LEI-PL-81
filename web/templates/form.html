@@ -8,6 +8,7 @@
         <h1>Optimization configuration: Step 1</h1>
 
         <form action class="mt-5" method="post" enctype="multipart/form-data">
+            {% include 'messages.html' %}
             {% csrf_token %}
             {% bootstrap_form form %}
             <button type="submit" class="btn btn-primary">Next</button>
