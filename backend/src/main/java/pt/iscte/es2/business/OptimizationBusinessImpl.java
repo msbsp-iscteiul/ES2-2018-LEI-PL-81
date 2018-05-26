@@ -211,7 +211,7 @@ public class OptimizationBusinessImpl implements OptimizationBusiness {
 		if (optimizationConfiguration != null) {
 			result = new ExecuteOptimizationConfigurationResult(optimizationDataManager
 				.saveExecutionOptimizationConfiguration(optimizationConfiguration), "SUCCESS");
-			Object[] idEmail = new Object[]{id.longValue(), email};
+			Object[] idEmail = new Object[]{id.longValue(), result.getId().longValue(), email};
 			sender.sendMessage(idEmail);
 		} else {
 			result = new ExecuteOptimizationConfigurationResult(null, "FAILED");

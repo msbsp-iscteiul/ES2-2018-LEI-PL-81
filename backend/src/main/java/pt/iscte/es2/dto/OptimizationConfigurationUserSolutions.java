@@ -13,6 +13,10 @@ public class OptimizationConfigurationUserSolutions {
 
 	}
 
+	public OptimizationConfigurationUserSolutions(String solutionQuality) {
+		this.solutionQuality = solutionQuality;
+	}
+
 	public String getSolutionQuality() {
 		return solutionQuality;
 	}
