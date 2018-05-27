@@ -2,6 +2,11 @@ package pt.iscte.es2.dto;
 
 import java.util.Date;
 
+/**
+ * DTO of SummaryOptimizationConfiguration
+ *
+ * Contains a Summary of an {@link OptimizationConfiguration}
+ */
 public class SummaryOptimizationConfiguration {
 
 	private Integer id;

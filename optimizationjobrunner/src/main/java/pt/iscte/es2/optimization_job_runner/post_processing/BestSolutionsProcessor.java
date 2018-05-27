@@ -29,12 +29,11 @@ public class BestSolutionsProcessor implements PostProblemProcessor {
 		final SolutionsFileReader<SolutionQuality> solutionQualityReader = new SolutionsFileReader<>(new SolutionQualityParser());
 		final SolutionsFileReader<String> solutionsReader = new SolutionsFileReader<>(new SolutionParser());
 		final List<AlgorithmSolutionQuality> algorithmSolutionQualities = new ArrayList<>();
-		final Job job = context.getJob();
 		for (ExperimentAlgorithm<Solution<?>, List<Solution<?>>> algorithm : context.getAlgorithms()) {
-			final String algorithmSolutionQualityFileName = String.format("%s/%s.%s.rf",
-				context.getSolutionsPath(), job.getProblemName(), algorithm.getAlgorithmTag());
-			final String algorithmSolutionFileName = String.format("%s/%s.%s.rs",
-				context.getSolutionsPath(), job.getProblemName(), algorithm.getAlgorithmTag());
+			final String algorithmSolutionQualityFileName = String.format("%s/data/%s/%s/BEST_SPREAD_FUN.tsv",
+				context.getExperimentPath(), algorithm.getAlgorithmTag(), algorithm.getProblemTag());
+			final String algorithmSolutionFileName = String.format("%s/data/%s/%s/BEST_SPREAD_VAR.tsv",
+				context.getExperimentPath(), algorithm.getAlgorithmTag(), algorithm.getProblemTag());
 			try {
 				final List<SolutionQuality> solutionQualities = solutionQualityReader.readFile(new FileReader(algorithmSolutionQualityFileName));
 				final List<String> algorithmSolutions = solutionsReader.readFile(new FileReader(algorithmSolutionFileName));

@@ -5,6 +5,12 @@ import pt.iscte.es2.dto.OptimizationJobSolutions;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DTO Save OptimizationJobSolution Result
+ *
+ * Contains a {@link String} for a message of Success or Failure and a List of {@link OptimizationJobSolutions}
+ * corresponding to the persisted solutions.
+ */
 public class SaveOptimizationJobSolutionResult {
 
 	private String message;

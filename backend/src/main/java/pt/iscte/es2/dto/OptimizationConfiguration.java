@@ -4,7 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DTO of the OptimizationConfiguration
+ * DTO of OptimizationConfiguration
+ *
+ * Contains the following:
+ * 		problemName - Just a simple problem name
+ * 		description - Description of what the problem consists
+ * 		email - Email of the user that is submitting the OptimizationConfiguration
+ * 		filePath - Path of where the file is saved
+ * 		variablesQuantity - Number of Variables
+ * 		objectivesQuantity - Number of Objectives
+ * 		restrictionsQuantity - Number of Restrictions
+ * 		algorithmsQuantity - Number of Algorithms
+ * 		executionMaxWaitTime - Time to wait for the executions to run, in Seconds
+ * 		variables - List of {@link OptimizationConfigurationVariables}
+ * 		objectives - List of {@link OptimizationConfigurationObjectives}
+ * 		algorithms - List of {@link OptimizationConfigurationAlgorithms}
+ * 		restrictions - List of {@link OptimizationConfigurationRestrictions}
+ * 		userSolutions - List of {@link OptimizationConfigurationUserSolutions}
+ * 		executions - List of {@link OptimizationJobExecutions}
+ * 		algorithmChoiceMethod - {@link AlgorithmChoiceMethod}
  */
 public class OptimizationConfiguration {
 
@@ -24,7 +42,11 @@ public class OptimizationConfiguration {
 	private List<OptimizationConfigurationRestrictions> restrictions;
 	private List<OptimizationConfigurationAlgorithms> algorithms;
 	private List<OptimizationConfigurationUserSolutions> userSolutions;
-	private List<OptimizationJobExecutions> optimizationJobExecutions;
+	private List<OptimizationJobExecutions> executions;
+
+	public OptimizationConfiguration() {
+
+	}
 
 	public Integer getId() {
 		return id;
@@ -169,14 +191,14 @@ public class OptimizationConfiguration {
 		this.userSolutions = userSolutions;
 	}
 
-	public List<OptimizationJobExecutions> getOptimizationJobExecutions() {
-		if (optimizationJobExecutions == null) {
-			optimizationJobExecutions = new ArrayList<>();
+	public List<OptimizationJobExecutions> getExecutions() {
+		if (executions == null) {
+			executions = new ArrayList<>();
 		}
-		return optimizationJobExecutions;
+		return executions;
 	}
 
-	public void setOptimizationJobExecutions(List<OptimizationJobExecutions> optimizationJobExecutions) {
-		this.optimizationJobExecutions = optimizationJobExecutions;
+	public void setExecutions(List<OptimizationJobExecutions> executions) {
+		this.executions = executions;
 	}
 }

@@ -3,11 +3,14 @@ package pt.iscte.es2.dto;
 import java.io.Serializable;
 
 /**
- * DTO of the FileUpload
+ * DTO FileUpload
+ *
+ * Contains the id of the persisted file uploaded, sessionId of the user that send the Jar Problem (File)
+ * and the filePath of where the file is located.
  */
 public class FileUpload implements Serializable {
 
-	private int id;
+	private Integer id;
 	private String sessionId;
 	private String filePath;
 
@@ -19,11 +22,11 @@ public class FileUpload implements Serializable {
 		this.filePath = filePath;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

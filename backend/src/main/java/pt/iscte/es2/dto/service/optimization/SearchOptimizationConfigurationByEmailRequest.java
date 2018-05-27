@@ -1,5 +1,10 @@
 package pt.iscte.es2.dto.service.optimization;
 
+/**
+ * DTO Search OptimizationConfiguration Request
+ *
+ * Contains the email of the User to search for OptimizationConfiguration's associated with the email
+ */
 public class SearchOptimizationConfigurationByEmailRequest {
 
 	private String email;

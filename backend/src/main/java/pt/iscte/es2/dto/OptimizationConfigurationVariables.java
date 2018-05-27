@@ -1,11 +1,12 @@
 package pt.iscte.es2.dto;
 
 /**
- * DTO of the OptimizationConfigurationVariables
+ * DTO of OptimizationConfigurationVariables
+ *
+ * Contains the name of the Variable
  */
 public class OptimizationConfigurationVariables {
 
-	private Integer id;
 	private String name;
 
 	public OptimizationConfigurationVariables() {
@@ -22,13 +23,5 @@ public class OptimizationConfigurationVariables {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 }

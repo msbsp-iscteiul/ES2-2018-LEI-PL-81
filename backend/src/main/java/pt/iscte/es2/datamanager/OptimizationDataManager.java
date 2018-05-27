@@ -20,7 +20,9 @@ public interface OptimizationDataManager {
 	 * Persists the given OptimizationConfiguration
 	 *
 	 * @param optimizationConfiguration
-	 * 			OptimizationConfiguration
+	 * 			{@link OptimizationConfiguration}
+	 *
+	 * @return {@link OptimizationConfiguration}
 	 */
 	public OptimizationConfiguration saveOptimization(OptimizationConfiguration optimizationConfiguration);
 
@@ -33,7 +35,7 @@ public interface OptimizationDataManager {
 	 * @param filePath
 	 * 			String
 	 *
-	 * @return FileUpload
+	 * @return {@link FileUpload}
 	 */
 	public FileUpload saveFileUpload(String sessionId, String filePath);
 
@@ -45,7 +47,7 @@ public interface OptimizationDataManager {
 	 * @param email
 	 * 			String
 	 *
-	 * @return OptimizationConfiguration
+	 * @return {@link OptimizationConfiguration}
 	 */
 	public OptimizationConfiguration searchOptimizationConfigurationByIdAndEmail(Integer id, String email);
 
@@ -55,7 +57,7 @@ public interface OptimizationDataManager {
 	 * @param email
 	 * 			String
 	 *
-	 * @return List<SummaryOptimizationConfiguration>
+	 * @return List {@link SummaryOptimizationConfiguration}
 	 */
 	public List<SummaryOptimizationConfiguration> searchOptimizationConfigurationByEmail(String email);
 
@@ -63,11 +65,11 @@ public interface OptimizationDataManager {
 	 * Persists an OptimizationConfiguration By ID
 	 *
 	 * @param optimizationConfiguration
-	 * 			OptimizationConfiguration
+	 * 			{@link OptimizationConfiguration}
 	 *
-	 * @return OptimizationJobExecutions
+	 * @return Integer
 	 */
-	public OptimizationJobExecutions saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration);
+	public Integer saveExecutionOptimizationConfiguration(OptimizationConfiguration optimizationConfiguration);
 
 	/**
 	 * Searchs for an OptimizationJobExecutions By its ID
@@ -75,19 +77,32 @@ public interface OptimizationDataManager {
 	 * @param id
 	 * 			Integer
 	 *
-	 * @return OptimizationJobExecutions
+	 * @return {@link OptimizationJobExecutions}
 	 */
 	public OptimizationJobExecutions searchOptimizationJobExecutionsById(Integer id);
 
 	/**
 	 * Persists a list of OptimizationJobSolutions
 	 *
+	 * @param id
+	 * 			Integer
+	 *
 	 * @param optimizationJobSolutions
 	 * 			List
 	 *
-	 * @return OptimizationJobExecutions
+	 * @param state
+	 * 			State
+	 *
+	 * @param latexPath
+	 * 			Sring
+	 *
+	 * @param rPath
+	 * 			String
+	 *
+	 * @return List {@link OptimizationJobSolutions}
 	 */
-	public List<OptimizationJobSolutions> saveOptimizationJobSolution(List<OptimizationJobSolutions> optimizationJobSolutions);
+	public List<OptimizationJobSolutions> saveOptimizationJobSolution(
+		Integer id, List<OptimizationJobSolutions> optimizationJobSolutions, State state, String latexPath, String rPath);
 
 	/**
 	 * Updates the state of an Execution By ID
@@ -98,7 +113,48 @@ public interface OptimizationDataManager {
 	 * @param state
 	 * 			State
 	 *
-	 * @return OptimizationJobExecutions
+	 * @return {@link OptimizationJobExecutions}
 	 */
 	public OptimizationJobExecutions updateState(Integer id, State state);
+
+	/**
+	 * Searchs for all OptimizationJobExecutions available given an OptimizationConfigurationId
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @return List {@link OptimizationJobExecutions}
+	 */
+	public List<OptimizationJobExecutions> searchOptimizationJobExecutionsByOptimizationConfigurationId(Integer id);
+
+	/**
+	 * Searchs for an OptimizationJobExecutions By ID
+	 *
+	 * @param optimizationJobExecutions
+	 * 			{@link OptimizationJobExecutions}
+	 *
+	 * @return {@link OptimizationConfiguration}
+	 */
+	public OptimizationConfiguration searchOptimizationConfigurationByOptimizationJobExecution(
+		OptimizationJobExecutions optimizationJobExecutions);
+
+	/**
+	 * Searchs a Latex Path given an Execution ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @return String
+	 */
+	public String searchLatexPathByExecutionId(Integer id);
+
+	/**
+	 * Searchs a R Path given an Execution ID
+	 *
+	 * @param id
+	 * 			Integer
+	 *
+	 * @return String
+	 */
+	public String searchRPathByExecutionId(Integer id);
 }

@@ -21,11 +21,8 @@ public class OptimizationJobExecutionsEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_optimization_configuration", nullable = false)
-	private OptimizationConfigurationEntity optimizationConfiguration;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "optimizationJobExecutions")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "id_optimization_job_executions", nullable = false)
 	private List<OptimizationJobSolutionsEntity> optimizationJobSolutions;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -38,6 +35,10 @@ public class OptimizationJobExecutionsEntity {
 	@Enumerated(EnumType.STRING)
 	private State state;
 
+	private String latexPath;
+
+	private String rPath;
+
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -47,11 +48,9 @@ public class OptimizationJobExecutionsEntity {
 
 	}
 
-	public OptimizationJobExecutionsEntity(
-		OptimizationConfigurationEntity optimizationConfiguration, Date startDate, State state) {
-		this.optimizationConfiguration = optimizationConfiguration;
+	public OptimizationJobExecutionsEntity(Date startDate) {
 		this.startDate = startDate;
-		this.state = state;
+		this.state = State.Ready;
 	}
 
 	public Long getId() {
@@ -62,14 +61,6 @@ public class OptimizationJobExecutionsEntity {
 		this.id = id;
 	}
 
-	public OptimizationConfigurationEntity getOptimizationConfiguration() {
-		return optimizationConfiguration;
-	}
-
-	public void setOptimizationConfiguration(OptimizationConfigurationEntity optimizationConfiguration) {
-		this.optimizationConfiguration = optimizationConfiguration;
-	}
-
 	public List<OptimizationJobSolutionsEntity> getOptimizationJobSolutions() {
 		if (optimizationJobSolutions == null) {
 			optimizationJobSolutions = new ArrayList<>();
@@ -78,7 +69,7 @@ public class OptimizationJobExecutionsEntity {
 	}
 
 	public void setOptimizationJobSolutions(List<OptimizationJobSolutionsEntity> optimizationJobSolutions) {
-		this.optimizationJobSolutions = optimizationJobSolutions;
+		this.optimizationJobSolutions.addAll(optimizationJobSolutions);
 	}
 
 	public Date getStartDate() {
@@ -105,5 +96,19 @@ public class OptimizationJobExecutionsEntity {
 		this.state = state;
 	}
 
+	public String getLatexPath() {
+		return latexPath;
+	}
 
+	public void setLatexPath(String latexPath) {
+		this.latexPath = latexPath;
+	}
+
+	public String getrPath() {
+		return rPath;
+	}
+
+	public void setrPath(String rPath) {
+		this.rPath = rPath;
+	}
 }

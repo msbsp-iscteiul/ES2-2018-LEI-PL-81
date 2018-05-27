@@ -2,16 +2,14 @@ package pt.iscte.es2.optimization_job_runner;
 
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.Problem;
+import org.uma.jmetal.qualityindicator.impl.Spread;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
-import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
-import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
-import org.uma.jmetal.util.experiment.component.GenerateLatexTablesWithStatistics;
-import org.uma.jmetal.util.experiment.component.GenerateReferenceParetoSetAndFrontFromDoubleSolutions;
+import org.uma.jmetal.util.experiment.component.*;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 import pt.iscte.es2.algorithm_finder.AlgorithmConstants;
@@ -91,7 +89,7 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 		final ExperimentProblem<Solution<?>> experimentProblem = new ExperimentProblem(observableProblem);
 		final List<ExperimentAlgorithm<Solution<?>, List<Solution<?>>>> algorithms = getExperimentAlgorithms(
 			experimentProblem,
-			finderResult.getConstructors()
+			finderResult.getConstructorsForAlgorithms(job.getAlgorithms())
 		);
 		// Setup evaluations counter
 		final int totalEvaluations = INDEPENDENT_RUNS * algorithms.size() * AlgorithmConstants.MAX_EVALUTIONS;
@@ -112,12 +110,12 @@ public class JMetalTask implements Callable<OptimizationJobResult> {
 				.setReferenceFrontDirectory(referenceFront)
 				.setOutputParetoFrontFileName("FUN")
 				.setOutputParetoSetFileName("VAR")
-				.setIndicatorList(Collections.singletonList(new PISAHypervolume<>()))
+				.setIndicatorList(Collections.singletonList(new Spread<>()))
 				.build();
 
 		final List<ExperimentComponent> components = Arrays.asList(
 			new OptimizationJobRunnerExecuteAlgorithms<>(experiment),
-			new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment),
+			new GenerateReferenceParetoFront(experiment),
 			new ComputeQualityIndicators<>(experiment),
 			new GenerateLatexTablesWithStatistics(experiment),
 			new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1)

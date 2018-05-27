@@ -1,10 +1,15 @@
+import re
+
 from django import forms
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+from appform.validators import validate_file_ext
 
 
-# Formulário que trata o pedido de email, caso não exista em sessão
 class RequestEmailForm(forms.Form):
+    """Login form"""
     email = forms.EmailField(label='Email',
-                             help_text='Please, enter your email -- Acrescentar algo')
+                             help_text='Please, enter your email to login into the system')
 
     def clean(self):
         cleaned_data = super(RequestEmailForm, self).clean()
@@ -14,10 +19,13 @@ class RequestEmailForm(forms.Form):
 
 
 class ProblemInputUser(forms.Form):
-    name = forms.CharField(
-        max_length=30,
+    """First part of the problem configuration creation form"""
+    name = forms.RegexField(
+        max_length=127,
         label='Problem name',
-        help_text='Write the problem name using Java Class Name Convention')
+        help_text='Write the problem name using Java Class Name Convention',
+        regex=re.compile('^[A-Z][\w$]+$', re.UNICODE)  # https://regex101.com/r/vR0iK3/5
+    )
     description = forms.CharField(
         label='Description',
         max_length=500,
@@ -26,8 +34,16 @@ class ProblemInputUser(forms.Form):
         }),
         help_text='Write the description of the problem to solve')
     waiting_time = forms.IntegerField(
-        help_text='Write the maximum time you are willing to wait for optimization of the problem in SECONDS')
-    input_jar = forms.FileField(label='Select a file')
+        label='Max execution time (1800 - 3600 seconds)',
+        help_text='Write the maximum time you are willing to wait for optimization of the problem in SECONDS',
+        validators=[MinValueValidator(1800), MaxValueValidator(3600)],
+        initial=1800
+    )
+    input_jar = forms.FileField(
+        label='Select the problem jar file',
+        help_text='If you need help, consult the FAQ section',
+        validators=[validate_file_ext(['.jar'])]
+    )
 
     def clean(self):
         cleaned_data = super(ProblemInputUser, self).clean()
@@ -40,7 +56,7 @@ class ProblemInputUser(forms.Form):
 
 
 class ProblemInputVariable(forms.Form):
-
+    """Second part of the problem configuration creation form"""
     def __init__(self, *args, **kwargs):
         algorithms = kwargs.pop('algorithms')
         variables = kwargs.pop('variables')
@@ -63,8 +79,11 @@ class ProblemInputVariable(forms.Form):
         self.fields['variables'].initial = variables
         self.fields['variable_type'].initial = variable_type
         self.fields['objectives'].initial = objectives
-        self.fields['input_csv'] = forms.FileField(label='Select the csv with the best solution you have',
-                                                   required=False)
+        self.fields['input_csv'] = forms.FileField(
+            label='Select the csv or rs file with the best solutions you have',
+            required=False,
+            validators=[validate_file_ext(['.csv', '.rf'])]
+        )
         self.fields['algorithm_choice_method'] = forms.ChoiceField(
             label='Select the algorithm choice method',
             choices=(
@@ -100,8 +119,9 @@ class ProblemInputVariable(forms.Form):
 
 
 class SendEmail(forms.Form):
+    """Support request email form"""
     subject = forms.CharField(
-        max_length=30,
+        max_length=255,
         label='Subject')
     message = forms.CharField(
         label='Message',

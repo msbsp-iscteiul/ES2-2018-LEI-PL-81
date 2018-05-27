@@ -19,10 +19,6 @@ public class OptimizationJobSolutionsEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_optimization_job_executions", nullable = false)
-	private OptimizationJobExecutionsEntity optimizationJobExecutions;
-
 	@NotBlank
 	private String algorithmName;
 
@@ -46,14 +42,6 @@ public class OptimizationJobSolutionsEntity {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public OptimizationJobExecutionsEntity getOptimizationJobExecutions() {
-		return optimizationJobExecutions;
-	}
-
-	public void setOptimizationJobExecutions(OptimizationJobExecutionsEntity optimizationJobExecutions) {
-		this.optimizationJobExecutions = optimizationJobExecutions;
 	}
 
 	public String getAlgorithmName() {

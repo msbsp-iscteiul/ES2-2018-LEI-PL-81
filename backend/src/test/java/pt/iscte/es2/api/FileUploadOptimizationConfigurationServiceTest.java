@@ -33,5 +33,4 @@ public class FileUploadOptimizationConfigurationServiceTest {
 		Mockito.when(optimizationBusiness.fileUpload(Mockito.any(), Mockito.any())).thenReturn(new FileUploadResult());
 		Assert.assertNotNull(optimizationService.fileUpload(new FileUploadRequest()));
 	}
-
 }

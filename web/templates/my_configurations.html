@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load parse_date %}
+{% block title %}My configurations{% endblock %}
+
+{% block body_scripts %}
+    {% load static %}
+    <script src="{% static "JS/HistoryTableFilters.js" %}" defer></script>
+{% endblock %}
+{% block content_app %}
+
+    <div class="container">
+        <h1>My configurations</h1>
+
+        <div class="panel panel-primary filterable mt-5">
+            <table class="table table-striped table-bordered text-center">
+                <thead>
+                <tr class="filters">
+                    <th><input type="text" onkeyup="myFunction()" class="form-control" placeholder="Configuration Name"></th>
+                    <th><input type="text" onkeyup="myFunction()" class="form-control" placeholder="Description"></th>
+                    <th colspan="2"></th>
+                </tr>
+                <tr>
+                    <th scope="col" class="align-middle">Configuration Name</th>
+                    <th scope="col" class="align-middle">Description</th>
+                    <th scope="col" class="align-middle">Date</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="tableDiv">
+                {% for configuration in configurations %}
+                    <tr class="align-middle">
+                        <th class="align-middle" scope="row">{{ configuration.problemName }}</th>
+                        <td class="align-middle">{{ configuration.description }}</td>
+                        <td class="align-middle">{{ configuration.createdDate|parse_date|date:'Y-m-d \a\t H:i:s' }}</td>
+                        <td class="align-middle"><a href="{% url 'request_details' configuration.id %}" class="btn btn-primary">Open</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+{% endblock %}

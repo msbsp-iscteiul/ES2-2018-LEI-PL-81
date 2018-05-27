@@ -18,7 +18,7 @@ public class OptimizationJobResult {
 	 */
 	public OptimizationJobResult(PostProcessingContext context) {
 		this.context = context;
-		jobId = context.getJob().getId();
+		jobId = context.getJob().getJobId();
 	}
 
 	/**
