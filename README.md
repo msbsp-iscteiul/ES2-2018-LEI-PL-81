@@ -25,6 +25,9 @@ evitando assim o envio e uso de contas de emails de produção.
 Todas as funcionalidades foram implementadas. No entanto as funcionalidades foram implementadas de forma diferente do
 que especificado, com o consentimento do professor.
 
+**Nota**: Como temos múltiplos módulos na aplicação, criámos pastas para o coverage, executáveis e code smells.
+Estes encontram-se nas pastas `coverage`, `dist` e `code-smells`, respectivamente.
+
 ### Arquitectura
 
 ![Arquitectura](resources/Architecture.png)
