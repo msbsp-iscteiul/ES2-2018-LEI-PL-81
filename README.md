@@ -58,6 +58,12 @@ como as restrições dentro do JAR importado.
 A vantagem da importação do JAR em runtime é de uma performance muito superior a soluções que tenham de aceder a
 recursos externos, como web services ou iniciar processos no sistema para executar o JAR através do sistema operativo.
 
+#### Exemplos
+
+Podem encontrar exemplos na pasta [_exemplos_plugin_jars_problemas](_exemplos_plugin_jars_problemas).
+
+Os exemplos são implementações dos algoritmos Kursawe, NMMin e OneZeroMax disponíveis no projecto JMetal.
+
 ### Configurações das aplicações
 
 Para tirar partido do ecosistema das frameworks que utilizámos na implementação do projecto, Django e Spring Boot, não
