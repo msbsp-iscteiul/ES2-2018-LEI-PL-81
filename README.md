@@ -60,7 +60,7 @@ recursos externos, como web services ou iniciar processos no sistema para execut
 
 #### Exemplos
 
-Podem encontrar exemplos na pasta [_exemplos_jars_problemas](_exemplos_jars_problemas).
+Podem encontrar exemplos na pasta [_exemplos_plugin_jars_problemas](_exemplos_plugin_jars_problemas).
 
 Os exemplos são implementações dos algoritmos Kursawe, NMMin e OneZeroMax disponíveis no projecto JMetal.
 
